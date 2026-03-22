@@ -34,11 +34,11 @@ var curatedQueries = []struct {
 }
 
 type fixtureFile struct {
-	Query     string          `json:"query"`
-	FetchedAt string          `json:"fetched_at"`
-	Source    fixtureSource   `json:"source"`
-	Results   []fixtureResult `json:"results"`
-	Indexers  []fixtureIndexer`json:"indexers"`
+	Query     string           `json:"query"`
+	FetchedAt string           `json:"fetched_at"`
+	Source    fixtureSource    `json:"source"`
+	Results   []fixtureResult  `json:"results"`
+	Indexers  []fixtureIndexer `json:"indexers"`
 }
 
 type fixtureSource struct {
