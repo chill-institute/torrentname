@@ -110,7 +110,7 @@ We track parser performance in two ways:
 - low-level microbenchmarks for `ns/op`, `B/op`, and `allocs/op`
 - batch-style overhead translated into `ms per 1k rows`
 
-Use `mise run bench` for the local benchmark suite.
+Use `mise run bench` for the local benchmark suite, including the `1k rows` batch benchmark.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for the repeatable before/after benchmark workflow.
 
