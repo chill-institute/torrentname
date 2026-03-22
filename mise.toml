@@ -1,0 +1,76 @@
+[tools]
+go = "1.26.1"
+
+[env]
+GOWORK = "off"
+
+[tasks.fmt]
+description = "Format Go sources"
+run = """
+go_files="$(git ls-files '*.go')"
+if [ -z "$go_files" ]; then
+  exit 0
+fi
+
+printf '%s\n' "$go_files" | while IFS= read -r file; do
+  [ -n "$file" ] || continue
+  gofmt -w "$file"
+done
+"""
+
+[tasks."fmt:check"]
+description = "Check Go source formatting"
+run = """
+go_files="$(git ls-files '*.go')"
+if [ -z "$go_files" ]; then
+  exit 0
+fi
+
+unformatted="$(printf '%s\n' "$go_files" | while IFS= read -r file; do
+  [ -n "$file" ] || continue
+  gofmt -l "$file"
+done)"
+
+if [ -n "$unformatted" ]; then
+  printf 'gofmt needs to be run on:\n%s\n' "$unformatted" >&2
+  exit 1
+fi
+
+printf '==> Go formatting is clean\n'
+"""
+
+[tasks."mod:tidy"]
+description = "Tidy Go module metadata"
+run = "go mod tidy"
+
+[tasks."mod:check"]
+description = "Ensure go.mod and go.sum are tidy without mutating them"
+run = "go mod tidy -diff"
+
+[tasks.test]
+description = "Run parser unit tests"
+run = "go test ./..."
+
+[tasks.bench]
+description = "Run parser benchmarks"
+run = "go test ./... -bench=. -benchmem"
+
+[tasks."fixtures:jackett"]
+description = "Refresh curated Jackett search fixtures from a live local Jackett"
+run = """
+if [ -z "${JACKETT_API_KEY:-}" ]; then
+  printf 'JACKETT_API_KEY is required\n' >&2
+  exit 1
+fi
+
+JACKETT_BASE_URL="${JACKETT_BASE_URL:-http://localhost:9117}" \
+go run ./tools/jackettfixtures
+"""
+
+[tasks."test:fuzz"]
+description = "Run the parser fuzz target for a short local pass"
+run = "go test ./... -run=^$ -fuzz=FuzzParse -fuzztime=5s"
+
+[tasks.verify]
+description = "Run formatting and test checks"
+depends = ["fmt:check", "mod:check", "test"]

@@ -1,0 +1,370 @@
+{
+  "query": "DV HDR HEVC",
+  "fetched_at": "2026-03-22T13:13:53Z",
+  "source": {
+    "base_url": "http://localhost:9117",
+    "configured": true
+  },
+  "results": [
+    {
+      "title": "Monarch Legacy of Monsters S02E04 2160p HDR10Plus DV WEBRip 6CH x265 HEVC-P",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "TV/UHD, TV",
+      "size": 1103918848,
+      "seeders": 16,
+      "peers": 8,
+      "publish_date": "2026-03-20T05:15:58Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "ГКС. Сент-Луис / Хочу секса. Сент-Луис / DTF St. Louis / S1E1-3 of 7 (Стивен Конрад) [2026, США, Комедия, детектив, HEVC, HDR10, Dolby Vision, WEB-DL 2160p] MVO (Syncmer, HDRezka Studio, Red Head Sound, LE-Production) + DVO + Ukr MVO + Original + Sub (Rus, Eng, Heb)",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "TV/HD, TV",
+      "size": 27722242048,
+      "seeders": 18,
+      "peers": 20,
+      "publish_date": "2026-03-19T15:41:29Z",
+      "has_link": true,
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Nightmare Alley 2021 BW Directors Cut 2160p UHD Blu ray Remux DV HDR HEVC DTS HD MA 5 1 CiNEPHiLES",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 76192718848,
+      "seeders": 9,
+      "peers": 16,
+      "publish_date": "2026-03-15T13:13:06Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Nightmare Alley 2021 2160p UHD Blu ray Remux DV HDR HEVC TrueHD Atmos 7 1 CiNEPHiLES",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 89109831680,
+      "seeders": 13,
+      "peers": 8,
+      "publish_date": "2026-03-15T13:13:06Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Fury 2014 2160p BluRay Remux HEVC HDR DV TrueHD 7 1 Atmos p78",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 63146758144,
+      "seeders": 20,
+      "peers": 12,
+      "publish_date": "2026-03-15T13:13:06Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Nightmare.Alley.2021.2160p.UHD.Blu-ray.Remux.DV.HDR.HEVC.TrueHD.Atmos.7.1-CiNEPHiLES",
+      "tracker": "Uindex",
+      "tracker_id": "uindex",
+      "category": "Movies",
+      "size": 89109831680,
+      "seeders": 20,
+      "peers": 18,
+      "publish_date": "2026-03-14T20:25:06Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Fury.2014.2160p.BluRay.Remux.HEVC.HDR.DV.TrueHD.7.1.Atmos-p78",
+      "tracker": "Uindex",
+      "tracker_id": "uindex",
+      "category": "Movies",
+      "size": 63146758144,
+      "seeders": 39,
+      "peers": 11,
+      "publish_date": "2026-03-14T20:25:06Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Zootopia 2 2025 Hybrid 2160p UHD Blu-ray Remux DV HDR10P HEVC TrueHD Atmos 7 1-C",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "Movies/UHD",
+      "size": 39463491190,
+      "seeders": 19,
+      "peers": 42,
+      "publish_date": "2026-03-13T12:43:16Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Monarch Legacy of Monsters S02E03 2160p HDR10Plus DV WEBRip 6CH x265 HEVC-P",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "TV/UHD, TV",
+      "size": 940662656,
+      "seeders": 11,
+      "peers": 6,
+      "publish_date": "2026-03-13T07:16:35Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Anaconda.2025.UHD.BluRay.2160p.TrueHD.Atmos.7.1.DV.HDR10P.HEVC.HYBRID.REMUX-FraMeSToR",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "Movies/UHD, Movies",
+      "size": 64615776256,
+      "seeders": 110,
+      "peers": 56,
+      "publish_date": "2026-03-12T16:30:19Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Nightmare.Alley.2021.2160p.UHD.Blu-ray.Remux.DV.HDR.HEVC.TrueHD.Atmos.7.1-CiNEPHiLES",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 89111535616,
+      "seeders": 6,
+      "peers": 195,
+      "publish_date": "2026-03-12T05:32:46Z",
+      "imdb": "tt7740496",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Nightmare.Alley.2021.2160p.UHD.Blu-ray.Remux.DV.HDR.HEVC.TrueHD.Atmos.7.1-CiNEPHiLES",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "Movies/UHD, Movies",
+      "size": 89111535616,
+      "seeders": 5,
+      "peers": 89,
+      "publish_date": "2026-03-12T04:30:44Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Nightmare.Alley.2021.BW.Directors.Cut.2160p.UHD.Blu-ray.Remux.DV.HDR.HEVC.DTS-HD.MA.5.1-CiNEPHiLES",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "Movies/UHD, Movies",
+      "size": 76197871616,
+      "seeders": 7,
+      "peers": 36,
+      "publish_date": "2026-03-12T04:30:09Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Fury.2014.2160p.BluRay.Remux.HEVC.HDR.DV.TrueHD.7.1.Atmos-p78",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "Movies/UHD, Movies",
+      "size": 63150891008,
+      "seeders": 9,
+      "peers": 1,
+      "publish_date": "2026-03-08T03:49:47Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Monarch Legacy of Monsters S02E02 2160p HDR10Plus DV WEBRip 6CH x265 HEVC-P",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "TV/UHD, TV",
+      "size": 1030028416,
+      "seeders": 45,
+      "peers": 47,
+      "publish_date": "2026-03-06T06:51:38Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Devils Advocate 1997 Unrated DC UHD BluRay 2160p HDR10 DV HEVC DTS-HD MA 5.1",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "Movies/UHD, Movies",
+      "size": 34697109504,
+      "seeders": 60,
+      "peers": 27,
+      "publish_date": "2026-03-06T04:43:48Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Hamnet 2025 2160p USA UHD Blu ray DV HDR HEVC TrueHD 7 1 Atmos TMT",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 91965988864,
+      "seeders": 3,
+      "peers": 78,
+      "publish_date": "2026-03-05T13:13:06Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Hamnet.2025.2160p.USA.UHD.Blu-ray.DV.HDR.HEVC.TrueHD.7.1.Atmos-TMT",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 91962892288,
+      "seeders": 0,
+      "peers": 50,
+      "publish_date": "2026-03-04T19:32:14Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Hamnet.2025.2160p.USA.UHD.Blu-ray.DV.HDR.HEVC.TrueHD.7.1.Atmos-TMT",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "Movies/UHD, Movies",
+      "size": 91962892288,
+      "seeders": 1,
+      "peers": 55,
+      "publish_date": "2026-03-04T17:43:25Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The.Devils.Advocate.1997.Unrated.DC.2160p.UHD.BluRay.REMUX.DV.HDR.HEVC.DTS-HD.MA",
+      "tracker": "Uindex",
+      "tracker_id": "uindex",
+      "category": "Movies",
+      "size": 114128019456,
+      "seeders": 34,
+      "peers": 13,
+      "publish_date": "2026-03-03T15:37:06Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The.Devils.Advocate.1997.Unrated.DC.2160p.UHD.BluRay.REMUX.DV.HDR.HEVC.DTS-HD.MA",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 114125463552,
+      "seeders": 190,
+      "peers": 133,
+      "publish_date": "2026-03-03T13:25:11Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Devils Advocate 1997 Unrated DC 2160p UHD BluRay REMUX DV HDR HEVC DTS HD MA",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 114128019456,
+      "seeders": 19,
+      "peers": 8,
+      "publish_date": "2026-03-03T13:13:06Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "The.Devils.Advocate.1997.Unrated.DC.2160p.UHD.BluRay.REMUX.DV.HDR.HEVC.DTS-HD.MA",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "Movies/UHD",
+      "size": 114125462629,
+      "seeders": 5,
+      "peers": 52,
+      "publish_date": "2026-03-03T10:25:36Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The.Chronicles.of.Riddick.2004.DC.2160p.UHD.BluRay.REMUX.DV.HDR.HEVC.DTS-HD.MA.5",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 115355017216,
+      "seeders": 6,
+      "peers": 14,
+      "publish_date": "2026-03-02T22:39:36Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The.Chronicles.of.Riddick.2004.TC.2160p.UHD.BluRay.REMUX.DV.HDR.HEVC.TrueHD.7.1.",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 83499319296,
+      "seeders": 0,
+      "peers": 3,
+      "publish_date": "2026-03-02T22:39:06Z",
+      "has_details": true,
+      "has_magnet": true
+    }
+  ],
+  "indexers": [
+    {
+      "id": "knaben",
+      "name": "Knaben",
+      "status": 2,
+      "results": 32,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "limetorrents",
+      "name": "LimeTorrents",
+      "status": 2,
+      "results": 40,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "nyaasi",
+      "name": "Nyaa.si",
+      "status": 2,
+      "results": 12,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "thepiratebay",
+      "name": "The Pirate Bay",
+      "status": 2,
+      "results": 100,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "therarbg",
+      "name": "TheRARBG",
+      "status": 2,
+      "results": 50,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "torrentscsv",
+      "name": "Torrents.csv",
+      "status": 2,
+      "results": 25,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "uindex",
+      "name": "Uindex",
+      "status": 2,
+      "results": 100,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "yts",
+      "name": "YTS",
+      "status": 2,
+      "results": 0,
+      "elapsed_time_ms": 0
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-package parsetorrentname
+package torrentname
 
 import (
 	"fmt"
@@ -9,13 +9,9 @@ import (
 
 var patterns = []struct {
 	name string
-	// Use the last matching pattern. E.g. Year.
 	last bool
 	kind reflect.Kind
-	// REs need to have 2 sub expressions (groups), the first one is "raw", and
-	// the second one for the "clean" value.
-	// E.g. Epiode matching on "S01E18" will result in: raw = "E18", clean = "18".
-	re *regexp.Regexp
+	re   *regexp.Regexp
 }{
 	{"season", false, reflect.Int, regexp.MustCompile(`(?i)(s?([0-9]{1,2}))[ex]`)},
 	{"episode", false, reflect.Int, regexp.MustCompile(`(?i)([ex]([0-9]{2})(?:[^0-9]|$))`)},

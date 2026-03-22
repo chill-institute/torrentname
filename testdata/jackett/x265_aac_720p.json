@@ -1,0 +1,369 @@
+{
+  "query": "x265 AAC 720p",
+  "fetched_at": "2026-03-22T13:13:53Z",
+  "source": {
+    "base_url": "http://localhost:9117",
+    "configured": true
+  },
+  "results": [
+    {
+      "title": "Boyfriend.on.Demand.S01.720p.ITA-KOR-ENG.MULTI.WEBRip.x265.AAC-V3SP4EV3R",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "TV/HD, TV",
+      "size": 4417698304,
+      "seeders": 5,
+      "peers": 20,
+      "publish_date": "2026-03-17T08:16:04Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Young Sherlock 2026 S01 720p ITA ENG MULTI WEBRip x265 AAC V3SP4EV3R",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "TV",
+      "size": 2609192704,
+      "seeders": 76,
+      "peers": 68,
+      "publish_date": "2026-03-11T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Young.Sherlock.2026.S01.720p.ITA-ENG.MULTI.WEBRip.x265.AAC-V3SP4EV3R",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "TV/HD, TV",
+      "size": 2610462976,
+      "seeders": 62,
+      "peers": 30,
+      "publish_date": "2026-03-10T14:05:31Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Pyramid.Builders.New.Clues.2019.720p.x265.aac.subs.mkv",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 350724736,
+      "seeders": 11,
+      "peers": 1,
+      "publish_date": "2026-03-03T01:29:52Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "aliens.the.big.think.2016.720p.x265.aac.subs.mkv",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 246838848,
+      "seeders": 7,
+      "peers": 3,
+      "publish_date": "2026-03-03T01:29:51Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Biancaneve \u0026amp; Co...(1982) WEBRip 720p x264 AAC ITA - Lullozzo",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 1393242368,
+      "seeders": 13,
+      "peers": 0,
+      "publish_date": "2026-03-02T06:29:52Z",
+      "imdb": "tt0128076",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Bluff 2026 720p WEBRip x265 AAC SSN",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 1535450752,
+      "seeders": 27,
+      "peers": 19,
+      "publish_date": "2026-03-01T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "The Bluff 2026 720p WEBRip x265 AAC SSN",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 1535450752,
+      "seeders": 8,
+      "peers": 15,
+      "publish_date": "2026-03-01T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "The Bluff 2026 720p WEBRip x265 AAC-SSN",
+      "tracker": "Uindex",
+      "tracker_id": "uindex",
+      "category": "Movies",
+      "size": 1535450752,
+      "seeders": 44,
+      "peers": 30,
+      "publish_date": "2026-02-28T20:24:58Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Bluff 2026 720p WEBRip x265 AAC-SSN",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "Movies/HD, Movies",
+      "size": 1534490624,
+      "seeders": 30,
+      "peers": 9,
+      "publish_date": "2026-02-28T13:13:55Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Bluff 2026 720p WEBRip x265 AAC-SSN",
+      "tracker": "The Pirate Bay",
+      "tracker_id": "thepiratebay",
+      "category": "Movies/HD",
+      "size": 1534490624,
+      "seeders": 30,
+      "peers": 9,
+      "publish_date": "2026-02-28T13:13:55Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Would I Lie to You? S19E07 720p HEVC x265 AAC MKV",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "TV, TV/HD",
+      "size": 215545282,
+      "seeders": 14,
+      "peers": 0,
+      "publish_date": "2026-02-20T20:23:00Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "QI XL S23E12 Willy Nilly 720p HEVC x265 AAC",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "TV",
+      "size": 292206688,
+      "seeders": 71,
+      "peers": 5,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Would I Lie to You  S19E04 720p HEVC x265 AAC MKV",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "TV",
+      "size": 199554496,
+      "seeders": 7,
+      "peers": 0,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Steal S01 720p ITA ENG MULTI WEBRip x265 AAC V3SP4EV3R",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "TV",
+      "size": 1675037184,
+      "seeders": 43,
+      "peers": 6,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Finding Her Edge S01 720p ITA ENG MULTI WEBRip x265 AAC V3SP4EV3R",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "TV",
+      "size": 2319282432,
+      "seeders": 10,
+      "peers": 14,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "QI XL S23E13 Wordmongery 720p HEVC x265 AAC",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "TV",
+      "size": 256429264,
+      "seeders": 39,
+      "peers": 0,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Zootopia 2 2025 720p WEBRip x265 AAC SSN",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 1546188288,
+      "seeders": 11,
+      "peers": 17,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Zootopia 2 2025 720p WEBRip x265 AAC SSN",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 1546188288,
+      "seeders": 9,
+      "peers": 25,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Wonder Man S01 720p ITA ENG MULTI WEBRip x265 AAC V3SP4EV3R",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "TV",
+      "size": 1664299776,
+      "seeders": 51,
+      "peers": 7,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Sarvam Maya (2025) 720p WEBRip x265 AAC [ Hin  Mal ] ESub",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 1288490240,
+      "seeders": 88,
+      "peers": 17,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Would I Lie to You  S19E05 720p HEVC x265 AAC MKV",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "TV",
+      "size": 180973728,
+      "seeders": 6,
+      "peers": 2,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Greenland 2 Migration 2026 720p WEBRip x265 AAC SSN",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 1546188288,
+      "seeders": 17,
+      "peers": 15,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Greenland 2 Migration 2026 720p WEBRip x265 AAC SSN",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 1546188288,
+      "seeders": 9,
+      "peers": 2,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "QI XL S23E14 Whatnots 720p HEVC x265 AAC",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "TV",
+      "size": 283367168,
+      "seeders": 27,
+      "peers": 1,
+      "publish_date": "2026-02-20T13:12:58Z",
+      "has_link": true,
+      "has_details": true
+    }
+  ],
+  "indexers": [
+    {
+      "id": "knaben",
+      "name": "Knaben",
+      "status": 2,
+      "results": 65,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "limetorrents",
+      "name": "LimeTorrents",
+      "status": 2,
+      "results": 40,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "nyaasi",
+      "name": "Nyaa.si",
+      "status": 2,
+      "results": 75,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "thepiratebay",
+      "name": "The Pirate Bay",
+      "status": 2,
+      "results": 100,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "therarbg",
+      "name": "TheRARBG",
+      "status": 2,
+      "results": 50,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "torrentscsv",
+      "name": "Torrents.csv",
+      "status": 2,
+      "results": 25,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "uindex",
+      "name": "Uindex",
+      "status": 2,
+      "results": 100,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "yts",
+      "name": "YTS",
+      "status": 2,
+      "results": 0,
+      "elapsed_time_ms": 0
+    }
+  ]
+}

@@ -1,0 +1,374 @@
+{
+  "query": "1080p BluRay x264",
+  "fetched_at": "2026-03-22T13:13:53Z",
+  "source": {
+    "base_url": "http://localhost:9117",
+    "configured": true
+  },
+  "results": [
+    {
+      "title": "Delivery Run 2024 BluRay 1080p DDP 5 1 x264 hallowed",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 6420976128,
+      "seeders": 1,
+      "peers": 17,
+      "publish_date": "2026-03-22T07:12:25Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Harold.and.the.Purple.Crayon.2024.1080p.BluRay.x264-SPHD_EniaHD",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "Movies/HD, Movies",
+      "size": 11780000000,
+      "seeders": 8,
+      "peers": 2,
+      "publish_date": "2026-03-22T05:02:00Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Silkwood 1983 1080p BluRay x265 10bit EAC3 2 0 r00t QxR",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 8482560512,
+      "seeders": 1,
+      "peers": 7,
+      "publish_date": "2026-03-22T03:22:31Z",
+      "imdb": "tt0086312",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Rebuilding 2025 1080p BluRay x265-YAWNTiC",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 5987556352,
+      "seeders": 14,
+      "peers": 32,
+      "publish_date": "2026-03-21T23:41:50Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Door Of Sin 2022 1080p BluRay x264-GeneMige",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 8885928960,
+      "seeders": 3,
+      "peers": 28,
+      "publish_date": "2026-03-21T21:40:32Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Anaconda 2025 1080p BluRay x265-YAWNTiC",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 7297406976,
+      "seeders": 69,
+      "peers": 29,
+      "publish_date": "2026-03-21T21:31:00Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Door Of Sin 2022 1080p BluRay x264 GeneMige",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 8890582016,
+      "seeders": 1,
+      "peers": 8,
+      "publish_date": "2026-03-21T21:12:25Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Greenland.2.Migration.2026.1080p.BluRay.x264-KNiVES",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 18134765568,
+      "seeders": 5,
+      "peers": 15,
+      "publish_date": "2026-03-21T19:30:33Z",
+      "imdb": "tt14850054",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The.History.of.Sound.2025.1080p.BluRay.x264-KNiVES",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 17817583616,
+      "seeders": 4,
+      "peers": 11,
+      "publish_date": "2026-03-21T17:46:32Z",
+      "imdb": "tt15799524",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Scared Stiff 1987 1080p BluRay x264-GeneMige",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 7821603840,
+      "seeders": 4,
+      "peers": 25,
+      "publish_date": "2026-03-21T17:38:32Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Scared Stiff 1987 1080p BluRay x264 GeneMige",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 7816840704,
+      "seeders": 3,
+      "peers": 14,
+      "publish_date": "2026-03-21T17:12:25Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Gladiator.II.2024.1080p.BluRay.x264-HiP_EniaHD",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "Movies/HD, Movies",
+      "size": 21933000000,
+      "seeders": 33,
+      "peers": 3,
+      "publish_date": "2026-03-21T17:00:00Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "A Time for Dying 1969 1080p BluRay x264 OFT",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 3328599552,
+      "seeders": 3,
+      "peers": 12,
+      "publish_date": "2026-03-21T16:38:37Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "My Blood and Bones in a Flowing Galaxy 2021 1080p BluRay x265 10bit DTS-WiK",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 5864670720,
+      "seeders": 1,
+      "peers": 10,
+      "publish_date": "2026-03-21T15:50:38Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "House.2008.LiMiTED.1080p.BluRay.x264-RESiSTANCE",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 8531437568,
+      "seeders": 7,
+      "peers": 27,
+      "publish_date": "2026-03-21T15:30:32Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "House 2008 LiMiTED 1080p BluRay x264 RESiSTANCE",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "Movies",
+      "size": 8536247296,
+      "seeders": 1,
+      "peers": 6,
+      "publish_date": "2026-03-21T14:12:25Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "The Shawshank Redemption 1994 RM4K EXTRAS 1080p BluRay x265",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 9985799168,
+      "seeders": 10,
+      "peers": 10,
+      "publish_date": "2026-03-21T12:30:17Z",
+      "imdb": "tt0111161",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "My.Blood.\u0026amp;.Bones.in.a.Flowing.Galaxy.2021.1080p.BluRay.x265.10bit.DTS-WiKi",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 5864674816,
+      "seeders": 6,
+      "peers": 39,
+      "publish_date": "2026-03-21T11:56:46Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "40 secondi 2025 1080p BluRay x264 FHC_CREW mkv",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 13099650048,
+      "seeders": 8,
+      "peers": 4,
+      "publish_date": "2026-03-21T11:40:42Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Nightmare Shark 2018 1080p BluRay x264-GeneMige",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 9056331776,
+      "seeders": 2,
+      "peers": 24,
+      "publish_date": "2026-03-21T07:59:22Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Wellwood.2025.1080p.BluRay.x264-JustWatch",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 8714539008,
+      "seeders": 2,
+      "peers": 39,
+      "publish_date": "2026-03-21T07:56:36Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Ratatouille 2007 BluRay 1080p DDP 5 1 x264-hallowed",
+      "tracker": "Uindex",
+      "tracker_id": "uindex",
+      "category": "Movies",
+      "size": 7226282496,
+      "seeders": 161,
+      "peers": 10,
+      "publish_date": "2026-03-21T06:01:53Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Greenland 2 Migration 2026 BluRay 1080p DDP Atmos 5 1 x264-hallowed",
+      "tracker": "Uindex",
+      "tracker_id": "uindex",
+      "category": "Movies",
+      "size": 8096013312,
+      "seeders": 246,
+      "peers": 22,
+      "publish_date": "2026-03-21T06:01:53Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Chuck Norris Invasion U S A 1985 1080p BluRay x265 5 1 RARBG",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 1825361152,
+      "seeders": 451,
+      "peers": 92,
+      "publish_date": "2026-03-21T05:30:22Z",
+      "imdb": "tt0089348",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Witches of Salem 1957 1080p BluRay x265 10bit EAC3 2 0 Fre",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "Movies",
+      "size": 10737418240,
+      "seeders": 0,
+      "peers": 8,
+      "publish_date": "2026-03-21T01:20:49Z",
+      "imdb": "tt0050997",
+      "has_details": true,
+      "has_magnet": true
+    }
+  ],
+  "indexers": [
+    {
+      "id": "knaben",
+      "name": "Knaben",
+      "status": 2,
+      "results": 38,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "limetorrents",
+      "name": "LimeTorrents",
+      "status": 2,
+      "results": 40,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "nyaasi",
+      "name": "Nyaa.si",
+      "status": 2,
+      "results": 75,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "thepiratebay",
+      "name": "The Pirate Bay",
+      "status": 2,
+      "results": 100,
+      "elapsed_time_ms": 83
+    },
+    {
+      "id": "therarbg",
+      "name": "TheRARBG",
+      "status": 2,
+      "results": 50,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "torrentscsv",
+      "name": "Torrents.csv",
+      "status": 2,
+      "results": 25,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "uindex",
+      "name": "Uindex",
+      "status": 2,
+      "results": 100,
+      "elapsed_time_ms": 318
+    },
+    {
+      "id": "yts",
+      "name": "YTS",
+      "status": 2,
+      "results": 0,
+      "elapsed_time_ms": 0
+    }
+  ]
+}

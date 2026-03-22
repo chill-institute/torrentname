@@ -1,0 +1,375 @@
+{
+  "query": "S01E01 720p HDTV",
+  "fetched_at": "2026-03-22T13:13:53Z",
+  "source": {
+    "base_url": "http://localhost:9117",
+    "configured": true
+  },
+  "results": [
+    {
+      "title": "Roman Empire By Train With Alice Roberts S01E06 720p HDTV H264-JFF",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 934574144,
+      "seeders": 1,
+      "peers": 19,
+      "publish_date": "2026-03-22T03:49:18Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Lip Reading The Royals What Are They Really Saying S01E04 720p HDTV H264-JF",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 1452402560,
+      "seeders": 7,
+      "peers": 6,
+      "publish_date": "2026-03-22T03:44:43Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Roman Empire By Train With Alice Roberts S01E06 720p HDTV H264 JFF EZTV",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 934573184,
+      "seeders": 18,
+      "peers": 22,
+      "publish_date": "2026-03-22T02:50:17Z",
+      "imdb": "tt39813014",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Lip Reading The Royals What Are They Really Saying S01E04 720p HDTV H264 JFF EZTV",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 1452401664,
+      "seeders": 10,
+      "peers": 12,
+      "publish_date": "2026-03-22T02:10:16Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Claudia Winkleman Show S01E02 720p HDTV H264-JFF",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 1403797248,
+      "seeders": 11,
+      "peers": 4,
+      "publish_date": "2026-03-21T01:43:58Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Claudia Winkleman Show S01E02 720p HDTV H264 JFF EZTV",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 1403796352,
+      "seeders": 23,
+      "peers": 27,
+      "publish_date": "2026-03-21T00:43:32Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Apprentice Unfinished Business S01E08 720p HDTV H264-JFF",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 921879936,
+      "seeders": 2,
+      "peers": 5,
+      "publish_date": "2026-03-20T03:30:56Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Alexander Armstrong In India S01E03 720p HDTV H264-JFF",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 1430605824,
+      "seeders": 3,
+      "peers": 13,
+      "publish_date": "2026-03-20T01:51:37Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Apprentice Unfinished Business S01E08 720p HDTV H264 JFF EZTV",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 921878976,
+      "seeders": 8,
+      "peers": 55,
+      "publish_date": "2026-03-20T01:45:16Z",
+      "imdb": "tt39370649",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Alexander Armstrong In India S01E03 720p HDTV H264 JFF EZTV",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 1430604928,
+      "seeders": 17,
+      "peers": 26,
+      "publish_date": "2026-03-20T01:03:19Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Blue.Skies.2026.S01E04.720p.HDTV.x264-SYNCOPY",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 853188032,
+      "seeders": 57,
+      "peers": 8,
+      "publish_date": "2026-03-19T19:54:18Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Blue Skies 2026 S01E04 720p HDTV x264 SYNCOPY EZTV",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 852853824,
+      "seeders": 40,
+      "peers": 51,
+      "publish_date": "2026-03-19T17:50:35Z",
+      "imdb": "tt37484311",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Price Is Right Tonight S01E01 720p HDTV H264-SJ186",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 1212588288,
+      "seeders": 1,
+      "peers": 1,
+      "publish_date": "2026-03-19T01:53:01Z",
+      "imdb": "tt40548665",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "CIA.2026.S01E04.720p.HDTV.x264-SYNCOPY",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 868049216,
+      "seeders": 1255,
+      "peers": 150,
+      "publish_date": "2026-03-17T05:48:51Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Memory.of.a.Killer.S01E07.720p.HDTV.x264-SYNCOPY",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 654921344,
+      "seeders": 2084,
+      "peers": 125,
+      "publish_date": "2026-03-17T05:40:11Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "CIA 2026 S01E04 720p HDTV x264 SYNCOPY EZTV",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 867832064,
+      "seeders": 74,
+      "peers": 136,
+      "publish_date": "2026-03-17T04:43:29Z",
+      "imdb": "tt35515227",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Memory of a Killer S01E07 720p HDTV x264 SYNCOPY EZTV",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 654575744,
+      "seeders": 18,
+      "peers": 21,
+      "publish_date": "2026-03-17T03:23:18Z",
+      "imdb": "tt35707374",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Marshals S01E03 720p HDTV x264",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 450992544,
+      "seeders": 3,
+      "peers": 23,
+      "publish_date": "2026-03-16T04:10:45Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Marshals.S01E03.720p.HDTV.x264-SYNCOPY",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 951432704,
+      "seeders": 2091,
+      "peers": 557,
+      "publish_date": "2026-03-16T03:40:21Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Marshals S01E03 720p HDTV x264 SYNCOPY EZTV",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 951037568,
+      "seeders": 274,
+      "peers": 389,
+      "publish_date": "2026-03-16T02:50:23Z",
+      "imdb": "tt36849871",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Race For Ancient Egypt In Colour S01E01 720p HDTV H264 JFF",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "TV",
+      "size": 847459136,
+      "seeders": 1,
+      "peers": 0,
+      "publish_date": "2026-03-15T13:12:36Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "The Race For Ancient Egypt In Colour S01E01 720p HDTV H264 JFF",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "TV",
+      "size": 847459136,
+      "seeders": 7,
+      "peers": 1,
+      "publish_date": "2026-03-15T13:12:36Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "The Race For Ancient Egypt In Colour S01E01 720p HDTV H264-JFF",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 847455168,
+      "seeders": 8,
+      "peers": 4,
+      "publish_date": "2026-03-15T01:58:27Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Race For Ancient Egypt In Colour S01E01 720p HDTV H264-JFF",
+      "tracker": "The Pirate Bay",
+      "tracker_id": "thepiratebay",
+      "category": "TV/HD",
+      "size": 847454208,
+      "seeders": 9,
+      "peers": 26,
+      "publish_date": "2026-03-15T00:35:02Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "The Race For Ancient Egypt In Colour S01E01 720p HDTV H264 JFF EZTV",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 847454208,
+      "seeders": 13,
+      "peers": 41,
+      "publish_date": "2026-03-15T00:33:55Z",
+      "has_details": true,
+      "has_magnet": true
+    }
+  ],
+  "indexers": [
+    {
+      "id": "knaben",
+      "name": "Knaben",
+      "status": 2,
+      "results": 80,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "limetorrents",
+      "name": "LimeTorrents",
+      "status": 2,
+      "results": 40,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "nyaasi",
+      "name": "Nyaa.si",
+      "status": 2,
+      "results": 5,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "thepiratebay",
+      "name": "The Pirate Bay",
+      "status": 2,
+      "results": 100,
+      "elapsed_time_ms": 50
+    },
+    {
+      "id": "therarbg",
+      "name": "TheRARBG",
+      "status": 2,
+      "results": 50,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "torrentscsv",
+      "name": "Torrents.csv",
+      "status": 2,
+      "results": 25,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "uindex",
+      "name": "Uindex",
+      "status": 2,
+      "results": 26,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "yts",
+      "name": "YTS",
+      "status": 2,
+      "results": 0,
+      "elapsed_time_ms": 0
+    }
+  ]
+}
