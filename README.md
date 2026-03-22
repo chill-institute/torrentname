@@ -4,8 +4,6 @@
 
 Modern fork of [middelink/go-parse-torrent-name](https://github.com/middelink/go-parse-torrent-name) / [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name)
 
-This repo started as a fork of [middelink/go-parse-torrent-name](https://github.com/middelink/go-parse-torrent-name), and it keeps the original MIT-licensed lineage visible while we iterate toward a cleaner, faster, more battle-tested parser.
-
 ## Install
 
 Add the module:
@@ -75,7 +73,6 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the repeatable before/after benchma
 
 ## Current Focus
 
-- preserve the original library credit and MIT license lineage
 - improve parser accuracy and coverage against the real-world fixture corpus
 - keep tightening parser performance and allocations with measured benchmark passes
 - evolve the public parser contract toward the full library spec in small, verified steps
@@ -86,8 +83,4 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## License
 
-MIT
-
-Original library credit:
-
-- [middelink/go-parse-torrent-name](https://github.com/middelink/go-parse-torrent-name)
+MIT. See [LICENSE](./LICENSE)
