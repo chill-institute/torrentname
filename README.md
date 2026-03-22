@@ -4,6 +4,8 @@
 
 Modern fork of [middelink/go-parse-torrent-name](https://github.com/middelink/go-parse-torrent-name) / [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name)
 
+`torrentname` parses torrent-style release names into structured metadata such as title, year, season, episode, quality, codec, audio tags, and release group.
+
 ## Install
 
 Add the module:
@@ -44,6 +46,47 @@ func main() {
 	}
 
 	fmt.Printf("%+v\n", info)
+}
+```
+
+## What It Does
+
+Turn noisy release names into structured fields you can search, filter, deduplicate, or display.
+
+TV example:
+
+```text
+Sample Series S05E03 720p HDTV x264-GRP
+```
+
+```go
+&torrentname.TorrentInfo{
+	Title:      "Sample Series",
+	Season:     5,
+	Episode:    3,
+	Resolution: "720p",
+	Quality:    "HDTV",
+	Codec:      "x264",
+	Group:      "GRP",
+}
+```
+
+Movie example:
+
+```text
+Open.Feature.2014.EXTENDED.1080p.WEB-DL.DD5.1.H264-RARBG
+```
+
+```go
+&torrentname.TorrentInfo{
+	Title:      "Open Feature",
+	Year:       2014,
+	Resolution: "1080p",
+	Quality:    "WEB-DL",
+	Codec:      "H264",
+	Audio:      "DD5.1",
+	Group:      "RARBG",
+	Extended:   true,
 }
 ```
 
