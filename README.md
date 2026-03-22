@@ -75,9 +75,10 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the repeatable before/after benchma
 
 ## Current Focus
 
-- modernize the repo shell and developer workflow first
 - preserve the original library credit and MIT license lineage
-- iterate on parser accuracy, performance, and API ergonomics in small, verified steps
+- improve parser accuracy and coverage against the real-world fixture corpus
+- keep tightening parser performance and allocations with measured benchmark passes
+- evolve the public parser contract toward the full library spec in small, verified steps
 
 ## Contributing
 
