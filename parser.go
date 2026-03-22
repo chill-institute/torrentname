@@ -1,8 +1,6 @@
 package torrentname
 
 import (
-	"reflect"
-	"strconv"
 	"strings"
 )
 
@@ -32,48 +30,29 @@ type TorrentInfo struct {
 	ThreeD     bool   `json:"3d,omitempty"`
 }
 
-func setField(tor *TorrentInfo, field, raw, val string) {
-	ttor := reflect.TypeOf(tor)
-	torV := reflect.ValueOf(tor)
-	field = strings.Title(field)
-	v, _ := ttor.Elem().FieldByName(field)
-	switch v.Type.Kind() {
-	case reflect.Bool:
-		torV.Elem().FieldByName(field).SetBool(true)
-	case reflect.Int:
-		clean, _ := strconv.ParseInt(val, 10, 64)
-		torV.Elem().FieldByName(field).SetInt(clean)
-	case reflect.Uint:
-		clean, _ := strconv.ParseUint(val, 10, 64)
-		torV.Elem().FieldByName(field).SetUint(clean)
-	case reflect.String:
-		torV.Elem().FieldByName(field).SetString(val)
-	}
-}
-
 // Parse breaks up the given filename in TorrentInfo
 func Parse(filename string) (*TorrentInfo, error) {
 	tor := &TorrentInfo{}
 
 	var startIndex, endIndex = 0, len(filename)
-	cleanName := strings.Replace(filename, "_", " ", -1)
+	cleanName := strings.ReplaceAll(filename, "_", " ")
 	for _, pattern := range patterns {
-		matches := pattern.re.FindAllStringSubmatch(cleanName, -1)
-		if len(matches) == 0 {
+		match := findPatternMatch(pattern, cleanName)
+		if match == nil {
 			continue
 		}
-		matchIdx := 0
-		if pattern.last {
-			matchIdx = len(matches) - 1
-		}
 
-		index := strings.Index(cleanName, matches[matchIdx][1])
-		if index == 0 {
-			startIndex = len(matches[matchIdx][1])
-		} else if index < endIndex {
-			endIndex = index
+		rawStart, rawEnd := match[2], match[3]
+		valueStart, valueEnd := match[4], match[5]
+		if valueStart < 0 || valueEnd < 0 {
+			valueStart, valueEnd = rawStart, rawEnd
 		}
-		setField(tor, pattern.name, matches[matchIdx][1], matches[matchIdx][2])
+		if rawStart == 0 {
+			startIndex = rawEnd
+		} else if rawStart < endIndex {
+			endIndex = rawStart
+		}
+		pattern.apply(tor, cleanName[valueStart:valueEnd])
 	}
 
 	if startIndex < 0 {
@@ -88,15 +67,26 @@ func Parse(filename string) (*TorrentInfo, error) {
 	}
 
 	raw := strings.Split(filename[startIndex:endIndex], "(")[0]
-	cleanName = raw
-	if strings.HasPrefix(cleanName, "- ") {
-		cleanName = raw[2:]
-	}
+	cleanName = strings.TrimSpace(raw)
+	cleanName = strings.TrimLeft(cleanName, "- ")
+	cleanName = strings.Trim(cleanName, ".-_ ")
 	if strings.ContainsRune(cleanName, '.') && !strings.ContainsRune(cleanName, ' ') {
-		cleanName = strings.Replace(cleanName, ".", " ", -1)
+		cleanName = strings.ReplaceAll(cleanName, ".", " ")
 	}
-	cleanName = strings.Replace(cleanName, "_", " ", -1)
-	setField(tor, "title", raw, strings.TrimSpace(cleanName))
+	cleanName = strings.ReplaceAll(cleanName, "_", " ")
+	tor.Title = strings.TrimSpace(cleanName)
 
 	return tor, nil
+}
+
+func findPatternMatch(pattern pattern, cleanName string) []int {
+	if !pattern.last {
+		return pattern.re.FindStringSubmatchIndex(cleanName)
+	}
+
+	matches := pattern.re.FindAllStringSubmatchIndex(cleanName, -1)
+	if len(matches) == 0 {
+		return nil
+	}
+	return matches[len(matches)-1]
 }

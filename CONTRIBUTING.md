@@ -32,6 +32,20 @@ mise run test:fuzz
 JACKETT_API_KEY=... mise run fixtures:jackett
 ```
 
+For benchmark comparisons, capture before and after runs with:
+
+```bash
+go test . -run=^$ -bench=BenchmarkParse -benchmem -count=10 > /tmp/before.txt
+go test . -run=^$ -bench=BenchmarkParse -benchmem -count=10 > /tmp/after.txt
+benchstat /tmp/before.txt /tmp/after.txt
+```
+
+When discussing search-style workloads, translate parser cost into `ms per 1k rows`:
+
+- `ns/op` is the per-title parse cost
+- `ms per 1k rows = ns/op / 1_000_000`
+- example: `35,000 ns/op` is about `35 ms` of parser overhead for `1,000` results
+
 ## Development Notes
 
 - This repo owns a standalone Go parsing library with zero runtime dependencies.

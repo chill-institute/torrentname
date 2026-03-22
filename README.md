@@ -2,7 +2,7 @@
 
 ![chill.institute library](https://chill.institute/banner.png)
 
-Modern fork of [middlelink/go-parse-torrent-name](https://github.com/middelink/go-parse-torrent-name) / [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name)
+Modern fork of [middelink/go-parse-torrent-name](https://github.com/middelink/go-parse-torrent-name) / [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name)
 
 This repo started as a fork of [middelink/go-parse-torrent-name](https://github.com/middelink/go-parse-torrent-name), and it keeps the original MIT-licensed lineage visible while we iterate toward a cleaner, faster, more battle-tested parser.
 
@@ -57,9 +57,21 @@ Common local commands:
 mise run fmt
 mise run test
 mise run bench
+mise run test:fuzz
 JACKETT_API_KEY=... mise run fixtures:jackett
 mise run verify
 ```
+
+## Benchmarking
+
+We track parser performance in two ways:
+
+- low-level microbenchmarks for `ns/op`, `B/op`, and `allocs/op`
+- batch-style overhead translated into `ms per 1k rows`
+
+Use `mise run bench` for the local benchmark suite.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the repeatable before/after benchmark workflow.
 
 ## Current Focus
 

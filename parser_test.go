@@ -1,35 +1,11 @@
 package torrentname
 
-import (
-	"reflect"
-	"testing"
-)
+import "testing"
 
-// assertTorrentInfo matches only the explicitly-set fields in want so we can
-// keep clean, intentional fixtures without freezing every parser quirk.
 func assertTorrentInfo(t *testing.T, filename string, got TorrentInfo, want TorrentInfo) {
 	t.Helper()
-
-	gotValue := reflect.ValueOf(got)
-	wantValue := reflect.ValueOf(want)
-	infoType := wantValue.Type()
-
-	for i := range wantValue.NumField() {
-		wantField := wantValue.Field(i)
-		if wantField.IsZero() {
-			continue
-		}
-
-		gotField := gotValue.Field(i)
-		if !reflect.DeepEqual(gotField.Interface(), wantField.Interface()) {
-			t.Fatalf(
-				"Parse(%q) field %s\nwant: %#v\ngot:  %#v",
-				filename,
-				infoType.Field(i).Name,
-				wantField.Interface(),
-				gotField.Interface(),
-			)
-		}
+	if got != want {
+		t.Fatalf("Parse(%q)\nwant: %#v\ngot:  %#v", filename, want, got)
 	}
 }
 
@@ -63,6 +39,7 @@ func TestParse(t *testing.T) {
 				Resolution: "1080p",
 				Quality:    "BrRip",
 				Codec:      "H264",
+				Group:      "YIFY",
 			},
 		},
 		{
@@ -185,6 +162,7 @@ func TestParse(t *testing.T) {
 			name:     "website prefix",
 			filename: "[SafeSource] Sample.Series.S05E10.480p.BluRay.x264-GAnGSteR",
 			want: TorrentInfo{
+				Title:      "Sample Series",
 				Season:     5,
 				Episode:    10,
 				Resolution: "480p",
@@ -198,6 +176,7 @@ func TestParse(t *testing.T) {
 			name:     "website prefix with dash",
 			filename: "[ sample.source ] -Sample.Series.S07E07.720p.HDTV.x264-DIMENSION",
 			want: TorrentInfo{
+				Title:      "Sample Series",
 				Season:     7,
 				Episode:    7,
 				Resolution: "720p",

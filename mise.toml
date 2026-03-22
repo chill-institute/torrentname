@@ -69,7 +69,7 @@ go run ./tools/jackettfixtures
 
 [tasks."test:fuzz"]
 description = "Run the parser fuzz target for a short local pass"
-run = "go test ./... -run=^$ -fuzz=FuzzParse -fuzztime=5s"
+run = "go test . -run=^$ -fuzz=FuzzParse -fuzztime=5s"
 
 [tasks.verify]
 description = "Run formatting and test checks"
