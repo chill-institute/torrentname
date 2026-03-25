@@ -71,6 +71,23 @@ Sample Series S05E03 720p HDTV x264-GRP
 }
 ```
 
+Complete season example:
+
+```text
+Sample Series S01 COMPLETE 720p WEBRip x264-GRP
+```
+
+```go
+&torrentname.TorrentInfo{
+	Title:      "Sample Series",
+	Season:     1,
+	Resolution: "720p",
+	Quality:    "WEBRip",
+	Codec:      "x264",
+	Group:      "GRP",
+}
+```
+
 Movie example:
 
 ```text

@@ -292,6 +292,31 @@ func TestParse(t *testing.T) {
 				Audio:      "Dual Audio",
 			},
 		},
+		{
+			name:     "complete season with standalone season marker",
+			filename: "Sample Series S01 COMPLETE 720p WEBRip x264-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Series",
+				Season:     1,
+				Resolution: "720p",
+				Quality:    "WEBRip",
+				Codec:      "x264",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "complete season with spaced codec and web dl",
+			filename: "Sample Series S01 COMPLETE 1080p WEB DL DDP5 1 Atmos H 264-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Series",
+				Season:     1,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Audio:      "DDP5.1",
+				Group:      "GRP",
+			},
+		},
 	}
 
 	for _, tc := range tests {
