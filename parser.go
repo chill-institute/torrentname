@@ -9,25 +9,35 @@ type TorrentInfo struct {
 	Title      string
 	Season     int    `json:"season,omitempty"`
 	Episode    int    `json:"episode,omitempty"`
+	EpisodeEnd int    `json:"episode_end,omitempty"`
+	Part       int    `json:"part,omitempty"`
 	Year       int    `json:"year,omitempty"`
 	Resolution string `json:"resolution,omitempty"`
 	Quality    string `json:"quality,omitempty"`
 	Codec      string `json:"codec,omitempty"`
+	HDR        string `json:"hdr,omitempty"`
 	Audio      string `json:"audio,omitempty"`
+	Source     string `json:"source,omitempty"`
 	Group      string `json:"group,omitempty"`
 	Region     string `json:"region,omitempty"`
 	Extended   bool   `json:"extended,omitempty"`
 	Hardcoded  bool   `json:"hardcoded,omitempty"`
 	Proper     bool   `json:"proper,omitempty"`
 	Repack     bool   `json:"repack,omitempty"`
+	Remastered bool   `json:"remastered,omitempty"`
 	Container  string `json:"container,omitempty"`
 	Widescreen bool   `json:"widescreen,omitempty"`
 	Website    string `json:"website,omitempty"`
 	Language   string `json:"language,omitempty"`
+	BitDepth   string `json:"bit_depth,omitempty"`
+	Edition    string `json:"edition,omitempty"`
 	Sbs        string `json:"sbs,omitempty"`
 	Unrated    bool   `json:"unrated,omitempty"`
 	Size       string `json:"size,omitempty"`
 	ThreeD     bool   `json:"3d,omitempty"`
+	IMAX       bool   `json:"imax,omitempty"`
+	Complete   bool   `json:"complete,omitempty"`
+	Excess     string `json:"excess,omitempty"`
 }
 
 // Parse breaks up the given filename in TorrentInfo
@@ -75,8 +85,43 @@ func Parse(filename string) (*TorrentInfo, error) {
 	}
 	cleanName = strings.ReplaceAll(cleanName, "_", " ")
 	tor.Title = strings.TrimSpace(cleanName)
+	augmentTorrentInfo(tor, filename)
 
 	return tor, nil
+}
+
+// HasReleaseInfo reports whether Parse found any structured release facts.
+func (info TorrentInfo) HasReleaseInfo() bool {
+	return info.Title != "" ||
+		info.Season != 0 ||
+		info.Episode != 0 ||
+		info.EpisodeEnd != 0 ||
+		info.Part != 0 ||
+		info.Year != 0 ||
+		info.Resolution != "" ||
+		info.Quality != "" ||
+		info.Codec != "" ||
+		info.HDR != "" ||
+		info.Audio != "" ||
+		info.Source != "" ||
+		info.Group != "" ||
+		info.Region != "" ||
+		info.Extended ||
+		info.Hardcoded ||
+		info.Proper ||
+		info.Repack ||
+		info.Remastered ||
+		info.Container != "" ||
+		info.Widescreen ||
+		info.Language != "" ||
+		info.BitDepth != "" ||
+		info.Edition != "" ||
+		info.Unrated ||
+		info.Size != "" ||
+		info.ThreeD ||
+		info.IMAX ||
+		info.Complete ||
+		info.Excess != ""
 }
 
 func findPatternMatch(pattern pattern, cleanName string) []int {

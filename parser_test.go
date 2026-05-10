@@ -100,6 +100,7 @@ func TestParse(t *testing.T) {
 				Year:    2014,
 				Quality: "WEBRip",
 				Audio:   "Dual-Audio",
+				Edition: "Dual Audio",
 				Size:    "1400Mb",
 			},
 		},
@@ -278,6 +279,7 @@ func TestParse(t *testing.T) {
 				Year:       2009,
 				Resolution: "1080p",
 				Audio:      "Dual Audio",
+				Edition:    "Dual Audio",
 			},
 		},
 		{
@@ -290,6 +292,7 @@ func TestParse(t *testing.T) {
 				Quality:    "BluRay",
 				Codec:      "x264",
 				Audio:      "Dual Audio",
+				Edition:    "Dual Audio",
 			},
 		},
 		{
@@ -302,6 +305,7 @@ func TestParse(t *testing.T) {
 				Quality:    "WEBRip",
 				Codec:      "x264",
 				Group:      "GRP",
+				Complete:   true,
 			},
 		},
 		{
@@ -313,8 +317,9 @@ func TestParse(t *testing.T) {
 				Resolution: "1080p",
 				Quality:    "WEB-DL",
 				Codec:      "H264",
-				Audio:      "DDP5.1",
+				Audio:      "DDP5.1 Atmos",
 				Group:      "GRP",
+				Complete:   true,
 			},
 		},
 	}
@@ -339,5 +344,183 @@ func TestParserDoesNotPanicOnJackettFixtureTitle(t *testing.T) {
 	_, err := Parse("[Hi-Res] Symphonic Suite AKIRA 2016 ハイパーハイレゾエディション／芸能山城組 (diff DSD256 11.2MHz タグ付き)")
 	if err != nil {
 		t.Fatalf("Parse returned error: %v", err)
+	}
+}
+
+func TestReleaseInfoExamples(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		filename string
+		want     TorrentInfo
+	}{
+		{
+			name:     "cr anime web dl",
+			filename: "Kaya-chan.Isnt.Scary.S01E11.1080p.CR.WEB-DL.DUAL.AAC2.0.H.264-VARYG",
+			want: TorrentInfo{
+				Title:      "Kaya-chan Isnt Scary",
+				Season:     1,
+				Episode:    11,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Audio:      "AAC2.0",
+				Source:     "CR",
+				Group:      "VARYG",
+				Edition:    "Dual Audio",
+			},
+		},
+		{
+			name:     "multi hdr hevc",
+			filename: "Monarch Legacy of Monsters S02E04 2160p HDR10Plus DV WEBRip 6CH x265 HEVC-P",
+			want: TorrentInfo{
+				Title:      "Monarch Legacy of Monsters",
+				Season:     2,
+				Episode:    4,
+				Resolution: "2160p",
+				Quality:    "WEBRip",
+				Codec:      "H265",
+				HDR:        "HDR10+ DV",
+				Group:      "P",
+			},
+		},
+		{
+			name:     "bluray remux avc truehd",
+			filename: "Zootopia 2 2025 1080p Blu ray Remux AVC TrueHD Atmos 7 1 CiNEPHiL",
+			want: TorrentInfo{
+				Title:      "Zootopia 2",
+				Year:       2025,
+				Resolution: "1080p",
+				Quality:    "REMUX",
+				Codec:      "H264",
+				Audio:      "TrueHD Atmos 7.1",
+				Group:      "CiNEPHiL",
+			},
+		},
+		{
+			name:     "uhd remux dv hdr",
+			filename: "Nightmare Alley 2021 2160p UHD Blu ray Remux DV HDR HEVC TrueHD Atmos 7 1 CiNEPHiLES",
+			want: TorrentInfo{
+				Title:      "Nightmare Alley",
+				Year:       2021,
+				Resolution: "2160p",
+				Quality:    "REMUX",
+				Codec:      "H265",
+				HDR:        "DV HDR",
+				Audio:      "TrueHD Atmos 7.1",
+				Group:      "CiNEPHiLES",
+			},
+		},
+		{
+			name:     "complete series bracket group",
+			filename: "Crossing Jordan 2001 Complete Series Seasons 1 to 6 1080p WEB x264 [i_c]",
+			want: TorrentInfo{
+				Title:      "Crossing Jordan",
+				Year:       2001,
+				Resolution: "1080p",
+				Quality:    "WEB",
+				Codec:      "x264",
+				Group:      "i_c",
+				Complete:   true,
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := Parse(tc.filename)
+			if err != nil {
+				t.Fatalf("Parse(%q) error = %v", tc.filename, err)
+			}
+			assertTorrentInfo(t, tc.filename, *got, tc.want)
+		})
+	}
+}
+
+func TestReleaseInfoEdgeCases(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		filename string
+		check    func(*testing.T, TorrentInfo)
+	}{
+		{
+			name:     "it title is not source",
+			filename: "It 2017 1080p BluRay x264",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Source != "" {
+					t.Fatalf("Source = %q, want empty", got.Source)
+				}
+			},
+		},
+		{
+			name:     "critical title is not cr source",
+			filename: "Critical Role S01E01 1080p WEB x264",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Source != "" {
+					t.Fatalf("Source = %q, want empty", got.Source)
+				}
+			},
+		},
+		{
+			name:     "hdrip is not hdr",
+			filename: "Movie 2025 HDRip XViD AC3",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Quality != "HDRip" || got.HDR != "" {
+					t.Fatalf("Quality/HDR = %q/%q, want HDRip/empty", got.Quality, got.HDR)
+				}
+			},
+		},
+		{
+			name:     "dvdrip is not dolby vision",
+			filename: "Movie 2025 DVDRip XViD",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Quality != "DVDRip" || got.HDR != "" {
+					t.Fatalf("Quality/HDR = %q/%q, want DVDRip/empty", got.Quality, got.HDR)
+				}
+			},
+		},
+		{
+			name:     "episode range",
+			filename: "Show.Name.S01E01-E03.1080p.WEB-DL.x264-GRP",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Season != 1 || got.Episode != 1 || got.EpisodeEnd != 3 {
+					t.Fatalf("season/episode range = S%dE%d-E%d, want S1E1-E3", got.Season, got.Episode, got.EpisodeEnd)
+				}
+			},
+		},
+		{
+			name:     "edition and bit depth",
+			filename: "Movie 2025 Directors Cut 2160p REMUX HEVC 10bit TrueHD Atmos 7 1-GRP",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Edition != "Director's Cut" || got.BitDepth != "10-bit" {
+					t.Fatalf("edition/bit_depth = %q/%q, want Director's Cut/10-bit", got.Edition, got.BitDepth)
+				}
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := Parse(tc.filename)
+			if err != nil {
+				t.Fatalf("Parse(%q) error = %v", tc.filename, err)
+			}
+			tc.check(t, *got)
+		})
 	}
 }
