@@ -4,7 +4,6 @@ import (
 	"strings"
 )
 
-// TorrentInfo is the resulting structure returned by Parse
 type TorrentInfo struct {
 	Title      string
 	Season     int    `json:"season,omitempty"`
@@ -40,7 +39,6 @@ type TorrentInfo struct {
 	Excess     string `json:"excess,omitempty"`
 }
 
-// Parse breaks up the given filename in TorrentInfo
 func Parse(filename string) (*TorrentInfo, error) {
 	tor := &TorrentInfo{}
 
@@ -90,7 +88,6 @@ func Parse(filename string) (*TorrentInfo, error) {
 	return tor, nil
 }
 
-// HasReleaseInfo reports whether Parse found any structured release facts.
 func (info TorrentInfo) HasReleaseInfo() bool {
 	return info.Title != "" ||
 		info.Season != 0 ||
