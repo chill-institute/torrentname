@@ -21,7 +21,7 @@ var patterns = []pattern{
 	{name: "year", last: true, re: regexp.MustCompile(`\b(((?:19[0-9]|20[0-9])[0-9]))\b`), apply: setInt(func(t *TorrentInfo, value int) { t.Year = value })},
 	{name: "resolution", re: regexp.MustCompile(`\b(([0-9]{3,4}p))\b`), apply: func(t *TorrentInfo, value string) { t.Resolution = value }},
 	{name: "quality", re: regexp.MustCompile(`(?i)\b(((?:PPV\.)?[HP]DTV|(?:HD)?CAM|B[DR]Rip|(?:HD-?)?TS|(?:PPV )?WEB[ .-]?DL(?: DVDRip)?|HDRip|DVDRip|DVDRIP|CamRip|WEB[ .-]?Rip|WBRip|Blu[ .-]?Ray(?:[ .-]?Remux)?|BDRemux|REMUX|DvDScr|telesync))\b`), apply: func(t *TorrentInfo, value string) { t.Quality = normalizeQuality(value) }},
-	{name: "codec", re: regexp.MustCompile(`(?i)\b((xvid|x[ .]?26[45]|[h]\.? ?26[45]|HEVC|AVC|AV1))\b`), apply: func(t *TorrentInfo, value string) { t.Codec = normalizeCodec(value) }},
+	{name: "codec", re: regexp.MustCompile(`(?i)\b((xvid|x[ ._-]?26[45]|h[ ._-]?26[45]|HEVC|AVC|AV1))\b`), apply: func(t *TorrentInfo, value string) { t.Codec = normalizeCodec(value) }},
 	{name: "audio", re: regexp.MustCompile(`(?i)\b((MP3|TrueHD|Atmos|DTS[ .-]?HD(?:[ .-]?MA)?|E-?AC-?3|DDP[ .]?[257][ .]?[01]|DD[ .]?5[ .]?1|DD\+|Dual[\- ]Audio|LiNE|DTS|AAC[.-]?LC|AAC(?:\.?[257]\.?[01])?|AC3(?:\.5\.1)?|FLAC))\b`), apply: func(t *TorrentInfo, value string) { t.Audio = normalizeAudio(value) }},
 	{name: "region", re: regexp.MustCompile(`(?i)\b(R([0-9]))\b`), apply: func(t *TorrentInfo, value string) { t.Region = value }},
 	{name: "size", re: regexp.MustCompile(`(?i)\b((\d+(?:\.\d+)?(?:GB|MB)))\b`), apply: func(t *TorrentInfo, value string) { t.Size = value }},
@@ -71,7 +71,7 @@ func normalizeQuality(value string) string {
 }
 
 func normalizeCodec(value string) string {
-	collapsed := strings.ToLower(strings.NewReplacer(" ", "", ".", "").Replace(value))
+	collapsed := strings.ToLower(strings.NewReplacer(" ", "", ".", "", "-", "", "_", "").Replace(value))
 	switch collapsed {
 	case "x264":
 		return "x264"

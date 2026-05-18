@@ -11,7 +11,7 @@ var (
 	yearTokenPattern          = regexp.MustCompile(`\b(?:19[0-9]{2}|20[0-9]{2})\b`)
 	resolutionTokenPattern    = regexp.MustCompile(`(?i)\b(?:[0-9]{3,4}p|4K)\b`)
 	qualityTokenPattern       = regexp.MustCompile(`(?i)\b(?:UHD[ .-]+Blu[ .-]?Ray[ .-]+Remux|Blu[ .-]?Ray[ .-]+Remux|BDRemux|REMUX|WEB[ .-]?DL|WEB[ .-]?Rip|Blu[ .-]?Ray|HDRip|DVDRip|BRRip|BDRip|HDTV|PDTV|WEB)\b`)
-	codecTokenPattern         = regexp.MustCompile(`(?i)\b(?:xvid|x[ .]?26[45]|h[ .]?26[45]|HEVC|AVC|AV1)\b`)
+	codecTokenPattern         = regexp.MustCompile(`(?i)\b(?:xvid|x[ ._-]?26[45]|h[ ._-]?26[45]|HEVC|AVC|AV1)\b`)
 	hdrTokenPattern           = regexp.MustCompile(`(?i)\b(?:Dolby[ .-]+Vision|HDR10Plus|HDR10P|HDR10\+|HDR10|DoVi|DV|HLG|HDR)\b`)
 	audioTokenPattern         = regexp.MustCompile(`(?i)\b(?:TrueHD(?:[ .-]+Atmos)?(?:[ .-]+[257][ .][01])?|DTS[ .-]?HD(?:[ .-]?MA)?(?:[ .-]+[257][ .][01])?|E-?AC-?3(?:[ .-]*[257][ .][01])?|DDP(?:[ .-]*Atmos)?[ .-]*[257][ .][01](?:[ .-]+Atmos)?|DD\+|AAC[ .-]*[257][ .][01]|AAC|AC3(?:[ .-]*[257][ .][01])?|FLAC(?:[ .-]*[257][ .][01])?|Atmos)\b`)
 	bitDepthPattern           = regexp.MustCompile(`(?i)\b(8|10|12)[ .-]?bit\b`)
