@@ -72,3 +72,21 @@ func TestParseCodecVariantsInTitles(t *testing.T) {
 		}
 	}
 }
+
+func TestParseDoesNotMisreadMetadataBracketAsGroup(t *testing.T) {
+	t.Parallel()
+
+	titles := []string{
+		"Widow's Bay (2026) s01e04 [Mkv - 1080p H264 - MultiLang Aac 2.0 - MultiSubs]",
+		"Widow\u2019s Bay (2026) s01e04 [Mkv - 1080p H264 - MultiLang Aac 2.0 - MultiSubs]",
+	}
+	for _, title := range titles {
+		info, err := Parse(title)
+		if err != nil {
+			t.Fatalf("Parse(%q) error: %v", title, err)
+		}
+		if info.Group != "" {
+			t.Errorf("Parse(%q).Group = %q, want \"\"", title, info.Group)
+		}
+	}
+}

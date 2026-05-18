@@ -74,7 +74,7 @@ func TestSanitizeResults(t *testing.T) {
 			Tracker:   "   ",
 			TrackerID: "   ",
 		},
-	})
+	}, 0)
 
 	if len(got) != 1 {
 		t.Fatalf("sanitizeResults() len = %d, want 1", len(got))
@@ -184,7 +184,7 @@ func TestFetchFixture(t *testing.T) {
 	}))
 	defer server.Close()
 
-	fixture, err := fetchFixture(server.Client(), server.URL, "test-key", "safe query")
+	fixture, err := fetchFixture(server.Client(), server.URL, "test-key", "safe query", 0)
 	if err != nil {
 		t.Fatalf("fetchFixture() error = %v", err)
 	}

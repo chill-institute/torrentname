@@ -196,6 +196,34 @@ var fixtureGoldenCases = []struct {
 		},
 		fields: []string{"title", "season", "year", "resolution", "quality", "codec", "audio", "group"},
 	},
+	{
+		name:   "metadata bracket multisubs apostrophe",
+		title:  "Widow's Bay (2026) s01e04 [Mkv - 1080p H264 - MultiLang Aac 2 0 - MultiSubs]",
+		want:   TorrentInfo{},
+		fields: []string{"group"},
+	},
+	{
+		name:   "metadata bracket multisubs collapsed punctuation",
+		title:  "Widow s Bay (2026) s01e04 [Mkv  1080p H264  MultiLang Aac 2 0  MultiSubs]",
+		want:   TorrentInfo{},
+		fields: []string{"group"},
+	},
+	{
+		name:  "real bracket group after metadata",
+		title: "WidowS Bay S01e04 [1080p Ita Eng Spa HEVC10 SubS] byMe7alh [MIRCrew]",
+		want: TorrentInfo{
+			Group: "MIRCrew",
+		},
+		fields: []string{"group"},
+	},
+	{
+		name:  "real dash group after metadata",
+		title: "Widows Bay S01E04 Beach Reads 2160p ATVP WEB-DL DD 5 1 Atmos H 265-playWEB",
+		want: TorrentInfo{
+			Group: "playWEB",
+		},
+		fields: []string{"group"},
+	},
 }
 
 func TestFixtureGoldenCases(t *testing.T) {

@@ -18,6 +18,7 @@ const fixtureDir = "testdata/jackett"
 var curatedQueries = []struct {
 	slug  string
 	query string
+	limit int
 }{
 	{slug: "1080p_bluray_x264", query: "1080p BluRay x264"},
 	{slug: "2160p_hevc_hdr", query: "2160p HEVC HDR"},
@@ -30,6 +31,7 @@ var curatedQueries = []struct {
 	{slug: "remux_truehd_atmos", query: "REMUX TrueHD Atmos"},
 	{slug: "s01e01_720p_hdtv", query: "S01E01 720p HDTV"},
 	{slug: "web_dl_ddp5_1", query: "WEB-DL DDP5.1"},
+	{slug: "widow_bay_s01e04", query: "Widow Bay S01E04", limit: 11},
 	{slug: "x265_aac_720p", query: "x265 AAC 720p"},
 }
 
@@ -117,7 +119,7 @@ func main() {
 
 	client := &http.Client{Timeout: 30 * time.Second}
 	for _, item := range curatedQueries {
-		fixture, err := fetchFixture(client, baseURL, apiKey, item.query)
+		fixture, err := fetchFixture(client, baseURL, apiKey, item.query, item.limit)
 		if err != nil {
 			fail("fetch fixture %s: %v", item.slug, err)
 		}
@@ -151,7 +153,7 @@ func clearFixtureDir(dir string) error {
 	return nil
 }
 
-func fetchFixture(client *http.Client, baseURL, apiKey, queryValue string) (fixtureFile, error) {
+func fetchFixture(client *http.Client, baseURL, apiKey, queryValue string, limit int) (fixtureFile, error) {
 	requestURL, err := url.Parse(strings.TrimRight(baseURL, "/") + "/api/v2.0/indexers/all/results")
 	if err != nil {
 		return fixtureFile{}, err
@@ -187,7 +189,7 @@ func fetchFixture(client *http.Client, baseURL, apiKey, queryValue string) (fixt
 			BaseURL:    strings.TrimRight(baseURL, "/"),
 			Configured: true,
 		},
-		Results:  sanitizeResults(raw.Results),
+		Results:  sanitizeResults(raw.Results, limit),
 		Indexers: sanitizeIndexers(raw.Indexers),
 	}
 	if len(fixture.Results) == 0 {
@@ -196,8 +198,11 @@ func fetchFixture(client *http.Client, baseURL, apiKey, queryValue string) (fixt
 	return fixture, nil
 }
 
-func sanitizeResults(rawResults []rawResult) []fixtureResult {
-	results := make([]fixtureResult, 0, min(len(rawResults), 25))
+func sanitizeResults(rawResults []rawResult, limit int) []fixtureResult {
+	if limit <= 0 {
+		limit = 25
+	}
+	results := make([]fixtureResult, 0, min(len(rawResults), limit))
 	for _, item := range rawResults {
 		title := strings.TrimSpace(item.Title)
 		if title == "" {
@@ -224,7 +229,7 @@ func sanitizeResults(rawResults []rawResult) []fixtureResult {
 			HasDetails:  item.Details != nil && strings.TrimSpace(*item.Details) != "",
 			HasMagnet:   item.MagnetURI != nil && strings.TrimSpace(*item.MagnetURI) != "",
 		})
-		if len(results) == 25 {
+		if len(results) == limit {
 			break
 		}
 	}
