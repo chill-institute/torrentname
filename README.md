@@ -120,6 +120,10 @@ JACKETT_API_KEY=... mise run fixtures:jackett
 mise run verify
 ```
 
+## Delivery
+
+CI verifies pull requests and `main`; tagged GitHub Releases publish the Go module delivery surface. See [docs/DELIVERY.md](./docs/DELIVERY.md) for the release workflow and why this library has no deploy pipeline.
+
 ## Benchmarking
 
 We track parser performance in two ways:
