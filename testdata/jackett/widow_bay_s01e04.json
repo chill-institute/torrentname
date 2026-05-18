@@ -1,0 +1,221 @@
+{
+  "query": "Widow Bay S01E04",
+  "fetched_at": "2026-05-18T15:06:52Z",
+  "source": {
+    "base_url": "http://localhost:9117",
+    "configured": true
+  },
+  "results": [
+    {
+      "title": "Widow's Bay (2026) s01e04 [Mkv - 1080p H264 - MultiLang Aac 2 0 - MultiSubs]",
+      "tracker": "Torrent Downloads",
+      "tracker_id": "torrentdownloads",
+      "category": "TV",
+      "size": 3382286848,
+      "seeders": 3,
+      "peers": 21,
+      "publish_date": "2026-05-18T14:56:16Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "WidowS Bay S01e04 [1080p Ita Eng Spa HEVC10 SubS] byMe7alh [MIRCrew]",
+      "tracker": "TorrentGalaxyClone",
+      "tracker_id": "torrentgalaxyclone",
+      "category": "TV",
+      "size": 758330176,
+      "seeders": 34,
+      "peers": 10,
+      "publish_date": "2026-05-14T21:56:16Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "WidowS Bay S01e04 [720p Ita Eng Spa SubS] byMe7alh [MIRCrew]",
+      "tracker": "TorrentGalaxyClone",
+      "tracker_id": "torrentgalaxyclone",
+      "category": "TV",
+      "size": 1395864320,
+      "seeders": 14,
+      "peers": 19,
+      "publish_date": "2026-05-14T21:56:16Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "WidowS Bay S01e04 [1080p Ita Eng Spa HEVC10 SubS] byMe7alh [MIRCrew]",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 758281536,
+      "seeders": 34,
+      "peers": 10,
+      "publish_date": "2026-05-14T21:20:39Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "WidowS Bay S01e04 [720p Ita Eng Spa SubS] byMe7alh [MIRCrew]",
+      "tracker": "TheRARBG",
+      "tracker_id": "therarbg",
+      "category": "TV",
+      "size": 1354468608,
+      "seeders": 14,
+      "peers": 19,
+      "publish_date": "2026-05-14T21:20:22Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "WidowS Bay S01e04 [1080p Ita Eng Spa HEVC10 SubS] byMe7alh [MIRCrew]",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "TV, TV/HD",
+      "size": 758277734,
+      "seeders": 33,
+      "peers": 23,
+      "publish_date": "2026-05-14T18:43:00Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "WidowS Bay S01e04 [720p Ita Eng Spa SubS] byMe7alh [MIRCrew]",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "TV, TV/HD",
+      "size": 1352914698,
+      "seeders": 9,
+      "peers": 6,
+      "publish_date": "2026-05-14T18:40:00Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Widow s Bay (2026) s01e04 [Mkv  1080p H264  MultiLang Aac 2 0  MultiSubs]",
+      "tracker": "LimeTorrents",
+      "tracker_id": "limetorrents",
+      "category": "TV",
+      "size": 3382286848,
+      "seeders": 158,
+      "peers": 26,
+      "publish_date": "2026-05-13T14:56:16Z",
+      "has_link": true,
+      "has_details": true
+    },
+    {
+      "title": "Widow's Bay (2026) s01e04 [Mkv - 1080p H264 - MultiLang Aac 2.0 - MultiSubs]",
+      "tracker": "The Pirate Bay",
+      "tracker_id": "thepiratebay",
+      "category": "TV/HD",
+      "size": 3387411200,
+      "seeders": 95,
+      "peers": 33,
+      "publish_date": "2026-05-13T13:44:18Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Widow's Bay (2026) s01e04 [Mkv - 1080p H264 - MultiLang Aac 2.0 - MultiSubs]",
+      "tracker": "Knaben",
+      "tracker_id": "knaben",
+      "category": "TV, TV/HD",
+      "size": 3382286745,
+      "seeders": 140,
+      "peers": 21,
+      "publish_date": "2026-05-13T13:44:00Z",
+      "has_details": true,
+      "has_magnet": true
+    },
+    {
+      "title": "Widows Bay S01E04 Beach Reads 2160p ATVP WEB-DL DD 5 1 Atmos H 265-playWEB",
+      "tracker": "TorrentGalaxyClone",
+      "tracker_id": "torrentgalaxyclone",
+      "category": "TV",
+      "size": 5798205952,
+      "seeders": 33,
+      "peers": 41,
+      "publish_date": "2026-05-13T10:56:16Z",
+      "has_link": true,
+      "has_details": true
+    }
+  ],
+  "indexers": [
+    {
+      "id": "eztv",
+      "name": "EZTV",
+      "status": 2,
+      "results": 6,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "knaben",
+      "name": "Knaben",
+      "status": 2,
+      "results": 36,
+      "elapsed_time_ms": 139
+    },
+    {
+      "id": "limetorrents",
+      "name": "LimeTorrents",
+      "status": 2,
+      "results": 1,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "nyaasi",
+      "name": "Nyaa.si",
+      "status": 2,
+      "results": 0,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "thepiratebay",
+      "name": "The Pirate Bay",
+      "status": 2,
+      "results": 1,
+      "elapsed_time_ms": 30
+    },
+    {
+      "id": "therarbg",
+      "name": "TheRARBG",
+      "status": 2,
+      "results": 50,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "torrentdownloads",
+      "name": "Torrent Downloads",
+      "status": 2,
+      "results": 1,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "torrentgalaxyclone",
+      "name": "TorrentGalaxyClone",
+      "status": 2,
+      "results": 50,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "torrentscsv",
+      "name": "Torrents.csv",
+      "status": 2,
+      "results": 0,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "uindex",
+      "name": "Uindex",
+      "status": 2,
+      "results": 0,
+      "elapsed_time_ms": 0
+    },
+    {
+      "id": "yts",
+      "name": "YTS",
+      "status": 2,
+      "results": 0,
+      "elapsed_time_ms": 0
+    }
+  ]
+}
