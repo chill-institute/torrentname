@@ -116,7 +116,10 @@ mise run fmt
 mise run vet
 mise run test
 mise run test:cover
+mise run corpus:metrics
 mise run bench
+mise run bench:record
+mise run bench:compare
 mise run test:fuzz
 JACKETT_API_KEY=... mise run fixtures:jackett
 mise run verify
@@ -135,13 +138,14 @@ We track parser performance in two ways:
 
 Use `mise run bench` for the local benchmark suite, including the `1k rows` batch benchmark.
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for the repeatable before/after benchmark workflow.
+Use `mise run bench:record` and `mise run bench:compare` for repeatable before/after benchmark comparisons. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full workflow.
 
-## Current Focus
+## Quality Loops
 
-- improve parser accuracy and coverage against the real-world fixture corpus
-- keep tightening parser performance and allocations with measured benchmark passes
-- evolve the public parser contract toward the full library spec in small, verified steps
+- Parser contract: [Parser Spec](./docs/SPEC.md)
+- Fixture accuracy: `go test` includes golden real-world cases from `testdata/jackett`
+- Corpus coverage: `mise run corpus:metrics` reports field coverage across committed Jackett fixtures
+- Performance: `mise run bench:record` and `mise run bench:compare` measure parser runtime and allocation changes
 
 ## Contributing
 

@@ -7,6 +7,7 @@ GOWORK = "off"
 [tasks.fmt]
 description = "Format Go sources"
 run = """
+gofmt_bin="$(dirname "$(mise which go)")/gofmt"
 go_files="$(git ls-files '*.go')"
 if [ -z "$go_files" ]; then
   exit 0
@@ -14,13 +15,14 @@ fi
 
 printf '%s\n' "$go_files" | while IFS= read -r file; do
   [ -n "$file" ] || continue
-  gofmt -w "$file"
+  "$gofmt_bin" -w "$file"
 done
 """
 
 [tasks."fmt:check"]
 description = "Check Go source formatting"
 run = """
+gofmt_bin="$(dirname "$(mise which go)")/gofmt"
 go_files="$(git ls-files '*.go')"
 if [ -z "$go_files" ]; then
   exit 0
@@ -28,7 +30,7 @@ fi
 
 unformatted="$(printf '%s\n' "$go_files" | while IFS= read -r file; do
   [ -n "$file" ] || continue
-  gofmt -l "$file"
+  "$gofmt_bin" -l "$file"
 done)"
 
 if [ -n "$unformatted" ]; then
@@ -41,27 +43,48 @@ printf '==> Go formatting is clean\n'
 
 [tasks."mod:tidy"]
 description = "Tidy Go module metadata"
-run = "go mod tidy"
+run = '"$(mise which go)" mod tidy'
 
 [tasks."mod:check"]
 description = "Ensure go.mod and go.sum are tidy without mutating them"
-run = "go mod tidy -diff"
+run = '"$(mise which go)" mod tidy -diff'
 
 [tasks.test]
 description = "Run parser unit tests"
-run = "go test ./..."
+run = '"$(mise which go)" test ./...'
 
 [tasks.vet]
 description = "Run Go static checks"
-run = "go vet ./..."
+run = '"$(mise which go)" vet ./...'
 
 [tasks."test:cover"]
 description = "Run parser tests with coverage"
-run = "go test ./... -cover"
+run = '"$(mise which go)" test ./... -cover'
+
+[tasks."corpus:metrics"]
+description = "Report parser field coverage across committed Jackett fixtures"
+run = '"$(mise which go)" run ./cmd/corpusmetrics'
 
 [tasks.bench]
 description = "Run parser benchmarks"
-run = "go test ./... -bench=. -benchmem"
+run = '"$(mise which go)" test ./... -bench=. -benchmem'
+
+[tasks."bench:record"]
+description = "Record parser benchmark output for before/after comparison"
+run = """
+set -o pipefail
+out="${BENCH_OUT:-tmp/bench/current.txt}"
+mkdir -p "$(dirname "$out")"
+"$(mise which go)" test . -run=^$ -bench=BenchmarkParse -benchmem -count="${BENCH_COUNT:-5}" | tee "$out"
+"""
+
+[tasks."bench:compare"]
+description = "Compare two parser benchmark output files"
+run = """
+baseline="${BENCH_BASELINE:-tmp/bench/baseline.txt}"
+current="${BENCH_CURRENT:-tmp/bench/current.txt}"
+"$(mise which go)" run ./cmd/benchcompare "$baseline" "$current"
+"""
 
 [tasks."fixtures:jackett"]
 description = "Refresh curated Jackett search fixtures from a live local Jackett"
@@ -72,13 +95,13 @@ if [ -z "${JACKETT_API_KEY:-}" ]; then
 fi
 
 JACKETT_BASE_URL="${JACKETT_BASE_URL:-http://localhost:9117}" \
-go run ./cmd/jackettfixtures
+"$(mise which go)" run ./cmd/jackettfixtures
 """
 
 [tasks."test:fuzz"]
 description = "Run the parser fuzz target for a short local pass"
-run = "go test . -run=^$ -fuzz=FuzzParse -fuzztime=5s"
+run = '"$(mise which go)" test . -run=^$ -fuzz=FuzzParse -fuzztime=5s'
 
 [tasks.verify]
 description = "Run formatting, static, and test checks"
-depends = ["fmt:check", "mod:check", "vet", "test"]
+depends = ["fmt:check", "mod:check", "vet", "test", "corpus:metrics"]

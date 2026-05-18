@@ -10,6 +10,7 @@ Pull requests and pushes to `main` run the same guardrails:
 mise run verify
 mise run test:fuzz
 mise run test:cover
+mise run corpus:metrics
 go test . -run=^$ -bench=BenchmarkParse -benchmem -count=1
 ```
 

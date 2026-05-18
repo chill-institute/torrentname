@@ -28,17 +28,24 @@ Optional parser-focused checks:
 
 ```bash
 mise run bench
+BENCH_OUT=tmp/bench/baseline.txt mise run bench:record
+BENCH_OUT=tmp/bench/current.txt mise run bench:record
+mise run bench:compare
+mise run corpus:metrics
 mise run test:cover
 mise run test:fuzz
 JACKETT_API_KEY=... mise run fixtures:jackett
 ```
 
+Use the [Parser Spec](./docs/SPEC.md) to decide whether a parser behavior change is a contract expansion, a normalization fix, or an unsupported inference.
+
 For benchmark comparisons, capture before and after runs with:
 
 ```bash
-go test . -run=^$ -bench=BenchmarkParse -benchmem -count=10 > /tmp/before.txt
-go test . -run=^$ -bench=BenchmarkParse -benchmem -count=10 > /tmp/after.txt
-benchstat /tmp/before.txt /tmp/after.txt
+BENCH_OUT=tmp/bench/baseline.txt mise run bench:record
+# change parser code
+BENCH_OUT=tmp/bench/current.txt mise run bench:record
+mise run bench:compare
 ```
 
 For the search-style `1k rows` view, run:
