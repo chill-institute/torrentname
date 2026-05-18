@@ -51,6 +51,14 @@ run = "go mod tidy -diff"
 description = "Run parser unit tests"
 run = "go test ./..."
 
+[tasks.vet]
+description = "Run Go static checks"
+run = "go vet ./..."
+
+[tasks."test:cover"]
+description = "Run parser tests with coverage"
+run = "go test ./... -cover"
+
 [tasks.bench]
 description = "Run parser benchmarks"
 run = "go test ./... -bench=. -benchmem"
@@ -64,7 +72,7 @@ if [ -z "${JACKETT_API_KEY:-}" ]; then
 fi
 
 JACKETT_BASE_URL="${JACKETT_BASE_URL:-http://localhost:9117}" \
-go run ./tools/jackettfixtures
+go run ./cmd/jackettfixtures
 """
 
 [tasks."test:fuzz"]
@@ -72,5 +80,5 @@ description = "Run the parser fuzz target for a short local pass"
 run = "go test . -run=^$ -fuzz=FuzzParse -fuzztime=5s"
 
 [tasks.verify]
-description = "Run formatting and test checks"
-depends = ["fmt:check", "mod:check", "test"]
+description = "Run formatting, static, and test checks"
+depends = ["fmt:check", "mod:check", "vet", "test"]

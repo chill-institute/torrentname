@@ -28,6 +28,7 @@ Optional parser-focused checks:
 
 ```bash
 mise run bench
+mise run test:cover
 mise run test:fuzz
 JACKETT_API_KEY=... mise run fixtures:jackett
 ```

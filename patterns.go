@@ -1,8 +1,6 @@
 package torrentname
 
 import (
-	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -126,14 +124,5 @@ func normalizeAudio(value string) string {
 		return "Dual Audio"
 	default:
 		return value
-	}
-}
-
-func init() {
-	for _, pat := range patterns {
-		if pat.re.NumSubexp() != 2 {
-			fmt.Printf("Pattern %q does not have enough capture groups. want 2, got %d\n", pat.name, pat.re.NumSubexp())
-			os.Exit(1)
-		}
 	}
 }

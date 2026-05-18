@@ -113,7 +113,9 @@ Common local commands:
 
 ```bash
 mise run fmt
+mise run vet
 mise run test
+mise run test:cover
 mise run bench
 mise run test:fuzz
 JACKETT_API_KEY=... mise run fixtures:jackett

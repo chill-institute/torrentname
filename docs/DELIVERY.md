@@ -9,6 +9,7 @@ Pull requests and pushes to `main` run the same guardrails:
 ```bash
 mise run verify
 mise run test:fuzz
+mise run test:cover
 go test . -run=^$ -bench=BenchmarkParse -benchmem -count=1
 ```
 
