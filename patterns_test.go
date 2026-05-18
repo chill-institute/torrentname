@@ -64,7 +64,8 @@ func TestParseCodecVariantsInTitles(t *testing.T) {
 	for title, want := range cases {
 		info, err := Parse(title)
 		if err != nil {
-			t.Fatalf("Parse(%q) error: %v", title, err)
+			t.Errorf("Parse(%q) error: %v", title, err)
+			continue
 		}
 		if info.Codec != want {
 			t.Errorf("Parse(%q).Codec = %q, want %q", title, info.Codec, want)
