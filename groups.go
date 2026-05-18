@@ -14,9 +14,12 @@ var (
 )
 
 func applyGroup(info *TorrentInfo, value string) {
-	if group := cleanGroup(info.Group); group != "" {
-		info.Group = group
-		return
+	if info.Group != "" {
+		if group := cleanGroup(info.Group); group != "" {
+			info.Group = group
+			return
+		}
+		info.Group = ""
 	}
 	if matches := dashGroupPattern.FindAllStringSubmatch(value, -1); len(matches) > 0 {
 		if group := cleanGroup(matches[len(matches)-1][1]); group != "" {
