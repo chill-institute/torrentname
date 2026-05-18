@@ -2,33 +2,22 @@
 
 ![chill.institute library](https://chill.institute/banner.png)
 
-Modern fork of [middelink/go-parse-torrent-name](https://github.com/middelink/go-parse-torrent-name) / [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name)
+[![CI](https://github.com/chill-institute/torrentname/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/chill-institute/torrentname/actions/workflows/ci.yml?query=branch%3Amain)
+[![Go Reference](https://pkg.go.dev/badge/github.com/chill-institute/torrentname.svg)](https://pkg.go.dev/github.com/chill-institute/torrentname)
 
-`torrentname` parses torrent-style release names into structured metadata such as title, year, season, episode, quality, codec, audio tags, and release group.
+`torrentname` is a zero-dependency Go parser for torrent-style release names.
+It turns noisy filenames into structured metadata such as title, year, season,
+episode, quality, codec, audio, HDR, source, and release group.
+
+Modern fork of [middelink/go-parse-torrent-name](https://github.com/middelink/go-parse-torrent-name) / [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name).
 
 ## Install
-
-Add the module:
 
 ```bash
 go get github.com/chill-institute/torrentname
 ```
 
-## Quickstart
-
-Install the pinned toolchain:
-
-```bash
-mise install
-```
-
-Run the local verification baseline:
-
-```bash
-mise run verify
-```
-
-Basic usage:
+## Quick Start
 
 ```go
 package main
@@ -40,20 +29,31 @@ import (
 )
 
 func main() {
-	info, err := torrentname.Parse("Hercules.2014.EXTENDED.1080p.WEB-DL.DD5.1.H264-RARBG")
+	info, err := torrentname.Parse("Sample.Series.S05E03.720p.HDTV.x264-GRP")
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("%+v\n", info)
+	fmt.Printf("%s S%02dE%02d %s %s %s\n",
+		info.Title,
+		info.Season,
+		info.Episode,
+		info.Resolution,
+		info.Quality,
+		info.Group,
+	)
 }
 ```
 
-## What It Does
+Output:
 
-Turn noisy release names into structured fields you can search, filter, deduplicate, or display.
+```text
+Sample Series S05E03 720p HDTV GRP
+```
 
-TV example:
+## Examples
+
+TV episode:
 
 ```text
 Sample Series S05E03 720p HDTV x264-GRP
@@ -71,24 +71,7 @@ Sample Series S05E03 720p HDTV x264-GRP
 }
 ```
 
-Complete season example:
-
-```text
-Sample Series S01 COMPLETE 720p WEBRip x264-GRP
-```
-
-```go
-&torrentname.TorrentInfo{
-	Title:      "Sample Series",
-	Season:     1,
-	Resolution: "720p",
-	Quality:    "WEBRip",
-	Codec:      "x264",
-	Group:      "GRP",
-}
-```
-
-Movie example:
+Movie release:
 
 ```text
 Open.Feature.2014.EXTENDED.1080p.WEB-DL.DD5.1.H264-RARBG
@@ -107,49 +90,58 @@ Open.Feature.2014.EXTENDED.1080p.WEB-DL.DD5.1.H264-RARBG
 }
 ```
 
-## Repo Tasks
+Complete season:
 
-Common local commands:
+```text
+Sample Series S01 COMPLETE 720p WEBRip x264-GRP
+```
+
+```go
+&torrentname.TorrentInfo{
+	Title:      "Sample Series",
+	Season:     1,
+	Resolution: "720p",
+	Quality:    "WEBRip",
+	Codec:      "x264",
+	Group:      "GRP",
+	Complete:   true,
+}
+```
+
+## Supported Metadata
+
+`Parse` fills the fields it can prove from the release name:
+
+- identity: `Title`, `Year`, `Season`, `Episode`, `EpisodeEnd`, `Part`
+- release traits: `Resolution`, `Quality`, `Codec`, `HDR`, `Audio`, `BitDepth`
+- source traits: `Source`, `Group`, `Website`, `Language`, `Region`
+- flags: `Extended`, `Hardcoded`, `Proper`, `Repack`, `Remastered`, `Widescreen`, `Unrated`, `ThreeD`, `IMAX`, `Complete`
+- file traits: `Container`, `Sbs`, `Size`, `Excess`
+
+See [Parser Spec](./docs/SPEC.md) for the full contract and normalization rules.
+
+## Behavior
+
+- Parsing is deterministic and best-effort.
+- Missing or unrecognized fields stay at their Go zero value.
+- The parser does not call external services or validate titles against a media catalog.
+- Runtime code has no third-party dependencies.
+
+## Docs
+
+- [Parser Spec](./docs/SPEC.md)
+- [Contributing](./CONTRIBUTING.md)
+- [Release workflow](./docs/DELIVERY.md)
+
+## Development
 
 ```bash
-mise run fmt
-mise run vet
-mise run test
-mise run test:cover
-mise run corpus:metrics
-mise run bench
-mise run bench:record
-mise run bench:compare
-mise run test:fuzz
-JACKETT_API_KEY=... mise run fixtures:jackett
+mise install
 mise run verify
 ```
 
-## Delivery
-
-CI verifies pull requests and `main`; tagged GitHub Releases publish the Go module delivery surface. See [docs/DELIVERY.md](./docs/DELIVERY.md) for the release workflow and why this library has no deploy pipeline.
-
-## Benchmarking
-
-We track parser performance in two ways:
-
-- low-level microbenchmarks for `ns/op`, `B/op`, and `allocs/op`
-- batch-style overhead translated into `ms per 1k rows`
-
-Use `mise run bench` for the local benchmark suite, including the `1k rows` batch benchmark.
-
-Use `mise run bench:record` and `mise run bench:compare` for repeatable before/after benchmark comparisons. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full workflow.
-
-## Quality Loops
-
-- Parser contract: [Parser Spec](./docs/SPEC.md)
-- Fixture accuracy: `go test` includes golden real-world cases from `testdata/jackett`
-- Corpus coverage: `mise run corpus:metrics` reports field coverage across committed Jackett fixtures
-- Performance: `mise run bench:record` and `mise run bench:compare` measure parser runtime and allocation changes
-
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md)
+Contributor checks, fixture refreshes, corpus metrics, and benchmark workflows
+live in [Contributing](./CONTRIBUTING.md).
 
 ## License
 
