@@ -8,6 +8,7 @@ import (
 var (
 	releaseStartPatterns = []*regexp.Regexp{
 		seasonEpisodeRangePattern,
+		seasonReleaseTokenPattern,
 		yearTokenPattern,
 		resolutionTokenPattern,
 		qualityTokenPattern,
@@ -16,7 +17,7 @@ var (
 		audioTokenPattern,
 		bitDepthPattern,
 	}
-	sourceTokenPattern = regexp.MustCompile(`(?i)(?:^|[^A-Za-z0-9])((?:AMZN|NF|DSNP|HULU|CR|ATVP|PCOK|HMAX|HBO|MAX|iT))(?:$|[^A-Za-z0-9])`)
+	sourceTokenPattern = regexp.MustCompile(`(?i)(?:^|[^A-Za-z0-9])((?:AMZN|ATV\+?|ATVP|AUBC|B[ ._-]?CORE|CBC|CPNG|CR|CRAVE|CRAV|CRiT|DSNP|FOD|friDay|Hami|HBO[ ._-]?MAX|HBOM|HMAX|HBO|HTSR|HULU|iQIY|ITVX|iTUNES|iT|KCW|KKTV|LINE[ ._-]?TV|MAX|MY5|MyTVSuper|NF|NOW|OVID|PCOK|PLAY|PMTP|ROKU|STAN|STAR\+?|STRP|TVING|TVER|U[ ._-]?NEXT|Viki|VIU|VRV|WAVVE|WETV|YOUKU|iP))(?:$|[^A-Za-z0-9])`)
 )
 
 type tokenMatch struct {
@@ -59,13 +60,25 @@ func orderedNormalizedTokens(value string, pattern *regexp.Regexp, normalize fun
 }
 
 func sourceMatches(value string) []tokenMatch {
-	rawMatches := sourceTokenPattern.FindAllStringSubmatchIndex(value, -1)
-	matches := make([]tokenMatch, 0, len(rawMatches))
-	for _, match := range rawMatches {
+	matches := make([]tokenMatch, 0)
+	searchStart := 0
+	for searchStart < len(value) {
+		match := sourceTokenPattern.FindStringSubmatchIndex(value[searchStart:])
+		if match == nil {
+			break
+		}
 		if len(match) < 4 || match[2] < 0 || match[3] < 0 {
+			searchStart += match[1]
 			continue
 		}
-		matches = append(matches, tokenMatch{start: match[2], end: match[3], raw: value[match[2]:match[3]]})
+		start := searchStart + match[2]
+		end := searchStart + match[3]
+		matches = append(matches, tokenMatch{start: start, end: end, raw: value[start:end]})
+		if end <= searchStart {
+			searchStart += match[1]
+			continue
+		}
+		searchStart = end
 	}
 	sortTokenMatches(matches)
 	return matches

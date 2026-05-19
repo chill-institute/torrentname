@@ -1,0 +1,100 @@
+{
+  "query": "synthetic modern release patterns",
+  "fetched_at": "2026-05-19T00:00:00Z",
+  "source": {
+    "base_url": "synthetic://torrentname",
+    "configured": false
+  },
+  "results": [
+    {
+      "title": "Sample.Series.2025.Season.1-2.COMPLETE.SERIES.1080p.H265.EAC3.6CH-GRP",
+      "tracker": "synthetic",
+      "tracker_id": "synthetic",
+      "category": "TV",
+      "size": 0,
+      "seeders": 0,
+      "peers": 0
+    },
+    {
+      "title": "Sample.Collection.2003.Eng.Rus.Multi-Subs.1080p.H264-mp4-GRP",
+      "tracker": "synthetic",
+      "tracker_id": "synthetic",
+      "category": "Movies",
+      "size": 0,
+      "seeders": 0,
+      "peers": 0
+    },
+    {
+      "title": "Sample.Artist.Sample.Album.2026.Hi-Res.FLAC.24Bit.96kHz-GRP",
+      "tracker": "synthetic",
+      "tracker_id": "synthetic",
+      "category": "Audio",
+      "size": 0,
+      "seeders": 0,
+      "peers": 0
+    },
+    {
+      "title": "Sample.Feature.1999.1080p.RM4K.BluRay.x265.EAC3.6CH-GRP",
+      "tracker": "synthetic",
+      "tracker_id": "synthetic",
+      "category": "Movies",
+      "size": 0,
+      "seeders": 0,
+      "peers": 0
+    },
+    {
+      "title": "[Group] Sample Anime - 001v2 [1080p][HEVC 10bit][AAC][MultiSub][A1B2C3D4].mkv",
+      "tracker": "synthetic",
+      "tracker_id": "synthetic",
+      "category": "Anime",
+      "size": 0,
+      "seeders": 0,
+      "peers": 0
+    },
+    {
+      "title": "Sample.Series.S01E01E02.1080p.WEB-DL.DDP5.1.H.264-GRP",
+      "tracker": "synthetic",
+      "tracker_id": "synthetic",
+      "category": "TV",
+      "size": 0,
+      "seeders": 0,
+      "peers": 0
+    },
+    {
+      "title": "Sample.News.2026.05.19.1080p.WEB-DL.AAC2.0.H.264-GRP",
+      "tracker": "synthetic",
+      "tracker_id": "synthetic",
+      "category": "TV",
+      "size": 0,
+      "seeders": 0,
+      "peers": 0
+    },
+    {
+      "title": "Sample.Feature.2026.IMAX.Enhanced.2160p.WEB-DL.DDP5.1.H.265-GRP",
+      "tracker": "synthetic",
+      "tracker_id": "synthetic",
+      "category": "Movies",
+      "size": 0,
+      "seeders": 0,
+      "peers": 0
+    },
+    {
+      "title": "Sample.Series.S01E01.KORSUB.1080p.WEBRip.x264-GRP",
+      "tracker": "synthetic",
+      "tracker_id": "synthetic",
+      "category": "TV",
+      "size": 0,
+      "seeders": 0,
+      "peers": 0
+    }
+  ],
+  "indexers": [
+    {
+      "id": "synthetic",
+      "name": "Synthetic",
+      "status": 0,
+      "results": 9,
+      "elapsed_time_ms": 0
+    }
+  ]
+}

@@ -15,7 +15,7 @@
 | Field | Supported inputs | Normalization |
 | --- | --- | --- |
 | `Title` | Text before release metadata such as season, year, resolution, quality, or source tokens | Separators collapse to spaces; wrapper website/group tags are removed when recognized |
-| `Season` | `S01`, `S01E02`, `1x02`, and complete-season markers | Integer without leading zero |
+| `Season` | `S01`, `S01E02`, `1x02`, `Season 1`, and complete-season markers | Integer without leading zero |
 | `Episode` | `S01E02`, `1x02`, and anime-style ` - 10 ` forms | Integer without leading zero |
 | `EpisodeEnd` | Episode ranges such as `S01E01-E03` and `S01E01 03 of 10` | Integer without leading zero |
 | `Part` | `Part 1`, `Part One`, and roman numerals through `X` | Integer |
@@ -24,15 +24,15 @@
 | `Quality` | WEB, WEB-DL, WEBRip, HDTV, BluRay, REMUX, HDRip, DVDRip, BRRip, BDRip, CAM/TS-style tokens | Common web, BluRay, and remux variants collapse to canonical spellings |
 | `Codec` | x264, x265, H.264, H.265, AVC, HEVC, AV1, XViD | Common aliases collapse to `x264`, `x265`, `H264`, `H265`, `AV1`, or `XViD` |
 | `HDR` | HDR, HDR10, HDR10+, DV/DoVi/Dolby Vision, HLG | Ordered unique tokens such as `HDR10+ DV` |
-| `Audio` | AAC, AC3, EAC3, DDP, DD, DTS, DTS-HD MA, TrueHD, Atmos, FLAC, and channel tokens | Common channel variants collapse to forms such as `DDP5.1`, `AAC2.0`, `TrueHD Atmos 7.1` |
-| `Source` | Known source tags after release metadata, including AMZN, NF, DSNP, HULU, CR, ATVP, PCOK, HMAX, HBO, MAX, and iT | Canonical uppercase except `iT` |
+| `Audio` | AAC, AC3, EAC3, DDP, DD, DTS, DTS X, DTS-HD MA/HRA, TrueHD, Atmos, FLAC, PCM/LPCM, Opus, and channel tokens including `2CH`, `6CH`, and `8CH` | Common channel variants collapse to forms such as `DDP5.1`, `EAC3 5.1`, `EAC3 Atmos 5.1`, `PCM 2.0`, `TrueHD Atmos 7.1` |
+| `Source` | Known source tags after release metadata, including AMZN, ATVP, BCORE, CR, DSNP, HULU, NF, PCOK, PMTP, ROKU, STAN, HMAX/HBO/MAX, iT/iP, and other current streaming-service tags | Canonical uppercase except stylized tags such as `iT`, `iP`, and `CRiT` |
 | `Group` | Dash suffixes, bracket suffixes, and advanced release trailing group names | Wrapper characters and spaces are stripped; metadata-looking tokens are ignored |
 | `Website` | Leading bracket tags such as `[Source]` | Trimmed bracket content |
-| `Language` | Current explicit language pairs such as `rus.eng` and `ita.eng` | Preserved token |
-| `BitDepth` | `8-bit`, `10bit`, `12 bit` | `N-bit` |
-| `Edition` | Director's Cut, DC, hybrid, B&W, dubbed, dual audio, multi subs | Canonical descriptive labels |
+| `Language` | Current explicit language pairs such as `rus.eng` and `ita.eng`, plus post-release clusters such as `Eng.Rus.Multi-Subs`, `VOSTFR`, `VFF`, and `MultiLang` | Preserved explicit pairs or uppercase normalized clusters |
+| `BitDepth` | `8-bit`, `10bit`, `12 bit`, `16Bit`, `24bit` | `N-bit` |
+| `Edition` | Director's Cut, DC, hybrid, theatrical cut, special edition, open matte, B&W, dubbed, dual audio, multi subs | Canonical descriptive labels |
 | `Size` | `MB` and `GB` size tokens | Preserved token |
-| Flags | Extended, hardcoded, proper, repack, remastered, widescreen, unrated, 3D, IMAX, complete | Boolean |
+| Flags | Extended, hardcoded (`HC`, `HC-SUB`, `KORSUB`), proper, repack, remastered (`Remastered`, `RM4K`), widescreen, unrated, 3D, IMAX, complete | Boolean |
 | `Container` | MKV, AVI, MP4 tokens | Preserved token |
 | `Sbs` | SBS and Half-SBS | Preserved token |
 
