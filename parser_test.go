@@ -279,6 +279,7 @@ func TestParse(t *testing.T) {
 				Year:       2009,
 				Resolution: "1080p",
 				Audio:      "Dual Audio",
+				Language:   "HIN ENG",
 				Edition:    "Dual Audio",
 			},
 		},
@@ -292,6 +293,7 @@ func TestParse(t *testing.T) {
 				Quality:    "BluRay",
 				Codec:      "x264",
 				Audio:      "Dual Audio",
+				Language:   "ENG HIN",
 				Edition:    "Dual Audio",
 			},
 		},
@@ -382,6 +384,7 @@ func TestReleaseInfoExamples(t *testing.T) {
 				Quality:    "WEBRip",
 				Codec:      "H265",
 				HDR:        "HDR10+ DV",
+				Audio:      "5.1",
 				Group:      "P",
 			},
 		},
@@ -423,6 +426,478 @@ func TestReleaseInfoExamples(t *testing.T) {
 				Codec:      "x264",
 				Group:      "i_c",
 				Complete:   true,
+			},
+		},
+		{
+			name:     "p2p scene modern eac3 atmos",
+			filename: "The.Series.Title.2010.S01E01.ATVP.WEBDL-2160p.EAC3.Atmos.5.1.DV.HDR10Plus.h265-RlsGrp",
+			want: TorrentInfo{
+				Title:      "The Series Title",
+				Year:       2010,
+				Season:     1,
+				Episode:    1,
+				Resolution: "2160p",
+				Quality:    "WEB-DL",
+				Codec:      "H265",
+				HDR:        "DV HDR10+",
+				Audio:      "EAC3 Atmos 5.1",
+				Source:     "ATVP",
+				Group:      "RlsGrp",
+			},
+		},
+		{
+			name:     "bravia core dts x",
+			filename: "Festival.Movie.2025.2160p.BCORE.WEB-DL.DTS.X.7.1.HDR10.HEVC-GRP",
+			want: TorrentInfo{
+				Title:      "Festival Movie",
+				Year:       2025,
+				Resolution: "2160p",
+				Quality:    "WEB-DL",
+				Codec:      "H265",
+				HDR:        "HDR10",
+				Audio:      "DTS X 7.1",
+				Source:     "BCORE",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "bare dts with six channel audio",
+			filename: "Sample.Movie.2024.1080p.BluRay.DTS.6CH.x264-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "BluRay",
+				Codec:      "x264",
+				Audio:      "DTS 5.1",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "ddplus atmos",
+			filename: "Sample.Series.S01E01.1080p.WEB-DL.DDPlus.Atmos.H264-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Series",
+				Season:     1,
+				Episode:    1,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Audio:      "DD+ Atmos",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "ddplus atmos channel",
+			filename: "Sample.Series.S01E01.1080p.WEB-DL.DDPlus.Atmos.5.1.H264-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Series",
+				Season:     1,
+				Episode:    1,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Audio:      "DD+ Atmos 5.1",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "ddplus channel before atmos",
+			filename: "Sample.Series.S01E01.1080p.WEB-DL.DDPlus.5.1.Atmos.H264-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Series",
+				Season:     1,
+				Episode:    1,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Audio:      "DD+ Atmos 5.1",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "roku pcm av1",
+			filename: "Indie.Feature.2024.1080p.ROKU.WEBRip.PCM.2.0.AV1-GRP",
+			want: TorrentInfo{
+				Title:      "Indie Feature",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEBRip",
+				Codec:      "AV1",
+				Audio:      "PCM 2.0",
+				Source:     "ROKU",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "edition and newer source tokens",
+			filename: "Sample.Movie.2024.Special.Edition.Open.Matte.1080p.NOW.WEB-DL.Opus.5.1.x265-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "x265",
+				Audio:      "Opus 5.1",
+				Source:     "NOW",
+				Group:      "GRP",
+				Edition:    "Special Edition Open Matte",
+			},
+		},
+		{
+			name:     "bare opus stays in title",
+			filename: "Mr.Hollands.Opus.1995.1080p.BluRay.x264-GRP",
+			want: TorrentInfo{
+				Title:      "Mr Hollands Opus",
+				Year:       1995,
+				Resolution: "1080p",
+				Quality:    "BluRay",
+				Codec:      "x264",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "bare pcm stays in title",
+			filename: "PCM.Movie.2024.1080p.WEB-DL.x264-GRP",
+			want: TorrentInfo{
+				Title:      "PCM Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "x264",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "season range complete with six channel audio",
+			filename: "Sample.Series.2025.Season.1-2.COMPLETE.SERIES.1080p.H265.EAC3.6CH-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Series",
+				Year:       2025,
+				Season:     1,
+				Resolution: "1080p",
+				Codec:      "H265",
+				Audio:      "EAC3 5.1",
+				Group:      "GRP",
+				Complete:   true,
+			},
+		},
+		{
+			name:     "season word source before quality",
+			filename: "Sample.Series.Season.1.NF.WEB-DL.x264-GRP",
+			want: TorrentInfo{
+				Title:   "Sample Series",
+				Season:  1,
+				Quality: "WEB-DL",
+				Codec:   "x264",
+				Source:  "NF",
+				Group:   "GRP",
+			},
+		},
+		{
+			name:     "standalone max source",
+			filename: "Sample.Movie.2024.1080p.MAX.WEB-DL.x264-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "x264",
+				Source:     "MAX",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "terminal ambiguous provider remains source",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.ROKU",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Source:     "ROKU",
+			},
+		},
+		{
+			name:     "common provider before resolution and quality remains source",
+			filename: "Sample.Series.S01E01.NOW.1080p.WEB-DL.x264-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Series",
+				Season:     1,
+				Episode:    1,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "x264",
+				Source:     "NOW",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "multi language subtitles",
+			filename: "Sample.Collection.2003.Eng.Rus.Multi-Subs.1080p.H264-mp4-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Collection",
+				Year:       2003,
+				Resolution: "1080p",
+				Codec:      "H264",
+				Container:  "mp4",
+				Group:      "GRP",
+				Language:   "ENG RUS MULTI",
+				Edition:    "Multi Subs",
+			},
+		},
+		{
+			name:     "multi subtitles without language",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.H264.Multi-Subs-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Group:      "GRP",
+				Edition:    "Multi Subs",
+			},
+		},
+		{
+			name:     "multilang with multi subtitles keeps language",
+			filename: "Sample.Movie.2024.MultiLang.Multi-Subs.1080p.WEB-DL.H264-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Group:      "GRP",
+				Language:   "MULTI",
+				Edition:    "Multi Subs",
+			},
+		},
+		{
+			name:     "music style hi res flac",
+			filename: "Sample.Artist.Sample.Album.2026.Hi-Res.FLAC.24Bit.96kHz-GRP",
+			want: TorrentInfo{
+				Title:    "Sample Artist Sample Album",
+				Year:     2026,
+				Audio:    "FLAC",
+				Group:    "GRP",
+				BitDepth: "24-bit",
+			},
+		},
+		{
+			name:     "source-like final group is not source",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.H264-PLAY",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Group:      "PLAY",
+			},
+		},
+		{
+			name:     "source-like dot suffix group is not source",
+			filename: "Sample.Series.S01E01.720p.HDTV.x264.PLAY",
+			want: TorrentInfo{
+				Title:      "Sample Series",
+				Season:     1,
+				Episode:    1,
+				Resolution: "720p",
+				Quality:    "HDTV",
+				Codec:      "x264",
+				Group:      "PLAY",
+			},
+		},
+		{
+			name:     "source-like final group before container is not source",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.H264-PLAY.mkv",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Group:      "PLAY",
+				Container:  "mkv",
+			},
+		},
+		{
+			name:     "source-like provider group before container is not source",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.H264-NF.mkv",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Group:      "NF",
+				Container:  "mkv",
+			},
+		},
+		{
+			name:     "source-like dot suffix group before container is not source",
+			filename: "Sample.Series.S01E01.720p.HDTV.x264.PLAY.mkv",
+			want: TorrentInfo{
+				Title:      "Sample Series",
+				Season:     1,
+				Episode:    1,
+				Resolution: "720p",
+				Quality:    "HDTV",
+				Codec:      "x264",
+				Group:      "PLAY",
+				Container:  "mkv",
+			},
+		},
+		{
+			name:     "source-like dot provider group before container is not source",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.H264.NF.mkv",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Group:      "NF",
+				Container:  "mkv",
+			},
+		},
+		{
+			name:     "source-like bracket group is not source",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.H264.[PLAY]",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Group:      "PLAY",
+			},
+		},
+		{
+			name:     "source-like bracket provider group before container is not source",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.H264.[NF].mkv",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Group:      "NF",
+				Container:  "mkv",
+			},
+		},
+		{
+			name:     "rm4k remastered marker",
+			filename: "Sample.Feature.1999.1080p.RM4K.BluRay.x265.EAC3.6CH-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Feature",
+				Year:       1999,
+				Resolution: "1080p",
+				Quality:    "BluRay",
+				Codec:      "x265",
+				Audio:      "EAC3 5.1",
+				Group:      "GRP",
+				Remastered: true,
+			},
+		},
+		{
+			name:     "truehd channel before atmos",
+			filename: "Sample.Feature.2025.2160p.BluRay.Remux.HEVC.TrueHD.7.1.Atmos-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Feature",
+				Year:       2025,
+				Resolution: "2160p",
+				Quality:    "REMUX",
+				Codec:      "H265",
+				Audio:      "TrueHD Atmos 7.1",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "legacy dot suffix group",
+			filename: "Sample.Series.S01E01.720p.HDTV.x264.GRP",
+			want: TorrentInfo{
+				Title:      "Sample Series",
+				Season:     1,
+				Episode:    1,
+				Resolution: "720p",
+				Quality:    "HDTV",
+				Codec:      "x264",
+				Group:      "GRP",
+			},
+		},
+		{
+			name:     "terminal codec metadata is not group",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.AV1",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "AV1",
+			},
+		},
+		{
+			name:     "terminal audio metadata is not group",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.DTS",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Audio:      "DTS",
+			},
+		},
+		{
+			name:     "terminal rich audio metadata is not group",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.FLAC",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Audio:      "FLAC",
+			},
+		},
+		{
+			name:     "terminal flag metadata is not group",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.PROPER",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Proper:     true,
+			},
+		},
+		{
+			name:     "korsub hardcoded marker",
+			filename: "Sample.Series.S01E01.KORSUB.1080p.WEBRip.x264-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Series",
+				Season:     1,
+				Episode:    1,
+				Resolution: "1080p",
+				Quality:    "WEBRip",
+				Codec:      "x264",
+				Group:      "GRP",
+				Hardcoded:  true,
+			},
+		},
+		{
+			name:     "standalone channel count",
+			filename: "Sample.Series.S01E01.2160p.HDR10Plus.DV.WEBRip.6CH.x265.HEVC-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Series",
+				Season:     1,
+				Episode:    1,
+				Resolution: "2160p",
+				Quality:    "WEBRip",
+				Codec:      "H265",
+				HDR:        "HDR10+ DV",
+				Audio:      "5.1",
+				Group:      "GRP",
 			},
 		},
 	}
@@ -506,6 +981,149 @@ func TestReleaseInfoEdgeCases(t *testing.T) {
 				t.Helper()
 				if got.Edition != "Director's Cut" || got.BitDepth != "10-bit" {
 					t.Fatalf("edition/bit_depth = %q/%q, want Director's Cut/10-bit", got.Edition, got.BitDepth)
+				}
+			},
+		},
+		{
+			name:     "anime crc is not release group",
+			filename: "[Group] Sample Anime - 001v2 [1080p][HEVC 10bit][AAC][MultiSub][A1B2C3D4].mkv",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Title != "Sample Anime" || got.Episode != 1 {
+					t.Fatalf("title/episode = %q/%d, want Sample Anime/1", got.Title, got.Episode)
+				}
+				if got.Group != "" {
+					t.Fatalf("Group = %q, want empty for CRC-style bracket", got.Group)
+				}
+			},
+		},
+		{
+			name:     "season range does not become group",
+			filename: "Sample.Series.2025.Season.1-3.Complete.1080p.WEB-DL.x265",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Season != 1 || !got.Complete {
+					t.Fatalf("season/complete = %d/%v, want 1/true", got.Season, got.Complete)
+				}
+				if got.Group != "" {
+					t.Fatalf("Group = %q, want empty for season range", got.Group)
+				}
+			},
+		},
+		{
+			name:     "terminal provider remains source",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.NF",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Source != "NF" {
+					t.Fatalf("Source = %q, want NF", got.Source)
+				}
+				if got.Group != "" {
+					t.Fatalf("Group = %q, want empty", got.Group)
+				}
+			},
+		},
+		{
+			name:     "terminal hdtv quality is not group",
+			filename: "Sample.Series.S01E01.720p.HDTV",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Quality != "HDTV" {
+					t.Fatalf("Quality = %q, want HDTV", got.Quality)
+				}
+				if got.Group != "" {
+					t.Fatalf("Group = %q, want empty", got.Group)
+				}
+			},
+		},
+		{
+			name:     "terminal hdrip quality is not group",
+			filename: "Sample.Feature.2024.HDRip",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Quality != "HDRip" {
+					t.Fatalf("Quality = %q, want HDRip", got.Quality)
+				}
+				if got.Group != "" {
+					t.Fatalf("Group = %q, want empty", got.Group)
+				}
+			},
+		},
+		{
+			name:     "episode title play is not source",
+			filename: "Sample.Series.S01E01.Play.Time.1080p.WEB-DL.x264-GRP",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Source != "" {
+					t.Fatalf("Source = %q, want empty", got.Source)
+				}
+				if got.Group != "GRP" {
+					t.Fatalf("Group = %q, want GRP", got.Group)
+				}
+			},
+		},
+		{
+			name:     "episode title now is not source",
+			filename: "Sample.Series.S01E01.Now.What.1080p.WEB-DL.x264-GRP",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Source != "" {
+					t.Fatalf("Source = %q, want empty", got.Source)
+				}
+				if got.Group != "GRP" {
+					t.Fatalf("Group = %q, want GRP", got.Group)
+				}
+			},
+		},
+		{
+			name:     "rejected source word does not hide following provider",
+			filename: "Sample.Series.S01E01.Now.NF.WEB-DL.x264-GRP",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Source != "NF" {
+					t.Fatalf("Source = %q, want NF", got.Source)
+				}
+				if got.Group != "GRP" {
+					t.Fatalf("Group = %q, want GRP", got.Group)
+				}
+			},
+		},
+		{
+			name:     "episode title stan is not source",
+			filename: "Sample.Series.S01E01.Stan.Knows.Best.1080p.WEB-DL.x264-GRP",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Source != "" {
+					t.Fatalf("Source = %q, want empty", got.Source)
+				}
+				if got.Group != "GRP" {
+					t.Fatalf("Group = %q, want GRP", got.Group)
+				}
+			},
+		},
+		{
+			name:     "common stan provider before resolution and quality remains source",
+			filename: "Sample.Series.S01E01.STAN.1080p.WEB-DL.x264-GRP",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Source != "STAN" {
+					t.Fatalf("Source = %q, want STAN", got.Source)
+				}
+				if got.Group != "GRP" {
+					t.Fatalf("Group = %q, want GRP", got.Group)
+				}
+			},
+		},
+		{
+			name:     "ambiguous provider before resolution hdr and quality remains source",
+			filename: "Sample.Series.S01E01.STAN.2160p.HDR10.WEB-DL.x264-GRP",
+			check: func(t *testing.T, got TorrentInfo) {
+				t.Helper()
+				if got.Source != "STAN" {
+					t.Fatalf("Source = %q, want STAN", got.Source)
+				}
+				if got.HDR != "HDR10" || got.Quality != "WEB-DL" {
+					t.Fatalf("HDR/Quality = %q/%q, want HDR10/WEB-DL", got.HDR, got.Quality)
 				}
 			},
 		},

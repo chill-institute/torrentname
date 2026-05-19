@@ -90,3 +90,46 @@ func TestParseDoesNotMisreadMetadataBracketAsGroup(t *testing.T) {
 		}
 	}
 }
+
+func TestNormalizeModernAudioVariants(t *testing.T) {
+	t.Parallel()
+
+	cases := map[string]string{
+		"EAC3.Atmos.5.1":   "EAC3 Atmos 5.1",
+		"DTS.X.7.1":        "DTS X 7.1",
+		"DTS.6CH":          "DTS 5.1",
+		"DTS-HD.HRA.5.1":   "DTS-HD HRA 5.1",
+		"EAC3.6CH":         "EAC3 5.1",
+		"TrueHD.7.1.Atmos": "TrueHD Atmos 7.1",
+		"DDPlus.Atmos":     "DD+ Atmos",
+		"DDPlus.5.1":       "DD+ 5.1",
+		"DD+.Atmos.5.1":    "DD+ Atmos 5.1",
+		"DDPlus.5.1.Atmos": "DD+ Atmos 5.1",
+		"6CH":              "5.1",
+		"PCM.2.0":          "PCM 2.0",
+		"LPCM.5.1":         "LPCM 5.1",
+		"Opus.5.1":         "Opus 5.1",
+	}
+	for input, want := range cases {
+		if got := normalizeAudioRich(input); got != want {
+			t.Errorf("normalizeAudioRich(%q) = %q, want %q", input, got, want)
+		}
+	}
+}
+
+func TestNormalizeLanguageVariants(t *testing.T) {
+	t.Parallel()
+
+	cases := map[string]string{
+		"Eng":       "ENG",
+		"English":   "ENG",
+		"Jps":       "JPN",
+		"MultiLang": "MULTI",
+		"VOSTFR":    "VOSTFR",
+	}
+	for input, want := range cases {
+		if got := normalizeLanguage(input); got != want {
+			t.Errorf("normalizeLanguage(%q) = %q, want %q", input, got, want)
+		}
+	}
+}

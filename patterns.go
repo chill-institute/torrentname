@@ -16,13 +16,14 @@ type pattern struct {
 var patterns = []pattern{
 	{name: "season", re: regexp.MustCompile(`(?i)(s?([0-9]{1,2}))[ex]`), apply: setInt(func(t *TorrentInfo, value int) { t.Season = value })},
 	{name: "season", re: regexp.MustCompile(`(?i)\b((?:s([0-9]{1,2}))(?:\b|[^a-z0-9]))`), apply: setInt(func(t *TorrentInfo, value int) { t.Season = value })},
+	{name: "season", re: regexp.MustCompile(`(?i)\b((?:Season)[ .-]+([0-9]{1,2}))\b`), apply: setInt(func(t *TorrentInfo, value int) { t.Season = value })},
 	{name: "episode", re: regexp.MustCompile(`(?i)([ex]([0-9]{2})(?:[^0-9]|$))`), apply: setInt(func(t *TorrentInfo, value int) { t.Episode = value })},
 	{name: "episode", re: regexp.MustCompile(`(-\s+([0-9]{1,})(?:[^0-9]|$))`), apply: setInt(func(t *TorrentInfo, value int) { t.Episode = value })},
 	{name: "year", last: true, re: regexp.MustCompile(`\b(((?:19[0-9]|20[0-9])[0-9]))\b`), apply: setInt(func(t *TorrentInfo, value int) { t.Year = value })},
 	{name: "resolution", re: regexp.MustCompile(`\b(([0-9]{3,4}p))\b`), apply: func(t *TorrentInfo, value string) { t.Resolution = value }},
 	{name: "quality", re: regexp.MustCompile(`(?i)\b(((?:PPV\.)?[HP]DTV|(?:HD)?CAM|B[DR]Rip|(?:HD-?)?TS|(?:PPV )?WEB[ .-]?DL(?: DVDRip)?|HDRip|DVDRip|DVDRIP|CamRip|WEB[ .-]?Rip|WBRip|Blu[ .-]?Ray(?:[ .-]?Remux)?|BDRemux|REMUX|DvDScr|telesync))\b`), apply: func(t *TorrentInfo, value string) { t.Quality = normalizeQuality(value) }},
 	{name: "codec", re: regexp.MustCompile(`(?i)\b((xvid|x[ ._-]?26[45]|h[ ._-]?26[45]|HEVC|AVC|AV1))\b`), apply: func(t *TorrentInfo, value string) { t.Codec = normalizeCodec(value) }},
-	{name: "audio", re: regexp.MustCompile(`(?i)\b((MP3|TrueHD|Atmos|DTS[ .-]?HD(?:[ .-]?MA)?|E-?AC-?3|DDP[ .]?[257][ .]?[01]|DD[ .]?5[ .]?1|DD\+|Dual[\- ]Audio|LiNE|DTS|AAC[.-]?LC|AAC(?:\.?[257]\.?[01])?|AC3(?:\.5\.1)?|FLAC))\b`), apply: func(t *TorrentInfo, value string) { t.Audio = normalizeAudio(value) }},
+	{name: "audio", re: regexp.MustCompile(`(?i)\b((MP3|TrueHD|Atmos|DTS[ .-]?X|DTS[ .-]?HD(?:[ .-]?MA)?|E-?AC-?3|DDP[ .]?[257][ .]?[01]|DD[ .]?5[ .]?1|DD\+|DDPlus|Dual[\- ]Audio|LiNE|DTS|AAC[.-]?LC|AAC(?:\.?[257]\.?[01])?|AC3(?:\.5\.1)?|FLAC))\b`), apply: func(t *TorrentInfo, value string) { t.Audio = normalizeAudio(value) }},
 	{name: "region", re: regexp.MustCompile(`(?i)\b(R([0-9]))\b`), apply: func(t *TorrentInfo, value string) { t.Region = value }},
 	{name: "size", re: regexp.MustCompile(`(?i)\b((\d+(?:\.\d+)?(?:GB|MB)))\b`), apply: func(t *TorrentInfo, value string) { t.Size = value }},
 	{name: "website", re: regexp.MustCompile(`^(\[ ?([^\]]+?) ?\])`), apply: func(t *TorrentInfo, value string) { t.Website = value }},
@@ -31,7 +32,7 @@ var patterns = []pattern{
 	{name: "container", re: regexp.MustCompile(`(?i)\b((MKV|AVI|MP4))\b`), apply: func(t *TorrentInfo, value string) { t.Container = value }},
 	{name: "group", re: regexp.MustCompile(`(?i)(- ?([A-Za-z0-9\[{][A-Za-z0-9\[\]{}_=+-]*))$`), apply: func(t *TorrentInfo, value string) { t.Group = value }},
 	{name: "extended", re: regexp.MustCompile(`(?i)\b(EXTENDED(:?.CUT)?)\b`), apply: func(t *TorrentInfo, _ string) { t.Extended = true }},
-	{name: "hardcoded", re: regexp.MustCompile(`(?i)\b((HC))\b`), apply: func(t *TorrentInfo, _ string) { t.Hardcoded = true }},
+	{name: "hardcoded", re: regexp.MustCompile(`(?i)\b((HC[ .-]?SUB|HCSUB|KOR[ .-]?SUB|KORSUB|HC))\b`), apply: func(t *TorrentInfo, _ string) { t.Hardcoded = true }},
 	{name: "proper", re: regexp.MustCompile(`(?i)\b((PROPER))\b`), apply: func(t *TorrentInfo, _ string) { t.Proper = true }},
 	{name: "repack", re: regexp.MustCompile(`(?i)\b((REPACK))\b`), apply: func(t *TorrentInfo, _ string) { t.Repack = true }},
 	{name: "remastered", re: regexp.MustCompile(`(?i)\b((REMASTERED))\b`), apply: func(t *TorrentInfo, _ string) { t.Remastered = true }},
@@ -106,11 +107,15 @@ func normalizeAudio(value string) string {
 		return "EAC3"
 	case "dd+":
 		return "DD+"
+	case "ddplus":
+		return "DDPlus"
 	case "dtshd", "dtshdma":
 		if strings.Contains(collapsed, "ma") {
 			return "DTS-HD MA"
 		}
 		return "DTS-HD"
+	case "dtsx":
+		return "DTS X"
 	case "truehd":
 		return "TrueHD"
 	case "atmos":

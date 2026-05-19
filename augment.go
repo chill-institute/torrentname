@@ -6,19 +6,22 @@ import (
 )
 
 var (
+	audioChannelTokenPattern  = `[257][ .]?[01]|[268][ .-]*CH`
 	seasonEpisodeRangePattern = regexp.MustCompile(`(?i)\bS([0-9]{1,2})E([0-9]{1,3})(?:[ .-]*E?([0-9]{1,3}))?\b`)
+	seasonReleaseTokenPattern = regexp.MustCompile(`(?i)\bSeason[ .-]+[0-9]{1,2}\b`)
 	compactRangePattern       = regexp.MustCompile(`(?i)\bS([0-9]{1,2})E([0-9]{1,3})[ .-]+([0-9]{1,3})(?:[ .-]+of[ .-]+[0-9]{1,3})?\b`)
 	yearTokenPattern          = regexp.MustCompile(`\b(?:19[0-9]{2}|20[0-9]{2})\b`)
 	resolutionTokenPattern    = regexp.MustCompile(`(?i)\b(?:[0-9]{3,4}p|4K)\b`)
 	qualityTokenPattern       = regexp.MustCompile(`(?i)\b(?:UHD[ .-]+Blu[ .-]?Ray[ .-]+Remux|Blu[ .-]?Ray[ .-]+Remux|BDRemux|REMUX|WEB[ .-]?DL|WEB[ .-]?Rip|Blu[ .-]?Ray|HDRip|DVDRip|BRRip|BDRip|HDTV|PDTV|WEB)\b`)
 	codecTokenPattern         = regexp.MustCompile(`(?i)\b(?:xvid|x[ ._-]?26[45]|h[ ._-]?26[45]|HEVC|AVC|AV1)\b`)
 	hdrTokenPattern           = regexp.MustCompile(`(?i)\b(?:Dolby[ .-]+Vision|HDR10Plus|HDR10P|HDR10\+|HDR10|DoVi|DV|HLG|HDR)\b`)
-	audioTokenPattern         = regexp.MustCompile(`(?i)\b(?:TrueHD(?:[ .-]+Atmos)?(?:[ .-]+[257][ .][01])?|DTS[ .-]?HD(?:[ .-]?MA)?(?:[ .-]+[257][ .][01])?|E-?AC-?3(?:[ .-]*[257][ .][01])?|DDP(?:[ .-]*Atmos)?[ .-]*[257][ .][01](?:[ .-]+Atmos)?|DD\+|AAC[ .-]*[257][ .][01]|AAC|AC3(?:[ .-]*[257][ .][01])?|FLAC(?:[ .-]*[257][ .][01])?|Atmos)\b`)
-	bitDepthPattern           = regexp.MustCompile(`(?i)\b(8|10|12)[ .-]?bit\b`)
+	audioTokenPattern         = regexp.MustCompile(`(?i)\b(?:TrueHD(?:[ .-]+(?:Atmos|` + audioChannelTokenPattern + `)){0,2}|DTS[ .-]?X(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|DTS[ .-]?HD(?:[ .-]?(?:MA|HRA))?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|DTS(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|E-?AC-?3(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|DDP(?:[ .-]*Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|DD(?:\+|Plus)(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|AAC[ .-]*(?:` + audioChannelTokenPattern + `)|AAC|AC3(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|FLAC(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|L?PCM[ .-]*(?:` + audioChannelTokenPattern + `)|Opus[ .-]*(?:` + audioChannelTokenPattern + `)|[268][ .-]*CH|Atmos)\b`)
+	bitDepthPattern           = regexp.MustCompile(`(?i)\b(8|10|12|16|24)[ .-]?bits?\b`)
 	partPattern               = regexp.MustCompile(`(?i)\bPart[ .-]+([0-9]+|One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|I|II|III|IV|V|VI|VII|VIII|IX|X)\b`)
-	completePattern           = regexp.MustCompile(`(?i)\b(?:Complete(?:[ .-]+(?:Season|Series))?|Season[ .-]+[0-9]{1,2}[ .-]+Complete|Seasons[ .-]+[0-9]{1,2}[ .-]+to[ .-]+[0-9]{1,2}[ .-]+Complete|S[0-9]{1,2}[ .-]*Complete)\b`)
-	editionTokenPattern       = regexp.MustCompile(`(?i)\b(?:Director'?s[ .-]+Cut|Directors[ .-]+Cut|DC|Hybrid|B&W|BW|Black[ .-]+and[ .-]+White|DUBBED|DUAL|Dual[ .-]+Audio|Multi[ .-]*Subs?|MultiSub)\b`)
-	remasteredPattern         = regexp.MustCompile(`(?i)\bRemastered\b`)
+	completePattern           = regexp.MustCompile(`(?i)\b(?:Complete(?:[ .-]+(?:Season|Series))?|Season[ .-]+[0-9]{1,2}(?:[ .-]*(?:to|-|\+|&)[ .-]*[0-9]{1,2})?[ .-]+Complete(?:[ .-]+Series)?|Seasons[ .-]+[0-9]{1,2}[ .-]+to[ .-]+[0-9]{1,2}[ .-]+Complete|S[0-9]{1,2}[ .-]*Complete)\b`)
+	editionTokenPattern       = regexp.MustCompile(`(?i)\b(?:Director'?s[ .-]+Cut|Directors[ .-]+Cut|DC|Hybrid|Theatrical(?:[ .-]+Cut)?|Special[ .-]+Edition|Open[ .-]+Matte|B&W|BW|Black[ .-]+and[ .-]+White|DUBBED|DUAL|Dual[ .-]+Audio|Multi[ .-]*Subs?|MultiSub)\b`)
+	languageTokenPattern      = regexp.MustCompile(`(?i)\b(?:Multi(?:Lang)?|VOSTFR|VFF|VFQ|ENG|ENGLISH|ITA|ITALIAN|FRE|FRENCH|GER|GERMAN|SPA|SPANISH|RUS|RUSSIAN|JPN|JPS|JAP|JAPANESE|UKR|UKRAINIAN|HIN|HINDI|KOR|KOREAN|CHI|CHINESE)\b`)
+	remasteredPattern         = regexp.MustCompile(`(?i)\b(?:Remastered|RM4K|4K[ .-]+Remaster(?:ed)?)\b`)
 	imaxPattern               = regexp.MustCompile(`(?i)\bIMAX\b`)
 )
 
@@ -32,6 +35,7 @@ func augmentTorrentInfo(info *TorrentInfo, filename string) {
 	applyHDR(info, normalized)
 	applyAudio(info, normalized)
 	applySource(info, normalized)
+	applyLanguage(info, normalized)
 	applyBitDepth(info, normalized)
 	applyEdition(info, normalized)
 	applyFlags(info, normalized)
@@ -141,11 +145,172 @@ func applySource(info *TorrentInfo, value string) {
 			continue
 		}
 		source := normalizeSource(match.raw)
+		if source != "" && !hasSourceTokenContext(value, match, source) {
+			continue
+		}
+		if source != "" && isFinalGroupSourceToken(info, value, match, source) {
+			continue
+		}
 		if source != "" {
 			info.Source = source
 			return
 		}
 	}
+}
+
+func hasSourceTokenContext(value string, match tokenMatch, source string) bool {
+	if !requiresAdjacentReleaseContext(source) {
+		return true
+	}
+	return hasQualityBefore(value, match.start) || hasQualityAfter(value, match.end)
+}
+
+func requiresAdjacentReleaseContext(source string) bool {
+	switch source {
+	case "MAX", "NOW", "PLAY", "ROKU", "STAN", "STAR+", "STRP":
+		return true
+	default:
+		return false
+	}
+}
+
+func hasQualityBefore(value string, end int) bool {
+	prefix := strings.TrimRight(value[:end], ".-_ ")
+	matches := qualityTokenPattern.FindAllStringIndex(prefix, -1)
+	return len(matches) > 0 && matches[len(matches)-1][1] == len(prefix)
+}
+
+func hasQualityAfter(value string, start int) bool {
+	suffix := strings.TrimLeft(value[start:], ".-_ ")
+	if match := qualityTokenPattern.FindStringIndex(suffix); match != nil && match[0] == 0 {
+		return true
+	}
+	resolutionMatch := resolutionTokenPattern.FindStringIndex(suffix)
+	if resolutionMatch == nil || resolutionMatch[0] != 0 {
+		return false
+	}
+	afterResolution := strings.TrimLeft(suffix[resolutionMatch[1]:], ".-_ ")
+	for {
+		hdrMatch := hdrTokenPattern.FindStringIndex(afterResolution)
+		if hdrMatch == nil || hdrMatch[0] != 0 {
+			break
+		}
+		afterResolution = strings.TrimLeft(afterResolution[hdrMatch[1]:], ".-_ ")
+	}
+	match := qualityTokenPattern.FindStringIndex(afterResolution)
+	return match != nil && match[0] == 0
+}
+
+func isFinalGroupSourceToken(info *TorrentInfo, value string, match tokenMatch, source string) bool {
+	if match.start == 0 {
+		return false
+	}
+	if isFinalBracketSourceGroup(value, match, source) {
+		return true
+	}
+	separator := value[match.start-1]
+	if separator != '-' && separator != '.' {
+		return false
+	}
+	if separator == '.' && !hasDotSuffixGroupContext(value, match.start) {
+		return false
+	}
+	suffix := trimKnownContainerSuffix(value[match.start:])
+	hasGroupSuffix := strings.EqualFold(cleanGroup(suffix), source)
+	if separator == '-' && hasGroupSuffix {
+		return true
+	}
+	if separator == '.' && hasGroupSuffix {
+		return true
+	}
+	if !isAmbiguousFinalSourceGroup(source) && (info.Group == "" || !strings.EqualFold(info.Group, source)) {
+		return false
+	}
+	return hasGroupSuffix || info.Group != "" && strings.EqualFold(info.Group, source)
+}
+
+func isFinalBracketSourceGroup(value string, match tokenMatch, source string) bool {
+	if match.start == 0 || value[match.start-1] != '[' {
+		return false
+	}
+	rest := strings.TrimSpace(value[match.end:])
+	if !strings.HasPrefix(rest, "]") {
+		return false
+	}
+	suffix := strings.TrimSpace(strings.TrimPrefix(rest, "]"))
+	suffix = strings.TrimSpace(trimKnownContainerSuffix(suffix))
+	if suffix != "" {
+		return false
+	}
+	return strings.EqualFold(cleanGroup(source), source)
+}
+
+func hasDotSuffixGroupContext(value string, end int) bool {
+	previous := previousReleaseToken(value, end)
+	if previous == "" {
+		return false
+	}
+	return codecTokenPattern.MatchString(previous) ||
+		hdrTokenPattern.MatchString(previous) ||
+		audioTokenPattern.MatchString(previous) ||
+		bitDepthPattern.MatchString(previous)
+}
+
+func previousReleaseToken(value string, end int) string {
+	prefix := strings.TrimRight(value[:end], ".-_ ")
+	start := len(prefix)
+	for start > 0 {
+		switch prefix[start-1] {
+		case '.', '-', '_', ' ':
+			return prefix[start:]
+		default:
+			start--
+		}
+	}
+	return prefix
+}
+
+func isAmbiguousFinalSourceGroup(source string) bool {
+	switch source {
+	case "NOW", "PLAY", "PMTP", "ROKU", "STAN", "STAR+", "STRP":
+		return true
+	default:
+		return false
+	}
+}
+
+func applyLanguage(info *TorrentInfo, value string) {
+	if info.Language != "" {
+		return
+	}
+	releaseStart := firstReleaseTokenPosition(value)
+	if releaseStart < 0 {
+		return
+	}
+
+	releaseSuffix := value[releaseStart:]
+	tokens := orderedNormalizedTokens(releaseSuffix, languageTokenPattern, normalizeLanguage)
+	hasExplicitMulti := hasMultiLanguageMarker(releaseSuffix)
+	for _, language := range tokens {
+		isSubtitleMulti := language == "MULTI" && hasMultiSubtitleMarker(releaseSuffix)
+		if language == "MULTI" && !isSubtitleMulti || language == "VOSTFR" || language == "VFF" || language == "VFQ" {
+			hasExplicitMulti = true
+			break
+		}
+	}
+	if len(tokens) >= 2 || hasExplicitMulti {
+		info.Language = strings.Join(tokens, " ")
+	}
+}
+
+func hasMultiSubtitleMarker(value string) bool {
+	compact := strings.ToLower(strings.NewReplacer(" ", "", ".", "", "-", "", "_", "").Replace(value))
+	return strings.Contains(compact, "multisub")
+}
+
+func hasMultiLanguageMarker(value string) bool {
+	compact := strings.ToLower(strings.NewReplacer(" ", "", ".", "", "-", "", "_", "").Replace(value))
+	return strings.Contains(compact, "multilang")
 }
 
 func applyBitDepth(info *TorrentInfo, value string) {

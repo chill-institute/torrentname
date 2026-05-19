@@ -18,13 +18,23 @@ type jackettFixture struct {
 
 func TestJackettFixtures(t *testing.T) {
 	t.Parallel()
+	testFixtureDir(t, filepath.Join("testdata", "jackett"), "Jackett")
+}
 
-	files, err := filepath.Glob(filepath.Join("testdata", "jackett", "*.json"))
+func TestSyntheticFixtures(t *testing.T) {
+	t.Parallel()
+	testFixtureDir(t, filepath.Join("testdata", "synthetic"), "synthetic")
+}
+
+func testFixtureDir(t *testing.T, dir string, label string) {
+	t.Helper()
+
+	files, err := filepath.Glob(filepath.Join(dir, "*.json"))
 	if err != nil {
-		t.Fatalf("glob jackett fixtures: %v", err)
+		t.Fatalf("glob %s fixtures: %v", label, err)
 	}
 	if len(files) == 0 {
-		t.Fatalf("expected at least one Jackett fixture file")
+		t.Fatalf("expected at least one %s fixture file", label)
 	}
 
 	for _, path := range files {
