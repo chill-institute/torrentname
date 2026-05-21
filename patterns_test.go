@@ -79,6 +79,7 @@ func TestParseDoesNotMisreadMetadataBracketAsGroup(t *testing.T) {
 	titles := []string{
 		"Widow's Bay (2026) s01e04 [Mkv - 1080p H264 - MultiLang Aac 2.0 - MultiSubs]",
 		"Widow\u2019s Bay (2026) s01e04 [Mkv - 1080p H264 - MultiLang Aac 2.0 - MultiSubs]",
+		"[DKB] Sample Anime Title - S01E08 [1080p][HEVC x265 10bit][Dual-Audio][Multi-Subs][weekly]",
 	}
 	for _, title := range titles {
 		info, err := Parse(title)
@@ -105,6 +106,11 @@ func TestNormalizeModernAudioVariants(t *testing.T) {
 		"DDPlus.5.1":       "DD+ 5.1",
 		"DD+.Atmos.5.1":    "DD+ Atmos 5.1",
 		"DDPlus.5.1.Atmos": "DD+ Atmos 5.1",
+		"DD.Atmos.5.1":     "DD Atmos 5.1",
+		"5.1":              "5.1",
+		"5 1":              "5.1",
+		"2.0":              "2.0",
+		"7.1":              "7.1",
 		"6CH":              "5.1",
 		"PCM.2.0":          "PCM 2.0",
 		"LPCM.5.1":         "LPCM 5.1",
@@ -124,6 +130,8 @@ func TestNormalizeLanguageVariants(t *testing.T) {
 		"Eng":       "ENG",
 		"English":   "ENG",
 		"Jps":       "JPN",
+		"Lat":       "LAT",
+		"Latin":     "LAT",
 		"MultiLang": "MULTI",
 		"VOSTFR":    "VOSTFR",
 	}

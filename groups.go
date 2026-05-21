@@ -100,7 +100,7 @@ func trimKnownContainerSuffix(value string) string {
 
 func containsMetadataToken(value string) bool {
 	fields := strings.FieldsFunc(value, func(r rune) bool {
-		return r == '.' || r == '_' || r == ' '
+		return r == '.' || r == '_' || r == ' ' || r == '-' || r == '[' || r == ']' || r == '{' || r == '}'
 	})
 	for _, field := range fields {
 		if looksLikeMetadataToken(field) {

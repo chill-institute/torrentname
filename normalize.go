@@ -88,6 +88,13 @@ func normalizeAudioRich(value string) string {
 			return "DDP Atmos"
 		}
 		return "DDP"
+	case strings.HasPrefix(collapsed, "ddatmos"):
+		return "DD Atmos" + normalizeChannelFromCollapsed(collapsed)
+	case strings.HasPrefix(collapsed, "dd"):
+		if strings.Contains(collapsed, "atmos") {
+			return "DD Atmos" + normalizeChannelFromCollapsed(collapsed)
+		}
+		return "DD" + strings.TrimPrefix(normalizeOptionalChannel(collapsed, "dd"), " ")
 	case strings.HasPrefix(collapsed, "eac3"):
 		if strings.Contains(collapsed, "atmos") {
 			return "EAC3 Atmos" + normalizeChannelFromCollapsed(collapsed)
@@ -106,6 +113,8 @@ func normalizeAudioRich(value string) string {
 	case strings.HasPrefix(collapsed, "opus"):
 		return "Opus" + normalizeOptionalChannel(collapsed, "opus")
 	case collapsed == "2ch", collapsed == "6ch", collapsed == "8ch":
+		return strings.TrimSpace(normalizeChannelFromCollapsed(collapsed))
+	case collapsed == "20", collapsed == "51", collapsed == "71":
 		return strings.TrimSpace(normalizeChannelFromCollapsed(collapsed))
 	case collapsed == "atmos":
 		return "Atmos"
@@ -211,6 +220,8 @@ func normalizeLanguage(value string) string {
 		return "GER"
 	case "SPA", "SPANISH":
 		return "SPA"
+	case "LAT", "LATIN":
+		return "LAT"
 	case "RUS", "RUSSIAN":
 		return "RUS"
 	case "JPN", "JPS", "JAP", "JAPANESE":
@@ -245,7 +256,7 @@ func normalizeEdition(value string) string {
 		return "Black and White"
 	case "dubbed":
 		return "Dubbed"
-	case "dual", "dualaudio":
+	case "dual", "dualaudio", "2audio", "2audios":
 		return "Dual Audio"
 	case "multisub", "multisubs":
 		return "Multi Subs"
