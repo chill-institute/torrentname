@@ -16,7 +16,7 @@ var (
 	seasonRangeGroupPattern    = regexp.MustCompile(`(?i)^[0-9]{1,2}[._-]?Complete\b`)
 )
 
-func applyGroup(info *TorrentInfo, value string) {
+func applyGroup(info *TorrentInfo, value string, releaseStart int) {
 	if info.Group != "" {
 		if group := cleanGroup(info.Group); group != "" {
 			if assignGroup(info, group) {
@@ -42,7 +42,6 @@ func applyGroup(info *TorrentInfo, value string) {
 		}
 	}
 
-	releaseStart := firstReleaseTokenPosition(trimmed)
 	if releaseStart < 0 {
 		return
 	}

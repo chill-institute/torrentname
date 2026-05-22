@@ -40,7 +40,7 @@ func augmentTorrentInfo(info *TorrentInfo, filename string) {
 	applyBitDepth(info, normalized)
 	applyEdition(info, normalized, releaseStart)
 	applyFlags(info, normalized)
-	applyGroup(info, normalized)
+	applyGroup(info, normalized, releaseStart)
 }
 
 func applyEpisodeRanges(info *TorrentInfo, value string) {
