@@ -6,12 +6,17 @@ import (
 	"strings"
 )
 
+var (
+	releaseBoundaryReplacer = strings.NewReplacer("[", " [", "]", "] ", "(", " (", ")", ") ")
+	audioCompactReplacer    = strings.NewReplacer(" ", "", ".", "", "-", "")
+)
+
 func normalizeReleaseString(value string) string {
 	value = html.UnescapeString(strings.TrimSpace(value))
 	value = strings.ReplaceAll(value, "_", " ")
 	value = strings.ReplaceAll(value, " 039 ", "'")
 	value = strings.ReplaceAll(value, "039", "'")
-	value = strings.NewReplacer("[", " [", "]", "] ", "(", " (", ")", ") ").Replace(value)
+	value = releaseBoundaryReplacer.Replace(value)
 	return collapseSpaces(value)
 }
 
@@ -35,7 +40,7 @@ func normalizeHDR(value string) string {
 }
 
 func normalizeAudioRich(value string) string {
-	collapsed := strings.ToLower(strings.NewReplacer(" ", "", ".", "", "-", "").Replace(value))
+	collapsed := strings.ToLower(audioCompactReplacer.Replace(value))
 	switch {
 	case strings.HasPrefix(collapsed, "truehdatmos"):
 		return "TrueHD Atmos" + normalizeOptionalChannel(collapsed, "truehdatmos")

@@ -80,7 +80,7 @@ func normalizeCodec(value string) string {
 }
 
 func normalizeAudio(value string) string {
-	collapsed := strings.ToLower(strings.NewReplacer(" ", "", ".", "", "-", "").Replace(value))
+	collapsed := strings.ToLower(audioCompactReplacer.Replace(value))
 	switch collapsed {
 	case "ddp51":
 		return "DDP5.1"

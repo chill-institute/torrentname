@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+var compactKeyReplacer = strings.NewReplacer(" ", "", ".", "", "-", "", "_", "")
+
 type aliasToken struct {
 	canonical string
 	aliases   []string
@@ -42,7 +44,7 @@ func buildSourceLookup(tokens []sourceToken) map[string]sourceToken {
 }
 
 func compactKey(value string) string {
-	return strings.ToUpper(strings.NewReplacer(" ", "", ".", "", "-", "", "_", "").Replace(strings.TrimSpace(value)))
+	return strings.ToUpper(compactKeyReplacer.Replace(strings.TrimSpace(value)))
 }
 
 func compileTokenPattern(tokens []aliasToken) *regexp.Regexp {

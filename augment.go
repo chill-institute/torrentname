@@ -27,6 +27,7 @@ var (
 
 func augmentTorrentInfo(info *TorrentInfo, filename string) {
 	normalized := normalizeReleaseString(filename)
+	releaseStart := firstReleaseTokenPosition(normalized)
 	info.Title = normalizeTitleText(info.Title)
 	applyEpisodeRanges(info, normalized)
 	applyPart(info, normalized)
@@ -34,10 +35,10 @@ func augmentTorrentInfo(info *TorrentInfo, filename string) {
 	applyCodec(info, normalized)
 	applyHDR(info, normalized)
 	applyAudio(info, normalized)
-	applySource(info, normalized)
-	applyLanguage(info, normalized)
+	applySource(info, normalized, releaseStart)
+	applyLanguage(info, normalized, releaseStart)
 	applyBitDepth(info, normalized)
-	applyEdition(info, normalized)
+	applyEdition(info, normalized, releaseStart)
 	applyFlags(info, normalized)
 	applyGroup(info, normalized)
 }
@@ -142,8 +143,7 @@ func isBareChannelAudio(value string) bool {
 	return value == "2.0" || value == "5.1" || value == "7.1"
 }
 
-func applySource(info *TorrentInfo, value string) {
-	releaseStart := firstReleaseTokenPosition(value)
+func applySource(info *TorrentInfo, value string, releaseStart int) {
 	if releaseStart < 0 {
 		return
 	}
@@ -282,11 +282,10 @@ func isAmbiguousFinalSourceGroup(source string) bool {
 	return false
 }
 
-func applyLanguage(info *TorrentInfo, value string) {
+func applyLanguage(info *TorrentInfo, value string, releaseStart int) {
 	if info.Language != "" {
 		return
 	}
-	releaseStart := firstReleaseTokenPosition(value)
 	if releaseStart < 0 {
 		return
 	}
@@ -315,13 +314,11 @@ func isStrongSingleLanguageMarker(value string) bool {
 }
 
 func hasMultiSubtitleMarker(value string) bool {
-	compact := strings.ToLower(strings.NewReplacer(" ", "", ".", "", "-", "", "_", "").Replace(value))
-	return strings.Contains(compact, "multisub")
+	return strings.Contains(compactKey(value), "MULTISUB")
 }
 
 func hasMultiLanguageMarker(value string) bool {
-	compact := strings.ToLower(strings.NewReplacer(" ", "", ".", "", "-", "", "_", "").Replace(value))
-	return strings.Contains(compact, "multilang")
+	return strings.Contains(compactKey(value), "MULTILANG")
 }
 
 func applyBitDepth(info *TorrentInfo, value string) {
@@ -330,8 +327,7 @@ func applyBitDepth(info *TorrentInfo, value string) {
 	}
 }
 
-func applyEdition(info *TorrentInfo, value string) {
-	releaseStart := firstReleaseTokenPosition(value)
+func applyEdition(info *TorrentInfo, value string, releaseStart int) {
 	tokens := make([]tokenMatch, 0)
 	for _, match := range editionTokenPattern.FindAllStringIndex(value, -1) {
 		if releaseStart >= 0 && match[0] < releaseStart {
