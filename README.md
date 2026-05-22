@@ -17,6 +17,10 @@ Modern fork of [middelink/go-parse-torrent-name](https://github.com/middelink/go
 go get github.com/chill-institute/torrentname
 ```
 
+## Use
+
+Call `Parse` with a release name. The parser returns the fields it can prove and leaves unknown fields at their Go zero value.
+
 ## Quick Start
 
 ```go
@@ -129,9 +133,9 @@ See [Parser Spec](./docs/SPEC.md) for the full contract and normalization rules.
 
 ## Docs
 
-- [Parser Spec](./docs/SPEC.md)
-- [Contributing](./CONTRIBUTING.md)
-- [Release workflow](./docs/DELIVERY.md)
+- [Parser spec](./docs/SPEC.md): contract, normalization rules, and supported metadata
+- [Contributing](./CONTRIBUTING.md): local setup, benchmarks, fixtures, and fuzzing
+- [Release workflow](./docs/DELIVERY.md): CI, tags, and package delivery
 
 ## Development
 
