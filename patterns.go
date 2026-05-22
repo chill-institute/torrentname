@@ -54,41 +54,29 @@ func setInt(assign func(*TorrentInfo, int)) func(*TorrentInfo, string) {
 }
 
 func normalizeQuality(value string) string {
-	collapsed := strings.ToLower(strings.NewReplacer(" ", "", "-", "", ".", "").Replace(value))
-	switch collapsed {
-	case "webdl", "ppvwebdl", "hdwebdl":
-		return "WEB-DL"
-	case "webrip", "wbrip":
-		return "WEBRip"
-	case "web":
-		return "WEB"
-	case "bluray":
-		return "BluRay"
-	case "blurayremux", "bdremux", "remux", "uhdblurayremux":
-		return "REMUX"
+	if normalized, ok := qualityLookup[compactKey(value)]; ok {
+		if !canonicalizesQuality(normalized) {
+			return value
+		}
+		return normalized
+	}
+	return value
+}
+
+func canonicalizesQuality(value string) bool {
+	switch value {
+	case "WEB-DL", "WEBRip", "WEB", "BluRay", "REMUX":
+		return true
 	default:
-		return value
+		return false
 	}
 }
 
 func normalizeCodec(value string) string {
-	collapsed := strings.ToLower(strings.NewReplacer(" ", "", ".", "", "-", "", "_", "").Replace(value))
-	switch collapsed {
-	case "x264":
-		return "x264"
-	case "x265":
-		return "x265"
-	case "h264", "avc":
-		return "H264"
-	case "h265", "hevc":
-		return "H265"
-	case "av1":
-		return "AV1"
-	case "xvid":
-		return "XViD"
-	default:
-		return value
+	if normalized, ok := codecLookup[compactKey(value)]; ok {
+		return normalized
 	}
+	return value
 }
 
 func normalizeAudio(value string) string {

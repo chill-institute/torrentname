@@ -12,15 +12,15 @@ var (
 	compactRangePattern       = regexp.MustCompile(`(?i)\bS([0-9]{1,2})E([0-9]{1,3})[ .-]+([0-9]{1,3})(?:[ .-]+of[ .-]+[0-9]{1,3})?\b`)
 	yearTokenPattern          = regexp.MustCompile(`\b(?:19[0-9]{2}|20[0-9]{2})\b`)
 	resolutionTokenPattern    = regexp.MustCompile(`(?i)\b(?:[0-9]{3,4}p|4K)\b`)
-	qualityTokenPattern       = regexp.MustCompile(`(?i)\b(?:UHD[ .-]+Blu[ .-]?Ray[ .-]+Remux|Blu[ .-]?Ray[ .-]+Remux|BDRemux|REMUX|WEB[ .-]?DL|WEB[ .-]?Rip|Blu[ .-]?Ray|HDRip|DVDRip|BRRip|BDRip|HDTV|PDTV|WEB)\b`)
-	codecTokenPattern         = regexp.MustCompile(`(?i)\b(?:xvid|x[ ._-]?26[45]|h[ ._-]?26[45]|HEVC|AVC|AV1)\b`)
-	hdrTokenPattern           = regexp.MustCompile(`(?i)\b(?:Dolby[ .-]+Vision|HDR10Plus\b|HDR10P\b|HDR10\+|HDR10\b|DoVi\b|DV\b|HLG\b|HDR\b)`)
-	audioTokenPattern         = regexp.MustCompile(`(?i)\b(?:TrueHD(?:[ .-]+(?:Atmos|` + audioChannelTokenPattern + `)){0,2}|DTS[ .-]?X(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|DTS[ .-]?HD(?:[ .-]?(?:MA|HRA))?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|DTS(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|E-?AC-?3(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|DDPA(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|DDP(?:[ .-]*Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|DD(?:\+|Plus)(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|DD(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|AAC[ .-]*(?:` + audioChannelTokenPattern + `)|AAC|AC3(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|FLAC(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|L?PCM[ .-]*(?:` + audioChannelTokenPattern + `)|Opus[ .-]*(?:` + audioChannelTokenPattern + `)|[257][ .][01]|[268][ .-]*CH|Atmos)\b`)
+	qualityTokenPattern       = compileTokenPattern(qualityCatalog)
+	codecTokenPattern         = compileTokenPattern(codecCatalog)
+	hdrTokenPattern           = compileLooseEndTokenPattern(hdrCatalog)
+	audioTokenPattern         = compileTokenPattern(audioCatalog)
 	bitDepthPattern           = regexp.MustCompile(`(?i)\b(8|10|12|16|24)[ .-]?bits?\b`)
 	partPattern               = regexp.MustCompile(`(?i)\bPart[ .-]+([0-9]+|One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|I|II|III|IV|V|VI|VII|VIII|IX|X)\b`)
 	completePattern           = regexp.MustCompile(`(?i)\b(?:Complete(?:[ .-]+(?:Season|Series))?|Season[ .-]+[0-9]{1,2}(?:[ .-]*(?:to|-|\+|&)[ .-]*[0-9]{1,2})?[ .-]+Complete(?:[ .-]+Series)?|Seasons[ .-]+[0-9]{1,2}[ .-]+to[ .-]+[0-9]{1,2}[ .-]+Complete|S[0-9]{1,2}[ .-]*Complete)\b`)
-	editionTokenPattern       = regexp.MustCompile(`(?i)\b(?:Director'?s[ .-]+Cut|Directors[ .-]+Cut|DC|Hybrid|Theatrical(?:[ .-]+Cut)?|Special[ .-]+Edition|Open[ .-]+Matte|B&W|BW|Black[ .-]+and[ .-]+White|DUBBED|DUAL|Dual[ .-]+Audio|2[ .-]*Audios?|M[ .-]*Subs?|Multi[ .-]*Subs?|MultiSub)\b`)
-	languageTokenPattern      = regexp.MustCompile(`(?i)\b(?:Multi(?:Lang)?|VOSTFR|VFF|VFQ|ENG|ENGLISH|ITA|ITALIAN|FRE|FRENCH|GER|GERMAN|SPA|SPANISH|LAT|LATIN|RUS|RUSSIAN|JPN|JPS|JAP|JAPANESE|UKR|UKRAINIAN|HIN|HINDI|KOR|KOREAN|CHI|CHINESE)\b`)
+	editionTokenPattern       = compileTokenPattern(editionCatalog)
+	languageTokenPattern      = compileTokenPattern(languageCatalog)
 	remasteredPattern         = regexp.MustCompile(`(?i)\b(?:Remastered|RM4K|4K[ .-]+Remaster(?:ed)?)\b`)
 	imaxPattern               = regexp.MustCompile(`(?i)\bIMAX\b`)
 )
@@ -173,12 +173,10 @@ func hasSourceTokenContext(value string, match tokenMatch, source string) bool {
 }
 
 func requiresAdjacentReleaseContext(source string) bool {
-	switch source {
-	case "MAX", "NOW", "PLAY", "ROKU", "STAN", "STAR+", "STRP":
-		return true
-	default:
-		return false
+	if token, ok := sourceLookup[compactKey(source)]; ok {
+		return token.requiresContext
 	}
+	return false
 }
 
 func hasQualityBefore(value string, end int) bool {
@@ -278,12 +276,10 @@ func previousReleaseToken(value string, end int) string {
 }
 
 func isAmbiguousFinalSourceGroup(source string) bool {
-	switch source {
-	case "NOW", "PLAY", "PMTP", "ROKU", "STAN", "STAR+", "STRP":
-		return true
-	default:
-		return false
+	if token, ok := sourceLookup[compactKey(source)]; ok {
+		return token.ambiguousGroup
 	}
+	return false
 }
 
 func applyLanguage(info *TorrentInfo, value string) {

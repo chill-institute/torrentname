@@ -28,21 +28,10 @@ func collapseSpaces(value string) string {
 }
 
 func normalizeHDR(value string) string {
-	collapsed := strings.ToLower(strings.NewReplacer(" ", "", "-", "").Replace(value))
-	switch collapsed {
-	case "hdr":
-		return "HDR"
-	case "hdr10":
-		return "HDR10"
-	case "hdr10+", "hdr10plus", "hdr10p":
-		return "HDR10+"
-	case "dv", "dovi", "dolbyvision":
-		return "DV"
-	case "hlg":
-		return "HLG"
-	default:
-		return ""
+	if normalized, ok := hdrLookup[compactKey(value)]; ok {
+		return normalized
 	}
+	return ""
 }
 
 func normalizeAudioRich(value string) string {
@@ -126,7 +115,7 @@ func normalizeAudioRich(value string) string {
 }
 
 func compactUpperToken(value string) string {
-	return strings.ToUpper(strings.NewReplacer(" ", "", ".", "", "-", "", "_", "").Replace(strings.TrimSpace(value)))
+	return compactKey(value)
 }
 
 func normalizeDDPlus(collapsed string) string {
@@ -174,97 +163,24 @@ func formatChannel(value string) string {
 }
 
 func normalizeSource(value string) string {
-	upper := compactUpperToken(value)
-	switch upper {
-	case "ABEMA", "AMZN", "AUBC", "BILI", "CBC", "CPNG", "CR", "DSNP", "FOD", "HAMI", "HBO", "HMAX", "HULU", "HTSR", "IQIY", "ITVX", "KCW", "KKTV", "LINETV", "MY5", "MYTVSUPER", "NF", "NOW", "OVID", "PCOK", "PLAY", "PMTP", "ROKU", "STAN", "TVING", "TVER", "UNEXT", "VIKI", "VIU", "VRV", "WAVVE", "WETV", "YOUKU":
-		return upper
-	case "ATV", "ATV+", "ATVP":
-		return "ATVP"
-	case "BCORE":
-		return "BCORE"
-	case "CRAVE", "CRAV":
-		return "CRAVE"
-	case "CRIT":
-		return "CRiT"
-	case "FRIDAY":
-		return "friDay"
-	case "HBOM", "HBOMAX":
-		return "HMAX"
-	case "MAX":
-		return "MAX"
-	case "IT", "ITUNES":
-		return "iT"
-	case "IP":
-		return "iP"
-	case "STAR", "STAR+":
-		return "STAR+"
-	case "STRP":
-		return "STRP"
-	default:
-		return ""
+	if token, ok := sourceLookup[compactKey(value)]; ok {
+		return token.canonical
 	}
+	return ""
 }
 
 func normalizeLanguage(value string) string {
-	upper := compactUpperToken(value)
-	switch upper {
-	case "MULTI", "MULTILANG":
-		return "MULTI"
-	case "VOSTFR", "VFF", "VFQ":
-		return upper
-	case "ENG", "ENGLISH":
-		return "ENG"
-	case "ITA", "ITALIAN":
-		return "ITA"
-	case "FRE", "FRENCH":
-		return "FRE"
-	case "GER", "GERMAN":
-		return "GER"
-	case "SPA", "SPANISH":
-		return "SPA"
-	case "LAT", "LATIN":
-		return "LAT"
-	case "RUS", "RUSSIAN":
-		return "RUS"
-	case "JPN", "JPS", "JAP", "JAPANESE":
-		return "JPN"
-	case "UKR", "UKRAINIAN":
-		return "UKR"
-	case "HIN", "HINDI":
-		return "HIN"
-	case "KOR", "KOREAN":
-		return "KOR"
-	case "CHI", "CHINESE":
-		return "CHI"
-	default:
-		return ""
+	if normalized, ok := languageLookup[compactKey(value)]; ok {
+		return normalized
 	}
+	return ""
 }
 
 func normalizeEdition(value string) string {
-	collapsed := strings.ToLower(strings.NewReplacer(" ", "", ".", "", "-", "", "'", "").Replace(value))
-	switch collapsed {
-	case "directorscut", "dc":
-		return "Director's Cut"
-	case "hybrid":
-		return "Hybrid"
-	case "theatrical", "theatricalcut":
-		return "Theatrical Cut"
-	case "specialedition":
-		return "Special Edition"
-	case "openmatte":
-		return "Open Matte"
-	case "bw", "b&w", "blackandwhite":
-		return "Black and White"
-	case "dubbed":
-		return "Dubbed"
-	case "dual", "dualaudio", "2audio", "2audios":
-		return "Dual Audio"
-	case "msub", "msubs", "multisub", "multisubs":
-		return "Multi Subs"
-	default:
-		return ""
+	if normalized, ok := editionLookup[compactKey(strings.ReplaceAll(value, "'", ""))]; ok {
+		return normalized
 	}
+	return ""
 }
 
 func atoiOrZero(raw string) int {

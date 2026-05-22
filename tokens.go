@@ -17,7 +17,7 @@ var (
 		audioTokenPattern,
 		bitDepthPattern,
 	}
-	sourceTokenPattern = regexp.MustCompile(`(?i)(?:^|[^A-Za-z0-9])((?:ABEMA|AMZN|ATV\+?|ATVP|AUBC|BILI|B[ ._-]?CORE|CBC|CPNG|CR|CRAVE|CRAV|CRiT|DSNP|FOD|friDay|Hami|HBO[ ._-]?MAX|HBOM|HMAX|HBO|HTSR|HULU|iQIY|ITVX|iTUNES|iT|KCW|KKTV|LINE[ ._-]?TV|MAX|MY5|MyTVSuper|NF|NOW|OVID|PCOK|PLAY|PMTP|ROKU|STAN|STAR\+?|STRP|TVING|TVER|U[ ._-]?NEXT|Viki|VIU|VRV|WAVVE|WETV|YOUKU|iP))(?:$|[^A-Za-z0-9])`)
+	sourceTokenPattern = compileSourcePattern(sourceCatalog)
 )
 
 type tokenMatch struct {
