@@ -14,7 +14,7 @@ type pattern struct {
 }
 
 var patterns = []pattern{
-	{name: "season", re: regexp.MustCompile(`(?i)(s?([0-9]{1,2}))[ex]`), apply: setInt(func(t *TorrentInfo, value int) { t.Season = value })},
+	{name: "season", re: regexp.MustCompile(`(?i)\b((?:s?([0-9]{1,2}))[ex][0-9])`), apply: setInt(func(t *TorrentInfo, value int) { t.Season = value })},
 	{name: "season", re: regexp.MustCompile(`(?i)\b((?:s([0-9]{1,2}))(?:\b|[^a-z0-9]))`), apply: setInt(func(t *TorrentInfo, value int) { t.Season = value })},
 	{name: "season", re: regexp.MustCompile(`(?i)\b((?:Season)[ .-]+([0-9]{1,2}))\b`), apply: setInt(func(t *TorrentInfo, value int) { t.Season = value })},
 	{name: "episode", re: regexp.MustCompile(`(?i)([ex]([0-9]{2})(?:[^0-9]|$))`), apply: setInt(func(t *TorrentInfo, value int) { t.Episode = value })},

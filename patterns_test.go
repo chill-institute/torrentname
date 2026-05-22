@@ -106,6 +106,7 @@ func TestNormalizeModernAudioVariants(t *testing.T) {
 		"DDPlus.5.1":       "DD+ 5.1",
 		"DD+.Atmos.5.1":    "DD+ Atmos 5.1",
 		"DDPlus.5.1.Atmos": "DD+ Atmos 5.1",
+		"DDPA.5.1":         "DDP Atmos 5.1",
 		"DD.Atmos.5.1":     "DD Atmos 5.1",
 		"5.1":              "5.1",
 		"5 1":              "5.1",
@@ -119,6 +120,21 @@ func TestNormalizeModernAudioVariants(t *testing.T) {
 	for input, want := range cases {
 		if got := normalizeAudioRich(input); got != want {
 			t.Errorf("normalizeAudioRich(%q) = %q, want %q", input, got, want)
+		}
+	}
+}
+
+func TestNormalizeEditionShortMultiSub(t *testing.T) {
+	t.Parallel()
+
+	cases := map[string]string{
+		"M SUB":  "Multi Subs",
+		"M-SUB":  "Multi Subs",
+		"M Subs": "Multi Subs",
+	}
+	for input, want := range cases {
+		if got := normalizeEdition(input); got != want {
+			t.Errorf("normalizeEdition(%q) = %q, want %q", input, got, want)
 		}
 	}
 }

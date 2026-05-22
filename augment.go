@@ -15,11 +15,11 @@ var (
 	qualityTokenPattern       = regexp.MustCompile(`(?i)\b(?:UHD[ .-]+Blu[ .-]?Ray[ .-]+Remux|Blu[ .-]?Ray[ .-]+Remux|BDRemux|REMUX|WEB[ .-]?DL|WEB[ .-]?Rip|Blu[ .-]?Ray|HDRip|DVDRip|BRRip|BDRip|HDTV|PDTV|WEB)\b`)
 	codecTokenPattern         = regexp.MustCompile(`(?i)\b(?:xvid|x[ ._-]?26[45]|h[ ._-]?26[45]|HEVC|AVC|AV1)\b`)
 	hdrTokenPattern           = regexp.MustCompile(`(?i)\b(?:Dolby[ .-]+Vision|HDR10Plus\b|HDR10P\b|HDR10\+|HDR10\b|DoVi\b|DV\b|HLG\b|HDR\b)`)
-	audioTokenPattern         = regexp.MustCompile(`(?i)\b(?:TrueHD(?:[ .-]+(?:Atmos|` + audioChannelTokenPattern + `)){0,2}|DTS[ .-]?X(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|DTS[ .-]?HD(?:[ .-]?(?:MA|HRA))?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|DTS(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|E-?AC-?3(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|DDP(?:[ .-]*Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|DD(?:\+|Plus)(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|DD(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|AAC[ .-]*(?:` + audioChannelTokenPattern + `)|AAC|AC3(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|FLAC(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|L?PCM[ .-]*(?:` + audioChannelTokenPattern + `)|Opus[ .-]*(?:` + audioChannelTokenPattern + `)|[257][ .][01]|[268][ .-]*CH|Atmos)\b`)
+	audioTokenPattern         = regexp.MustCompile(`(?i)\b(?:TrueHD(?:[ .-]+(?:Atmos|` + audioChannelTokenPattern + `)){0,2}|DTS[ .-]?X(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|DTS[ .-]?HD(?:[ .-]?(?:MA|HRA))?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|DTS(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|E-?AC-?3(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|DDPA(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|DDP(?:[ .-]*Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|DD(?:\+|Plus)(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|DD(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?|AAC[ .-]*(?:` + audioChannelTokenPattern + `)|AAC|AC3(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|FLAC(?:[ .-]*(?:` + audioChannelTokenPattern + `))?|L?PCM[ .-]*(?:` + audioChannelTokenPattern + `)|Opus[ .-]*(?:` + audioChannelTokenPattern + `)|[257][ .][01]|[268][ .-]*CH|Atmos)\b`)
 	bitDepthPattern           = regexp.MustCompile(`(?i)\b(8|10|12|16|24)[ .-]?bits?\b`)
 	partPattern               = regexp.MustCompile(`(?i)\bPart[ .-]+([0-9]+|One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|I|II|III|IV|V|VI|VII|VIII|IX|X)\b`)
 	completePattern           = regexp.MustCompile(`(?i)\b(?:Complete(?:[ .-]+(?:Season|Series))?|Season[ .-]+[0-9]{1,2}(?:[ .-]*(?:to|-|\+|&)[ .-]*[0-9]{1,2})?[ .-]+Complete(?:[ .-]+Series)?|Seasons[ .-]+[0-9]{1,2}[ .-]+to[ .-]+[0-9]{1,2}[ .-]+Complete|S[0-9]{1,2}[ .-]*Complete)\b`)
-	editionTokenPattern       = regexp.MustCompile(`(?i)\b(?:Director'?s[ .-]+Cut|Directors[ .-]+Cut|DC|Hybrid|Theatrical(?:[ .-]+Cut)?|Special[ .-]+Edition|Open[ .-]+Matte|B&W|BW|Black[ .-]+and[ .-]+White|DUBBED|DUAL|Dual[ .-]+Audio|2[ .-]*Audios?|Multi[ .-]*Subs?|MultiSub)\b`)
+	editionTokenPattern       = regexp.MustCompile(`(?i)\b(?:Director'?s[ .-]+Cut|Directors[ .-]+Cut|DC|Hybrid|Theatrical(?:[ .-]+Cut)?|Special[ .-]+Edition|Open[ .-]+Matte|B&W|BW|Black[ .-]+and[ .-]+White|DUBBED|DUAL|Dual[ .-]+Audio|2[ .-]*Audios?|M[ .-]*Subs?|Multi[ .-]*Subs?|MultiSub)\b`)
 	languageTokenPattern      = regexp.MustCompile(`(?i)\b(?:Multi(?:Lang)?|VOSTFR|VFF|VFQ|ENG|ENGLISH|ITA|ITALIAN|FRE|FRENCH|GER|GERMAN|SPA|SPANISH|LAT|LATIN|RUS|RUSSIAN|JPN|JPS|JAP|JAPANESE|UKR|UKRAINIAN|HIN|HINDI|KOR|KOREAN|CHI|CHINESE)\b`)
 	remasteredPattern         = regexp.MustCompile(`(?i)\b(?:Remastered|RM4K|4K[ .-]+Remaster(?:ed)?)\b`)
 	imaxPattern               = regexp.MustCompile(`(?i)\bIMAX\b`)
@@ -307,7 +307,15 @@ func applyLanguage(info *TorrentInfo, value string) {
 	}
 	if len(tokens) >= 2 || hasExplicitMulti {
 		info.Language = strings.Join(tokens, " ")
+		return
 	}
+	if len(tokens) == 1 && isStrongSingleLanguageMarker(tokens[0]) {
+		info.Language = tokens[0]
+	}
+}
+
+func isStrongSingleLanguageMarker(value string) bool {
+	return value == "JPN" || value == "KOR"
 }
 
 func hasMultiSubtitleMarker(value string) bool {

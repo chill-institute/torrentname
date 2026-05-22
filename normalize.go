@@ -73,6 +73,8 @@ func normalizeAudioRich(value string) string {
 		return normalizeDDPlus(collapsed)
 	case strings.HasPrefix(collapsed, "ddplus"):
 		return normalizeDDPlus(collapsed)
+	case strings.HasPrefix(collapsed, "ddpa"):
+		return "DDP Atmos" + normalizeOptionalChannel(collapsed, "ddpa")
 	case strings.HasPrefix(collapsed, "ddpatmos"):
 		return "DDP Atmos" + normalizeOptionalChannel(collapsed, "ddpatmos")
 	case strings.HasPrefix(collapsed, "ddp"):
@@ -174,7 +176,7 @@ func formatChannel(value string) string {
 func normalizeSource(value string) string {
 	upper := compactUpperToken(value)
 	switch upper {
-	case "AMZN", "AUBC", "CBC", "CPNG", "CR", "DSNP", "FOD", "HAMI", "HBO", "HMAX", "HULU", "HTSR", "IQIY", "ITVX", "KCW", "KKTV", "LINETV", "MY5", "MYTVSUPER", "NF", "NOW", "OVID", "PCOK", "PLAY", "PMTP", "ROKU", "STAN", "TVING", "TVER", "UNEXT", "VIKI", "VIU", "VRV", "WAVVE", "WETV", "YOUKU":
+	case "ABEMA", "AMZN", "AUBC", "BILI", "CBC", "CPNG", "CR", "DSNP", "FOD", "HAMI", "HBO", "HMAX", "HULU", "HTSR", "IQIY", "ITVX", "KCW", "KKTV", "LINETV", "MY5", "MYTVSUPER", "NF", "NOW", "OVID", "PCOK", "PLAY", "PMTP", "ROKU", "STAN", "TVING", "TVER", "UNEXT", "VIKI", "VIU", "VRV", "WAVVE", "WETV", "YOUKU":
 		return upper
 	case "ATV", "ATV+", "ATVP":
 		return "ATVP"
@@ -258,7 +260,7 @@ func normalizeEdition(value string) string {
 		return "Dubbed"
 	case "dual", "dualaudio", "2audio", "2audios":
 		return "Dual Audio"
-	case "multisub", "multisubs":
+	case "msub", "msubs", "multisub", "multisubs":
 		return "Multi Subs"
 	default:
 		return ""
