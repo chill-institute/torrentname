@@ -349,6 +349,333 @@ func TestParserDoesNotPanicOnJackettFixtureTitle(t *testing.T) {
 	}
 }
 
+func TestParseCommonResolutionAliases(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name       string
+		filename   string
+		resolution string
+		quality    string
+	}{
+		{name: "uhd", filename: "Show.Name.S01E02.UHD.WEB-DL.H265", resolution: "2160p", quality: "WEB-DL"},
+		{name: "4k", filename: "Show.Name.S01E02.4K.WEB-DL.H265", resolution: "2160p", quality: "WEB-DL"},
+		{name: "sd", filename: "Show.Name.S01E02.SD.WEB-DL.H265", resolution: "480p", quality: "WEB-DL"},
+		{name: "hd", filename: "Show.Name.S01E02.HD.WEB-DL.H265", resolution: "720p", quality: "WEB-DL"},
+		{name: "fhd", filename: "Show.Name.S01E02.FHD.WEB-DL.H265", resolution: "1080p", quality: "WEB-DL"},
+		{name: "uppercase 1080p", filename: "Show.Name.S01E02.1080P.WEB-DL.H265", resolution: "1080p", quality: "WEB-DL"},
+		{name: "uppercase 2160p", filename: "Show.Name.S01E02.2160P.WEB-DL.H265", resolution: "2160p", quality: "WEB-DL"},
+		{name: "uppercase 720p", filename: "Show.Name.S01E02.720P.WEB-DL.H265", resolution: "720p", quality: "WEB-DL"},
+		{name: "uppercase 480p", filename: "Show.Name.S01E02.480P.WEB-DL.H265", resolution: "480p", quality: "WEB-DL"},
+		{name: "explicit numeric over uhd", filename: "Show.Name.S01E02.UHD.WEBRip.1080p.H265", resolution: "1080p", quality: "WEBRip"},
+	}
+
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := Parse(tc.filename)
+			if err != nil {
+				t.Fatalf("Parse(%q) error = %v", tc.filename, err)
+			}
+			want := TorrentInfo{
+				Title:      "Show Name",
+				Season:     1,
+				Episode:    2,
+				Resolution: tc.resolution,
+				Quality:    tc.quality,
+				Codec:      "H265",
+			}
+			assertTorrentInfo(t, tc.filename, *got, want)
+		})
+	}
+}
+
+func TestParseBroadResolutionAliasesDoNotTruncateTitles(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		filename string
+		want     TorrentInfo
+	}{
+		{
+			filename: "SD.Gundam.World.Heroes.S01E01.1080p.WEB-DL.H265",
+			want: TorrentInfo{
+				Title:      "SD Gundam World Heroes",
+				Season:     1,
+				Episode:    1,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H265",
+			},
+		},
+		{
+			filename: "SD.Gundam.World.Heroes.S01E01.WEB-DL.H265",
+			want: TorrentInfo{
+				Title:   "SD Gundam World Heroes",
+				Season:  1,
+				Episode: 1,
+				Quality: "WEB-DL",
+				Codec:   "H265",
+			},
+		},
+		{
+			filename: "Movie.Name.FHD.WEB-DL.H265",
+			want: TorrentInfo{
+				Title:      "Movie Name",
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H265",
+			},
+		},
+		{
+			filename: "Show.S01E01.FHD.NF.WEB-DL.H265",
+			want: TorrentInfo{
+				Title:      "Show",
+				Season:     1,
+				Episode:    1,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Codec:      "H265",
+				Source:     "NF",
+			},
+		},
+		{
+			filename: "Movie.Name.HD.WEB-DL.H265",
+			want: TorrentInfo{
+				Title:      "Movie Name",
+				Resolution: "720p",
+				Quality:    "WEB-DL",
+				Codec:      "H265",
+			},
+		},
+		{
+			filename: "Show.S01E01.MAX.HD.WEB-DL.H264",
+			want: TorrentInfo{
+				Title:      "Show",
+				Season:     1,
+				Episode:    1,
+				Resolution: "720p",
+				Quality:    "WEB-DL",
+				Codec:      "H264",
+				Source:     "MAX",
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		got, err := Parse(tc.filename)
+		if err != nil {
+			t.Fatalf("Parse(%q) error = %v", tc.filename, err)
+		}
+		assertTorrentInfo(t, tc.filename, *got, tc.want)
+	}
+}
+
+func TestParseResolutionAliasesDoNotSplitQualityTokens(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		filename string
+		want     TorrentInfo
+	}{
+		{
+			name:     "hdtv is quality only",
+			filename: "Show.Name.S01E02.HDTV.x264",
+			want: TorrentInfo{
+				Title:   "Show Name",
+				Season:  1,
+				Episode: 2,
+				Quality: "HDTV",
+				Codec:   "x264",
+			},
+		},
+		{
+			name:     "hdts is quality only",
+			filename: "Movie.2024.HDTS.x264",
+			want: TorrentInfo{
+				Title:   "Movie",
+				Year:    2024,
+				Quality: "TS",
+				Codec:   "x264",
+			},
+		},
+		{
+			name:     "hd ts is quality only",
+			filename: "Movie.2024.HD-TS.x264",
+			want: TorrentInfo{
+				Title:   "Movie",
+				Year:    2024,
+				Quality: "TS",
+				Codec:   "x264",
+			},
+		},
+		{
+			name:     "hd tc is quality only",
+			filename: "Movie.2024.HD.TC.x264",
+			want: TorrentInfo{
+				Title:   "Movie",
+				Year:    2024,
+				Quality: "TC",
+				Codec:   "x264",
+			},
+		},
+		{
+			name:     "hd cam is quality only",
+			filename: "Movie.2024.HD CAM.x264",
+			want: TorrentInfo{
+				Title:   "Movie",
+				Year:    2024,
+				Quality: "CAM",
+				Codec:   "x264",
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := Parse(tc.filename)
+			if err != nil {
+				t.Fatalf("Parse(%q) error = %v", tc.filename, err)
+			}
+			assertTorrentInfo(t, tc.filename, *got, tc.want)
+		})
+	}
+}
+
+func TestParseCommonQualityAliases(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		filename string
+		quality  string
+	}{
+		{name: "hdtc", filename: "Movie.2024.HDTC.x264", quality: "TC"},
+		{name: "tc", filename: "Movie.2024.TC.x264", quality: "TC"},
+		{name: "telecine", filename: "Movie.2024.Telecine.x264", quality: "TC"},
+		{name: "hdts", filename: "Movie.2024.HDTS.x264", quality: "TS"},
+		{name: "telesync", filename: "Movie.2024.Telesync.x264", quality: "TS"},
+		{name: "hdcam", filename: "Movie.2024.HDCAM.x264", quality: "CAM"},
+		{name: "camrip", filename: "Movie.2024.CAMRip.x264", quality: "CAM"},
+		{name: "ppv hdtv", filename: "Movie.2024.PPV.HDTV.x264", quality: "PPV.HDTV"},
+		{name: "dvdscr", filename: "Movie.2024.DvDScr.x264", quality: "DvDScr"},
+	}
+
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := Parse(tc.filename)
+			if err != nil {
+				t.Fatalf("Parse(%q) error = %v", tc.filename, err)
+			}
+			want := TorrentInfo{
+				Title:   "Movie",
+				Year:    2024,
+				Quality: tc.quality,
+				Codec:   "x264",
+			}
+			assertTorrentInfo(t, tc.filename, *got, want)
+		})
+	}
+}
+
+func TestParsePPVWebDLStartsQualityBoundaryAtPrefix(t *testing.T) {
+	t.Parallel()
+
+	got, err := Parse("Movie.PPV.WEB-DL.x264")
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+
+	want := TorrentInfo{
+		Title:   "Movie",
+		Quality: "WEB-DL",
+		Codec:   "x264",
+	}
+	assertTorrentInfo(t, "Movie.PPV.WEB-DL.x264", *got, want)
+}
+
+func TestParseLegacyAudioAliases(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		filename string
+		audio    string
+	}{
+		{name: "mp3", filename: "Movie.2024.WEB-DL.MP3.x264", audio: "MP3"},
+		{name: "line", filename: "Movie.2024.WEB-DL.LiNE.x264", audio: "LiNE"},
+		{name: "aac lc", filename: "Movie.2024.WEB-DL.AAC-LC.x264", audio: "AAC"},
+		{name: "ac3 compact channel", filename: "Movie.2024.WEB-DL.AC3.5.1.x264", audio: "AC3 5.1"},
+	}
+
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := Parse(tc.filename)
+			if err != nil {
+				t.Fatalf("Parse(%q) error = %v", tc.filename, err)
+			}
+			want := TorrentInfo{
+				Title:   "Movie",
+				Year:    2024,
+				Quality: "WEB-DL",
+				Codec:   "x264",
+				Audio:   tc.audio,
+			}
+			assertTorrentInfo(t, tc.filename, *got, want)
+		})
+	}
+}
+
+func TestParseLineTVSourceDoesNotSetLineAudio(t *testing.T) {
+	t.Parallel()
+
+	got, err := Parse("Show.S01E01.1080p.LINE.TV.WEB-DL.H264")
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+
+	want := TorrentInfo{
+		Title:      "Show",
+		Season:     1,
+		Episode:    1,
+		Resolution: "1080p",
+		Quality:    "WEB-DL",
+		Codec:      "H264",
+		Source:     "LINETV",
+	}
+	assertTorrentInfo(t, "Show.S01E01.1080p.LINE.TV.WEB-DL.H264", *got, want)
+}
+
+func TestParseDualAudioWithBareChannelIsOrderIndependent(t *testing.T) {
+	t.Parallel()
+
+	got, err := Parse("Movie.2024.5.1.Dual Audio.WEB-DL.x264")
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+	want := TorrentInfo{
+		Title:   "Movie",
+		Year:    2024,
+		Quality: "WEB-DL",
+		Codec:   "x264",
+		Audio:   "Dual Audio",
+		Edition: "Dual Audio",
+	}
+	assertTorrentInfo(t, "Movie.2024.5.1.Dual Audio.WEB-DL.x264", *got, want)
+}
+
 func TestReleaseInfoExamples(t *testing.T) {
 	t.Parallel()
 
@@ -1010,6 +1337,17 @@ func TestReleaseInfoExamples(t *testing.T) {
 				Resolution: "1080p",
 				Quality:    "WEB-DL",
 				Audio:      "FLAC",
+			},
+		},
+		{
+			name:     "terminal ddplus audio metadata is not group",
+			filename: "Sample.Movie.2024.1080p.WEB-DL.DDPlus",
+			want: TorrentInfo{
+				Title:      "Sample Movie",
+				Year:       2024,
+				Resolution: "1080p",
+				Quality:    "WEB-DL",
+				Audio:      "DD+",
 			},
 		},
 		{

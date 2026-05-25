@@ -11,7 +11,7 @@ var (
 		`\bS[0-9]{1,2}E[0-9]{1,3}(?:[ .-]*E?[0-9]{1,3})?\b` +
 		`|\bSeason[ .-]+[0-9]{1,2}\b` +
 		`|\b(?:19[0-9]{2}|20[0-9]{2})\b` +
-		`|\b(?:[0-9]{3,4}p|4K)\b` +
+		`|\b(?:` + tokenPatternAlternates(resolutionCatalog, broadResolutionAliasContextPattern, `[0-9]{3,4}p`) + `)\b` +
 		`|\b(?:` + strings.Join(tokenPatterns(qualityCatalog), "|") + `)\b` +
 		`|\b(?:` + strings.Join(tokenPatterns(codecCatalog), "|") + `)\b` +
 		`|\b(?:` + strings.Join(tokenPatterns(hdrCatalog), "|") + `)` +

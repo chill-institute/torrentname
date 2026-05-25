@@ -11,6 +11,7 @@ func TestCatalogAliasNormalization(t *testing.T) {
 		normalize func(string) string
 	}{
 		{name: "hdr", tokens: hdrCatalog, normalize: normalizeHDR},
+		{name: "resolution", tokens: resolutionCatalog, normalize: normalizeResolution},
 		{name: "codec", tokens: codecCatalog, normalize: normalizeCodec},
 		{name: "language", tokens: languageCatalog, normalize: normalizeLanguage},
 		{name: "edition", tokens: editionCatalog, normalize: normalizeEdition},
@@ -55,5 +56,24 @@ func TestSourceCatalogNormalizesAndMatches(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestCatalogTokensCountAsGroupMetadata(t *testing.T) {
+	t.Parallel()
+
+	cases := map[string]bool{
+		"FHD":    true,
+		"DvDScr": true,
+		"HEVC":   true,
+		"HDR10":  true,
+		"TrueHD": true,
+		"MKV":    true,
+		"RlsGrp": false,
+	}
+	for token, want := range cases {
+		if got := looksLikeMetadataToken(token); got != want {
+			t.Errorf("looksLikeMetadataToken(%q) = %v, want %v", token, got, want)
+		}
 	}
 }

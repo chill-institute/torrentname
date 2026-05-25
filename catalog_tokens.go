@@ -9,8 +9,15 @@ var (
 		{canonical: "HLG", aliases: []string{"HLG"}, patterns: []string{`HLG\b`}},
 	}
 
+	resolutionCatalog = []aliasToken{
+		{canonical: "480p", aliases: []string{"480P", "SD"}, patterns: []string{`480p`}},
+		{canonical: "720p", aliases: []string{"720P", "HD"}, patterns: []string{`720p`}},
+		{canonical: "1080p", aliases: []string{"1080P", "FHD"}, patterns: []string{`1080p`}},
+		{canonical: "2160p", aliases: []string{"2160P", "4K", "UHD"}, patterns: []string{`2160p`, `4K`, `UHD`}},
+	}
+
 	qualityCatalog = []aliasToken{
-		{canonical: "WEB-DL", aliases: []string{"WEB-DL", "WEB DL", "WEBDL", "PPV WEBDL", "HD WEBDL"}, patterns: []string{`WEB[ .-]?DL`}},
+		{canonical: "WEB-DL", aliases: []string{"WEB-DL", "WEB DL", "WEBDL", "PPV WEBDL", "HD WEBDL"}, patterns: []string{`(?:PPV|HD)[ .-]?WEB[ .-]?DL`, `WEB[ .-]?DL`}},
 		{canonical: "WEBRip", aliases: []string{"WEBRip", "WEB Rip", "WBRip"}, patterns: []string{`WEB[ .-]?Rip`, `WBRip`}},
 		{canonical: "WEB", aliases: []string{"WEB"}, patterns: []string{`WEB`}},
 		{canonical: "BluRay", aliases: []string{"BluRay", "Blu Ray"}, patterns: []string{`Blu[ .-]?Ray`}},
@@ -19,8 +26,12 @@ var (
 		{canonical: "DVDRip", aliases: []string{"DVDRip", "DVDRIP"}, patterns: []string{`DVDRip`, `DVDRIP`}},
 		{canonical: "BRRip", aliases: []string{"BRRip"}, patterns: []string{`BRRip`}},
 		{canonical: "BDRip", aliases: []string{"BDRip"}, patterns: []string{`BDRip`}},
-		{canonical: "HDTV", aliases: []string{"HDTV"}, patterns: []string{`HDTV`}},
-		{canonical: "PDTV", aliases: []string{"PDTV"}, patterns: []string{`PDTV`}},
+		{canonical: "HDTV", aliases: []string{"HDTV", "PPV.HDTV"}, patterns: []string{`(?:PPV\.)?HDTV`}},
+		{canonical: "PDTV", aliases: []string{"PDTV", "PPV.PDTV"}, patterns: []string{`(?:PPV\.)?PDTV`}},
+		{canonical: "TC", aliases: []string{"TC", "HDTC", "Telecine"}, patterns: []string{`(?:HD[ .-]?)?TC`, `Telecine`}},
+		{canonical: "TS", aliases: []string{"HDTS", "Telesync"}, patterns: []string{`(?:HD[ .-]?)?TS`, `Telesync`}},
+		{canonical: "CAM", aliases: []string{"HDCAM", "CAMRip"}, patterns: []string{`(?:HD)?CAM`, `CAMRip`}},
+		{canonical: "DvDScr", aliases: []string{"DvDScr", "DVDScr"}, patterns: []string{`DvDScr`}},
 	}
 
 	codecCatalog = []aliasToken{
@@ -64,6 +75,7 @@ var (
 	}
 
 	audioCatalog = []aliasToken{
+		{canonical: "MP3", patterns: []string{`MP3`}},
 		{canonical: "TrueHD", patterns: []string{`TrueHD(?:[ .-]+(?:Atmos|` + audioChannelTokenPattern + `)){0,2}`}},
 		{canonical: "DTS X", patterns: []string{`DTS[ .-]?X(?:[ .-]*(?:` + audioChannelTokenPattern + `))?`}},
 		{canonical: "DTS-HD", patterns: []string{`DTS[ .-]?HD(?:[ .-]?(?:MA|HRA))?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?`}},
@@ -71,16 +83,71 @@ var (
 		{canonical: "EAC3", patterns: []string{`E-?AC-?3(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?`}},
 		{canonical: "DDP Atmos", patterns: []string{`DDPA(?:[ .-]*(?:` + audioChannelTokenPattern + `))?`}},
 		{canonical: "DDP", patterns: []string{`DDP(?:[ .-]*Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?`}},
-		{canonical: "DD+", patterns: []string{`DD(?:\+|Plus)(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?`}},
+		{canonical: "DD+", aliases: []string{"DDPlus"}, patterns: []string{`DD(?:\+|Plus)(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?`}},
 		{canonical: "DD", patterns: []string{`DD(?:[ .-]+Atmos)?(?:[ .-]*(?:` + audioChannelTokenPattern + `))?(?:[ .-]+Atmos)?`}},
-		{canonical: "AAC", patterns: []string{`AAC[ .-]*(?:` + audioChannelTokenPattern + `)`, `AAC`}},
-		{canonical: "AC3", patterns: []string{`AC3(?:[ .-]*(?:` + audioChannelTokenPattern + `))?`}},
+		{canonical: "AAC", patterns: []string{`AAC[ .-]*LC`, `AAC[ .-]*(?:` + audioChannelTokenPattern + `)`, `AAC`}},
+		{canonical: "AC3", patterns: []string{`AC3(?:[ .-]*(?:` + audioChannelTokenPattern + `)|\.5\.1)?`}},
 		{canonical: "FLAC", patterns: []string{`FLAC(?:[ .-]*(?:` + audioChannelTokenPattern + `))?`}},
 		{canonical: "PCM", patterns: []string{`L?PCM[ .-]*(?:` + audioChannelTokenPattern + `)`}},
 		{canonical: "Opus", patterns: []string{`Opus[ .-]*(?:` + audioChannelTokenPattern + `)`}},
+		{canonical: "Dual Audio", aliases: []string{"Dual-Audio"}, patterns: []string{`Dual[\- ]Audio`}},
 		{canonical: "Channel", patterns: []string{`[257][ .][01]`, `[268][ .-]*CH`}},
 		{canonical: "Atmos", patterns: []string{`Atmos`}},
+		{canonical: "LiNE", patterns: []string{`LiNE`}},
 	}
+
+	containerCatalog = []aliasToken{
+		{canonical: "MKV", aliases: []string{"mkv"}, patterns: []string{`MKV`}},
+		{canonical: "AVI", aliases: []string{"avi"}, patterns: []string{`AVI`}},
+		{canonical: "MP4", aliases: []string{"mp4"}, patterns: []string{`MP4`}},
+	}
+
+	extendedCatalog = []aliasToken{
+		{canonical: "EXTENDED", aliases: []string{"EXTENDED CUT"}, patterns: []string{`EXTENDED(?:[ .-]?CUT)?`}},
+	}
+
+	hardcodedCatalog = []aliasToken{
+		{canonical: "HC", aliases: []string{"HC SUB", "HC-SUB", "HCSUB", "KOR SUB", "KOR-SUB", "KORSUB"}, patterns: []string{`HC[ .-]?SUB`, `HCSUB`, `KOR[ .-]?SUB`, `KORSUB`, `HC`}},
+	}
+
+	properCatalog = []aliasToken{
+		{canonical: "PROPER", patterns: []string{`PROPER`}},
+	}
+
+	repackCatalog = []aliasToken{
+		{canonical: "REPACK", patterns: []string{`REPACK`}},
+	}
+
+	remasteredCatalog = []aliasToken{
+		{canonical: "REMASTERED", patterns: []string{`REMASTERED`}},
+	}
+
+	widescreenCatalog = []aliasToken{
+		{canonical: "WS", patterns: []string{`WS`}},
+	}
+
+	unratedCatalog = []aliasToken{
+		{canonical: "UNRATED", patterns: []string{`UNRATED`}},
+	}
+
+	threeDCatalog = []aliasToken{
+		{canonical: "3D", patterns: []string{`3D`}},
+	}
+
+	imaxCatalog = []aliasToken{
+		{canonical: "IMAX", patterns: []string{`IMAX`}},
+	}
+
+	flagCatalog = mergeAliasTokens(extendedCatalog, hardcodedCatalog, properCatalog, repackCatalog, remasteredCatalog, widescreenCatalog, unratedCatalog, threeDCatalog, imaxCatalog)
+
+	broadResolutionAliasContextCatalog = mergeAliasTokens(
+		selectAliasTokens(qualityCatalog, "WEB-DL", "WEBRip", "WEB", "BluRay", "REMUX", "HDRip", "DVDRip", "BRRip", "BDRip", "HDTV", "PDTV", "DvDScr"),
+		codecCatalog,
+		hdrCatalog,
+		audioCatalog,
+	)
+	broadResolutionReleaseContextPattern = tokenPatternAlternates(broadResolutionAliasContextCatalog)
+	broadResolutionAliasContextPattern   = `(?:SD|HD|FHD)[ ._-]+(?:(?:` + broadResolutionReleaseContextPattern + `)|(?:` + sourceTokenPatternAlternates(sourceCatalog) + `)[ ._-]+(?:` + broadResolutionReleaseContextPattern + `))`
 
 	sourceCatalog = []sourceToken{
 		{canonical: "ABEMA", aliases: []string{"ABEMA"}, patterns: []string{`ABEMA`}},
@@ -135,10 +202,14 @@ var (
 )
 
 var (
-	hdrLookup      = buildAliasLookup(hdrCatalog)
-	qualityLookup  = buildAliasLookup(qualityCatalog)
-	codecLookup    = buildAliasLookup(codecCatalog)
-	languageLookup = buildAliasLookup(languageCatalog)
-	editionLookup  = buildAliasLookup(editionCatalog)
-	sourceLookup   = buildSourceLookup(sourceCatalog)
+	hdrLookup        = buildAliasLookup(hdrCatalog)
+	resolutionLookup = buildAliasLookup(resolutionCatalog)
+	qualityLookup    = buildAliasLookup(qualityCatalog)
+	codecLookup      = buildAliasLookup(codecCatalog)
+	audioLookup      = buildAliasLookup(audioCatalog)
+	containerLookup  = buildAliasLookup(containerCatalog)
+	flagLookup       = buildAliasLookup(flagCatalog)
+	languageLookup   = buildAliasLookup(languageCatalog)
+	editionLookup    = buildAliasLookup(editionCatalog)
+	sourceLookup     = buildSourceLookup(sourceCatalog)
 )

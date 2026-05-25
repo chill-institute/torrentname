@@ -89,7 +89,8 @@ func cleanGroup(value string) string {
 func trimKnownContainerSuffix(value string) string {
 	value = strings.TrimSpace(value)
 	lowered := strings.ToLower(value)
-	for _, suffix := range []string{".mkv", ".mp4", ".avi"} {
+	for _, token := range containerCatalog {
+		suffix := "." + strings.ToLower(token.canonical)
 		if strings.HasSuffix(lowered, suffix) {
 			return value[:len(value)-len(suffix)]
 		}
@@ -111,12 +112,41 @@ func containsMetadataToken(value string) bool {
 
 func looksLikeMetadataToken(value string) bool {
 	lowered := strings.ToLower(strings.TrimSpace(value))
+	if isCatalogMetadataToken(value) {
+		return true
+	}
 	switch lowered {
-	case "mkv", "mp4", "avi", "web", "dl", "rip", "webrip", "webdl", "hdtv", "pdtv", "hdrip", "dvdrip", "bdrip", "brrip", "bluray", "remux", "hevc", "avc", "av1", "xvid", "x264", "x265", "h264", "h265", "aac", "ac3", "eac3", "dd+", "ddplus", "ddp", "dts", "dts-hd", "flac", "opus", "pcm", "atmos", "truehd", "multi", "multisub", "multisubs", "dual", "audio", "subs", "sub", "proper", "repack", "remastered", "imax", "hdr", "hdr10", "hdr10plus", "dv", "dovi", "hlg":
+	case "dl", "rip", "multi", "multisub", "multisubs", "dual", "audio", "subs", "sub", "proper", "repack", "remastered", "imax":
 		return true
 	default:
 		return false
 	}
+}
+
+func isCatalogMetadataToken(value string) bool {
+	key := compactKey(value)
+	if _, ok := resolutionLookup[key]; ok {
+		return true
+	}
+	if _, ok := qualityLookup[key]; ok {
+		return true
+	}
+	if _, ok := codecLookup[key]; ok {
+		return true
+	}
+	if _, ok := hdrLookup[key]; ok {
+		return true
+	}
+	if _, ok := audioLookup[key]; ok {
+		return true
+	}
+	if _, ok := containerLookup[key]; ok {
+		return true
+	}
+	if _, ok := flagLookup[key]; ok {
+		return true
+	}
+	return false
 }
 
 func looksLikeHash(value string) bool {

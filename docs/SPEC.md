@@ -20,11 +20,11 @@
 | `EpisodeEnd` | Episode ranges such as `S01E01-E03` and `S01E01 03 of 10` | Integer without leading zero |
 | `Part` | `Part 1`, `Part One`, and roman numerals through `X` | Integer |
 | `Year` | Years from `1900` through `2099` | Integer |
-| `Resolution` | `480p`, `720p`, `1080p`, `2160p`, and similar `p` tokens | Preserved token |
-| `Quality` | WEB, WEB-DL, WEBRip, HDTV, BluRay, REMUX, HDRip, DVDRip, BRRip, BDRip, CAM/TS-style tokens | Common web, BluRay, and remux variants collapse to canonical spellings |
+| `Resolution` | `SD`, `HD`, `FHD`, `480p`, `720p`, `1080p`, `2160p`, uppercase `P` variants, `4K`, and `UHD` | Common aliases normalize to numeric `p` forms; numeric tokens canonicalize to lowercase; explicit numeric tokens take precedence when both appear |
+| `Quality` | WEB, WEB-DL, WEBRip, HDTV, PDTV, BluRay, REMUX, HDRip, DVDRip, BRRip, BDRip, DvDScr, CAM/TS/TC-style tokens | Common web, BluRay, remux, telecine, telesync, and cam variants collapse to canonical spellings such as `WEB-DL`, `REMUX`, `TC`, `TS`, and `CAM` |
 | `Codec` | x264, x265, H.264, H.265, AVC, HEVC, AV1, XViD | Common aliases collapse to `x264`, `x265`, `H264`, `H265`, `AV1`, or `XViD` |
 | `HDR` | HDR, HDR10, HDR10+, DV/DoVi/Dolby Vision, HLG | Ordered unique tokens such as `HDR10+ DV` |
-| `Audio` | AAC, AC3, EAC3, DDP, DDPA, DD, DTS, DTS X, DTS-HD MA/HRA, TrueHD, Atmos, FLAC, PCM/LPCM, Opus, and channel tokens including `2CH`, `6CH`, `8CH`, `2.0`, `5.1`, and `7.1` | Common channel variants collapse to forms such as `DDP5.1`, `DDP Atmos 5.1`, `DD Atmos 5.1`, `EAC3 5.1`, `EAC3 Atmos 5.1`, `PCM 2.0`, `TrueHD Atmos 7.1` |
+| `Audio` | MP3, AAC/AAC-LC, AC3, EAC3, DDP, DDPA, DD, DTS, DTS X, DTS-HD MA/HRA, TrueHD, Atmos, FLAC, LiNE, PCM/LPCM, Opus, dual-audio markers, and channel tokens including `2CH`, `6CH`, `8CH`, `2.0`, `5.1`, and `7.1` | Common channel variants collapse to forms such as `DDP5.1`, `DDP Atmos 5.1`, `DD Atmos 5.1`, `EAC3 5.1`, `EAC3 Atmos 5.1`, `PCM 2.0`, `TrueHD Atmos 7.1`; real audio tokens take precedence over dual-audio edition markers |
 | `Source` | Known source tags after release metadata, including ABEMA, AMZN, ATVP, BILI, BCORE, CR, DSNP, HULU, NF, PCOK, PMTP, ROKU, STAN, HMAX/HBO/MAX, iT/iP, and other current streaming-service tags | Canonical uppercase except stylized tags such as `iT`, `iP`, and `CRiT` |
 | `Group` | Dash suffixes, bracket suffixes, and advanced release trailing group names | Wrapper characters and spaces are stripped; metadata-looking tokens are ignored |
 | `Website` | Leading bracket tags such as `[Source]` | Trimmed bracket content |

@@ -42,6 +42,8 @@ func normalizeHDR(value string) string {
 func normalizeAudioRich(value string) string {
 	collapsed := strings.ToLower(audioCompactReplacer.Replace(value))
 	switch {
+	case strings.HasPrefix(collapsed, "mp3"):
+		return "MP3"
 	case strings.HasPrefix(collapsed, "truehdatmos"):
 		return "TrueHD Atmos" + normalizeOptionalChannel(collapsed, "truehdatmos")
 	case strings.HasPrefix(collapsed, "truehd"):
@@ -108,6 +110,13 @@ func normalizeAudioRich(value string) string {
 		return "PCM" + normalizeOptionalChannel(collapsed, "pcm")
 	case strings.HasPrefix(collapsed, "opus"):
 		return "Opus" + normalizeOptionalChannel(collapsed, "opus")
+	case collapsed == "dualaudio":
+		if strings.Contains(value, "-") {
+			return "Dual-Audio"
+		}
+		return "Dual Audio"
+	case collapsed == "line":
+		return "LiNE"
 	case collapsed == "2ch", collapsed == "6ch", collapsed == "8ch":
 		return strings.TrimSpace(normalizeChannelFromCollapsed(collapsed))
 	case collapsed == "20", collapsed == "51", collapsed == "71":
@@ -186,6 +195,49 @@ func normalizeEdition(value string) string {
 		return normalized
 	}
 	return ""
+}
+
+func normalizeResolution(value string) string {
+	if normalized, ok := resolutionLookup[compactKey(value)]; ok {
+		return normalized
+	}
+	if token := firstDelimitedToken(value); token != value {
+		if normalized, ok := resolutionLookup[compactKey(token)]; ok {
+			return normalized
+		}
+	}
+	if isNumericResolutionToken(value) {
+		return strings.ToLower(value)
+	}
+	return ""
+}
+
+func firstDelimitedToken(value string) string {
+	value = strings.TrimSpace(value)
+	end := strings.IndexFunc(value, func(r rune) bool {
+		return r == '.' || r == '-' || r == '_' || r == ' '
+	})
+	if end < 0 {
+		return value
+	}
+	return value[:end]
+}
+
+func isNumericResolutionToken(value string) bool {
+	value = strings.TrimSpace(value)
+	if len(value) < 2 {
+		return false
+	}
+	suffix := value[len(value)-1]
+	if suffix != 'p' && suffix != 'P' {
+		return false
+	}
+	for _, char := range value[:len(value)-1] {
+		if char < '0' || char > '9' {
+			return false
+		}
+	}
+	return true
 }
 
 func atoiOrZero(raw string) int {

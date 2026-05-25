@@ -11,7 +11,7 @@ var (
 	seasonReleaseTokenPattern = regexp.MustCompile(`(?i)\bSeason[ .-]+[0-9]{1,2}\b`)
 	compactRangePattern       = regexp.MustCompile(`(?i)\bS([0-9]{1,2})E([0-9]{1,3})[ .-]+([0-9]{1,3})(?:[ .-]+of[ .-]+[0-9]{1,3})?\b`)
 	yearTokenPattern          = regexp.MustCompile(`\b(?:19[0-9]{2}|20[0-9]{2})\b`)
-	resolutionTokenPattern    = regexp.MustCompile(`(?i)\b(?:[0-9]{3,4}p|4K)\b`)
+	resolutionTokenPattern    = regexp.MustCompile(`(?i)\b(?:` + tokenPatternAlternates(resolutionCatalog, broadResolutionAliasContextPattern, `[0-9]{3,4}p`) + `)\b`)
 	qualityTokenPattern       = compileTokenPattern(qualityCatalog)
 	codecTokenPattern         = compileTokenPattern(codecCatalog)
 	hdrTokenPattern           = compileLooseEndTokenPattern(hdrCatalog)
@@ -31,6 +31,7 @@ func augmentTorrentInfo(info *TorrentInfo, filename string) {
 	info.Title = normalizeTitleText(info.Title)
 	applyEpisodeRanges(info, normalized)
 	applyPart(info, normalized)
+	applyResolution(info, normalized)
 	applyQuality(info, normalized)
 	applyCodec(info, normalized)
 	applyHDR(info, normalized)
@@ -63,6 +64,50 @@ func applyPart(info *TorrentInfo, value string) {
 	if match := partPattern.FindStringSubmatch(value); len(match) == 2 {
 		info.Part = parsePart(match[1])
 	}
+}
+
+func applyResolution(info *TorrentInfo, value string) {
+	matches := resolutionTokenPattern.FindAllStringIndex(value, -1)
+	fallback := ""
+	skippedCurrentResolution := false
+	for _, match := range matches {
+		raw := value[match[0]:match[1]]
+		normalized := normalizeResolution(raw)
+		if normalized == "" {
+			continue
+		}
+		if isBlockedResolutionAlias(value, match[0], match[1]) {
+			if normalized == info.Resolution {
+				skippedCurrentResolution = true
+			}
+			continue
+		}
+		if isNumericResolutionToken(raw) {
+			info.Resolution = normalized
+			return
+		}
+		if fallback == "" {
+			fallback = normalized
+		}
+	}
+	if fallback != "" {
+		info.Resolution = fallback
+		return
+	}
+	if skippedCurrentResolution {
+		info.Resolution = ""
+	}
+}
+
+func isBlockedResolutionAlias(value string, start int, end int) bool {
+	if compactKey(value[start:end]) != "HD" {
+		return false
+	}
+	suffix := strings.TrimLeft(value[end:], ".-_ ")
+	suffixKey := compactKey(suffix)
+	return strings.HasPrefix(suffixKey, "TS") ||
+		strings.HasPrefix(suffixKey, "TC") ||
+		strings.HasPrefix(suffixKey, "CAM")
 }
 
 func applyQuality(info *TorrentInfo, value string) {
@@ -129,18 +174,116 @@ func applyHDR(info *TorrentInfo, value string) {
 }
 
 func applyAudio(info *TorrentInfo, value string) {
-	tokens := orderedNormalizedTokens(value, audioTokenPattern, normalizeAudioRich)
+	tokens, skippedCurrentAudio := orderedAudioTokens(value, info.Audio)
 	if len(tokens) == 0 {
+		if skippedCurrentAudio {
+			info.Audio = ""
+		}
 		return
 	}
-	if info.Audio == "Dual Audio" && len(tokens) == 1 && isBareChannelAudio(tokens[0]) {
+	if hasDualAudioToken(tokens) {
+		withoutDual := nonDualAudioTokens(tokens)
+		if len(withoutDual) == 0 {
+			if isDualAudioToken(info.Audio) {
+				return
+			}
+			info.Audio = "Dual Audio"
+			return
+		}
+		if allBareChannelAudio(withoutDual) {
+			info.Audio = firstDualAudioToken(tokens)
+			if info.Audio == "" {
+				info.Audio = "Dual Audio"
+			}
+			return
+		}
+		info.Audio = strings.Join(withoutDual, " ")
 		return
 	}
 	info.Audio = strings.Join(tokens, " ")
 }
 
+func orderedAudioTokens(value string, currentAudio string) ([]string, bool) {
+	matches := make([]tokenMatch, 0)
+	for _, match := range audioTokenPattern.FindAllStringIndex(value, -1) {
+		matches = append(matches, tokenMatch{start: match[0], end: match[1], raw: value[match[0]:match[1]]})
+	}
+	sortTokenMatches(matches)
+
+	out := make([]string, 0, len(matches))
+	seen := map[string]struct{}{}
+	skippedCurrentAudio := false
+	for _, match := range matches {
+		normalized := normalizeAudioRich(match.raw)
+		if normalized == "" {
+			continue
+		}
+		if isLineTVAudioMatch(value, match) {
+			if normalized == normalizeAudioRich(currentAudio) {
+				skippedCurrentAudio = true
+			}
+			continue
+		}
+		if _, ok := seen[normalized]; ok {
+			continue
+		}
+		seen[normalized] = struct{}{}
+		out = append(out, normalized)
+	}
+	return out, skippedCurrentAudio
+}
+
+func isLineTVAudioMatch(value string, match tokenMatch) bool {
+	if compactKey(match.raw) != "LINE" {
+		return false
+	}
+	suffix := strings.TrimLeft(value[match.end:], ".-_ ")
+	return strings.HasPrefix(compactKey(suffix), "TV")
+}
+
 func isBareChannelAudio(value string) bool {
 	return value == "2.0" || value == "5.1" || value == "7.1"
+}
+
+func hasDualAudioToken(tokens []string) bool {
+	for _, token := range tokens {
+		if isDualAudioToken(token) {
+			return true
+		}
+	}
+	return false
+}
+
+func nonDualAudioTokens(tokens []string) []string {
+	out := make([]string, 0, len(tokens))
+	for _, token := range tokens {
+		if !isDualAudioToken(token) {
+			out = append(out, token)
+		}
+	}
+	return out
+}
+
+func isDualAudioToken(value string) bool {
+	return value == "Dual Audio" || value == "Dual-Audio"
+}
+
+func firstDualAudioToken(tokens []string) string {
+	for _, token := range tokens {
+		if isDualAudioToken(token) {
+			return token
+		}
+	}
+	return ""
+}
+
+func allBareChannelAudio(tokens []string) bool {
+	for _, token := range tokens {
+		if !isBareChannelAudio(token) {
+			return false
+		}
+	}
+	return len(tokens) > 0
 }
 
 func applySource(info *TorrentInfo, value string, releaseStart int) {
@@ -194,6 +337,9 @@ func hasQualityAfter(value string, start int) bool {
 	if resolutionMatch == nil || resolutionMatch[0] != 0 {
 		return false
 	}
+	if resolutionMatchContainsQuality(suffix[:resolutionMatch[1]]) {
+		return true
+	}
 	afterResolution := strings.TrimLeft(suffix[resolutionMatch[1]:], ".-_ ")
 	for {
 		hdrMatch := hdrTokenPattern.FindStringIndex(afterResolution)
@@ -204,6 +350,11 @@ func hasQualityAfter(value string, start int) bool {
 	}
 	match := qualityTokenPattern.FindStringIndex(afterResolution)
 	return match != nil && match[0] == 0
+}
+
+func resolutionMatchContainsQuality(value string) bool {
+	match := qualityTokenPattern.FindStringIndex(value)
+	return match != nil && match[0] > 0
 }
 
 func isFinalGroupSourceToken(info *TorrentInfo, value string, match tokenMatch, source string) bool {
