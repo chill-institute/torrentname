@@ -4,6 +4,7 @@ import (
 	"strings"
 )
 
+// TorrentInfo contains the metadata proven from a parsed release name.
 type TorrentInfo struct {
 	Title      string
 	Season     int    `json:"season,omitempty"`
@@ -39,6 +40,10 @@ type TorrentInfo struct {
 	Excess     string `json:"excess,omitempty"`
 }
 
+// Parse extracts release metadata from a filename or release title.
+//
+// Parsing is best-effort: unsupported or ambiguous tokens are left as zero
+// values, and the returned error is reserved for future hard failures.
 func Parse(filename string) (*TorrentInfo, error) {
 	tor := &TorrentInfo{}
 
@@ -88,6 +93,7 @@ func Parse(filename string) (*TorrentInfo, error) {
 	return tor, nil
 }
 
+// HasReleaseInfo reports whether any parsed metadata field is populated.
 func (info TorrentInfo) HasReleaseInfo() bool {
 	return info.Title != "" ||
 		info.Season != 0 ||

@@ -32,6 +32,11 @@ mise run test:fuzz
 JACKETT_API_KEY=... mise run fixtures:jackett
 ```
 
+`mise run corpus:metrics` reports Jackett fixture coverage and fails if the
+checked parser coverage floors regress. To test a different floor directly,
+run `go run ./cmd/corpusmetrics --min field=percent`; repeat `--min` for each
+field you want to guard.
+
 Use the [Parser Spec](./docs/SPEC.md) to decide whether a parser behavior change is a contract expansion, a normalization fix, or an unsupported inference.
 
 For benchmark comparisons, capture before and after runs with:
@@ -42,6 +47,8 @@ BENCH_OUT=tmp/bench/baseline.txt mise run bench:record
 BENCH_OUT=tmp/bench/current.txt mise run bench:record
 mise run bench:compare
 ```
+
+`mise run bench:compare` uses the pinned `benchstat` tool from `go.mod`.
 
 For the search-style `1k rows` view, run:
 
@@ -57,7 +64,7 @@ When discussing search-style workloads, translate parser cost into `ms per 1k ro
 
 ## Development Notes
 
-- This repo owns a standalone Go parsing library with zero runtime dependencies.
+- This repo owns a standalone Go parsing library with zero runtime dependencies; `go.mod` may include tool-only development dependencies.
 - Keep parser behavior deterministic and fast.
 - Prefer small, explicit refactors over broad speculative rewrites.
 - Keep visible credit to the original `middelink/go-parse-torrent-name` project when updating public docs or package framing.

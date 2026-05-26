@@ -15,6 +15,7 @@ fi
 
 printf '%s\n' "$go_files" | while IFS= read -r file; do
   [ -n "$file" ] || continue
+  [ -f "$file" ] || continue
   "$gofmt_bin" -w "$file"
 done
 """
@@ -30,6 +31,7 @@ fi
 
 unformatted="$(printf '%s\n' "$go_files" | while IFS= read -r file; do
   [ -n "$file" ] || continue
+  [ -f "$file" ] || continue
   "$gofmt_bin" -l "$file"
 done)"
 
@@ -63,7 +65,17 @@ run = '"$(mise which go)" test ./... -cover'
 
 [tasks."corpus:metrics"]
 description = "Report parser field coverage across committed Jackett fixtures"
-run = '"$(mise which go)" run ./cmd/corpusmetrics'
+run = """
+"$(mise which go)" run ./cmd/corpusmetrics \
+  --min release_info=100 \
+  --min title=100 \
+  --min resolution=90 \
+  --min quality=80 \
+  --min codec=95 \
+  --min audio=65 \
+  --min source=20 \
+  --min group=50
+"""
 
 [tasks.bench]
 description = "Run parser benchmarks"
@@ -83,7 +95,7 @@ description = "Compare two parser benchmark output files"
 run = """
 baseline="${BENCH_BASELINE:-tmp/bench/baseline.txt}"
 current="${BENCH_CURRENT:-tmp/bench/current.txt}"
-"$(mise which go)" run ./cmd/benchcompare "$baseline" "$current"
+"$(mise which go)" tool benchstat "$baseline" "$current"
 """
 
 [tasks."fixtures:jackett"]

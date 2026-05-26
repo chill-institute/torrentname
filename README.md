@@ -129,13 +129,14 @@ See [Parser Spec](./docs/SPEC.md) for the full contract and normalization rules.
 - Parsing is deterministic and best-effort.
 - Missing or unrecognized fields stay at their Go zero value.
 - The parser does not call external services or validate titles against a media catalog.
-- Runtime code has no third-party dependencies.
+- Runtime parser code imports only the Go standard library; tool-only development dependencies live in `go.mod`.
 
 ## Docs
 
 - [Parser spec](./docs/SPEC.md): contract, normalization rules, and supported metadata
 - [Contributing](./CONTRIBUTING.md): local setup, benchmarks, fixtures, and fuzzing
 - [Release workflow](./docs/DELIVERY.md): CI, tags, and package delivery
+- [Security](./SECURITY.md): vulnerability reporting and parser safety baseline
 
 ## Development
 

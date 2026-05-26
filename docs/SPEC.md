@@ -51,6 +51,11 @@ mise run test
 mise run corpus:metrics
 ```
 
+The corpus metrics task is also a regression guard. It fails when checked field
+coverage drops below the floors in `mise.toml`; use direct
+`go run ./cmd/corpusmetrics --min field=percent` calls when testing temporary
+thresholds.
+
 Refresh the Jackett corpus only when intentionally updating real-world samples:
 
 ```bash
@@ -72,4 +77,6 @@ BENCH_OUT=tmp/bench/current.txt mise run bench:record
 mise run bench:compare
 ```
 
-Review `ns/op`, `B/op`, `allocs/op`, `rows/sec`, and `ms/1krows`. Treat allocation increases on hot parser paths as regressions unless the accuracy gain is worth the cost.
+`mise run bench:compare` uses Go's pinned `benchstat` tool. Review `ns/op`,
+`B/op`, and `allocs/op`. Treat allocation increases on hot parser paths as
+regressions unless the accuracy gain is worth the cost.
