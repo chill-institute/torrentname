@@ -12,6 +12,9 @@ updates:
         update-types: ["major"]
     commit-message:
       prefix: "ci"
+    labels:
+      - "dependencies"
+      - "github-actions"
 
   - package-ecosystem: gomod
     directory: "/"
@@ -25,3 +28,6 @@ updates:
         update-types: ["major"]
     commit-message:
       prefix: "deps"
+    labels:
+      - "dependencies"
+      - "go"
