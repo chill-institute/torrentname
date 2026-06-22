@@ -2,7 +2,6 @@ version: 2
 updates:
   - package-ecosystem: github-actions
     directory: "/"
-    open-pull-requests-limit: 10
     schedule:
       interval: weekly
       day: monday
@@ -13,13 +12,9 @@ updates:
         update-types: ["major"]
     commit-message:
       prefix: "ci"
-    labels:
-      - "dependencies"
-      - "github-actions"
 
   - package-ecosystem: gomod
     directory: "/"
-    open-pull-requests-limit: 10
     schedule:
       interval: weekly
       day: monday
@@ -30,6 +25,3 @@ updates:
         update-types: ["major"]
     commit-message:
       prefix: "deps"
-    labels:
-      - "dependencies"
-      - "go"
