@@ -1,6 +1,8 @@
 module github.com/chill-institute/torrentname
 
-go 1.26.5
+go 1.26
+
+toolchain go1.26.5
 
 tool golang.org/x/perf/cmd/benchstat
 
