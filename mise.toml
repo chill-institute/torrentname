@@ -59,6 +59,10 @@ run = '"$(mise which go)" test ./...'
 description = "Run Go static checks"
 run = '"$(mise which go)" vet ./...'
 
+[tasks.actionlint]
+description = "Lint GitHub Actions workflows"
+run = '"$(mise which go)" tool actionlint'
+
 [tasks."test:cover"]
 description = "Run parser tests with coverage"
 run = '"$(mise which go)" test ./... -cover'
@@ -116,4 +120,4 @@ run = '"$(mise which go)" test . -run=^$ -fuzz=FuzzParse -fuzztime=5s'
 
 [tasks.verify]
 description = "Run formatting, static, and test checks"
-depends = ["fmt:check", "mod:check", "vet", "test", "corpus:metrics"]
+depends = ["fmt:check", "mod:check", "vet", "actionlint", "test", "corpus:metrics"]
