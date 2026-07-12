@@ -65,7 +65,9 @@ func Parse(filename string) (*TorrentInfo, error) {
 		} else if rawStart < endIndex {
 			endIndex = rawStart
 		}
-		pattern.apply(tor, cleanName[valueStart:valueEnd])
+		if pattern.apply != nil {
+			pattern.apply(tor, cleanName[valueStart:valueEnd])
+		}
 	}
 
 	if startIndex < 0 {
