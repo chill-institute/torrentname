@@ -1,6 +1,9 @@
 package torrentname
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func assertTorrentInfo(t *testing.T, filename string, got TorrentInfo, want TorrentInfo) {
 	t.Helper()
@@ -66,50 +69,28 @@ func TestParseApostropheNormalization(t *testing.T) {
 func TestHasReleaseInfoCoversEveryField(t *testing.T) {
 	t.Parallel()
 
-	tests := map[string]TorrentInfo{
-		"title":       {Title: "value"},
-		"season":      {Season: 1},
-		"episode":     {Episode: 1},
-		"episode end": {EpisodeEnd: 2},
-		"part":        {Part: 1},
-		"year":        {Year: 2024},
-		"resolution":  {Resolution: "1080p"},
-		"quality":     {Quality: "WEB-DL"},
-		"codec":       {Codec: "x264"},
-		"hdr":         {HDR: "HDR"},
-		"audio":       {Audio: "AAC"},
-		"source":      {Source: "AMZN"},
-		"group":       {Group: "GROUP"},
-		"region":      {Region: "R1"},
-		"extended":    {Extended: true},
-		"hardcoded":   {Hardcoded: true},
-		"proper":      {Proper: true},
-		"repack":      {Repack: true},
-		"remastered":  {Remastered: true},
-		"container":   {Container: "mkv"},
-		"widescreen":  {Widescreen: true},
-		"website":     {Website: "source"},
-		"language":    {Language: "ENG"},
-		"bit depth":   {BitDepth: "10-bit"},
-		"edition":     {Edition: "Extended"},
-		"sbs":         {Sbs: "SBS"},
-		"unrated":     {Unrated: true},
-		"size":        {Size: "1GB"},
-		"three d":     {ThreeD: true},
-		"imax":        {IMAX: true},
-		"complete":    {Complete: true},
-		"excess":      {Excess: "value"},
-	}
-
 	if (TorrentInfo{}).HasReleaseInfo() {
 		t.Fatal("zero TorrentInfo.HasReleaseInfo() = true, want false")
 	}
-	for name, info := range tests {
-		info := info
-		t.Run(name, func(t *testing.T) {
+	infoType := reflect.TypeFor[TorrentInfo]()
+	for index := range infoType.NumField() {
+		field := infoType.Field(index)
+		t.Run(field.Name, func(t *testing.T) {
 			t.Parallel()
+			var info TorrentInfo
+			value := reflect.ValueOf(&info).Elem().FieldByIndex(field.Index)
+			switch value.Kind() {
+			case reflect.String:
+				value.SetString("value")
+			case reflect.Int:
+				value.SetInt(1)
+			case reflect.Bool:
+				value.SetBool(true)
+			default:
+				t.Fatalf("TorrentInfo.%s has unsupported kind %s", field.Name, value.Kind())
+			}
 			if !info.HasReleaseInfo() {
-				t.Fatalf("%s-only TorrentInfo.HasReleaseInfo() = false, want true", name)
+				t.Fatalf("%s-only TorrentInfo.HasReleaseInfo() = false, want true", field.Name)
 			}
 		})
 	}
