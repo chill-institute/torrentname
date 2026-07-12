@@ -123,7 +123,7 @@ var (
 	}
 
 	completeCatalog = []aliasToken{
-		{canonical: "COMPLETE", patterns: []string{`Complete(?:[ .-]+(?:Season|Series))?`, `Season[ .-]+[0-9]{1,2}(?:[ .-]*(?:to|-|\+|&)[ .-]*[0-9]{1,2})?[ .-]+Complete(?:[ .-]+Series)?`, `Seasons[ .-]+[0-9]{1,2}[ .-]+to[ .-]+[0-9]{1,2}[ .-]+Complete`, `S[0-9]{1,2}[ .-]*Complete`}},
+		{canonical: "COMPLETE", patterns: []string{`Complete(?:[ .-]*(?:Season|Series))?`, `Season[ .-]*[0-9]{1,2}(?:[ .-]*(?:to|-|\+|&)[ .-]*[0-9]{1,2})?[ .-]*Complete(?:[ .-]*Series)?`, `Seasons[ .-]+[0-9]{1,2}[ .-]+to[ .-]+[0-9]{1,2}[ .-]+Complete`, `S[0-9]{1,2}[ .-]*Complete`}},
 	}
 
 	widescreenCatalog = []aliasToken{

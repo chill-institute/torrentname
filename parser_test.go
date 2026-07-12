@@ -1516,6 +1516,30 @@ func TestReleaseInfoExamples(t *testing.T) {
 			},
 		},
 		{
+			name:     "compact complete season starts release metadata",
+			filename: "Sample.Series.CompleteSeason",
+			want: TorrentInfo{
+				Title:    "Sample Series",
+				Complete: true,
+			},
+		},
+		{
+			name:     "compact complete series starts release metadata",
+			filename: "Sample.Series.CompleteSeries",
+			want: TorrentInfo{
+				Title:    "Sample Series",
+				Complete: true,
+			},
+		},
+		{
+			name:     "compact season complete starts release metadata",
+			filename: "Sample.Series.Season1Complete",
+			want: TorrentInfo{
+				Title:    "Sample Series",
+				Complete: true,
+			},
+		},
+		{
 			name:     "truehd channel before atmos",
 			filename: "Sample.Feature.2025.2160p.BluRay.Remux.HEVC.TrueHD.7.1.Atmos-GRP",
 			want: TorrentInfo{
