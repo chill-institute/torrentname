@@ -228,16 +228,20 @@ func TestRefreshFixturesReplacesJSONAndPreservesOtherEntries(t *testing.T) {
 func TestFetchFixtureRedactsAPIKeyFromTransportErrors(t *testing.T) {
 	t.Parallel()
 
-	const credential = "neutral-placeholder-key"
+	const credential = "pass"
+	const username = "fixture-user"
+	const password = "pass-info"
 	client := &http.Client{Transport: roundTripFunc(func(request *http.Request) (*http.Response, error) {
 		return nil, errors.New("transport failed for " + request.URL.String())
 	})}
-	_, err := fetchFixture(client, "http://localhost:9117", credential, "safe query", 1)
+	_, err := fetchFixture(client, "http://"+username+":"+password+"@localhost:9117", credential, "safe query", 1)
 	if err == nil {
 		t.Fatal("fetchFixture() error = nil, want transport error")
 	}
-	if strings.Contains(err.Error(), credential) {
-		t.Fatalf("fetchFixture() error contains credential: %v", err)
+	for _, sensitive := range []string{credential, username, password} {
+		if strings.Contains(err.Error(), sensitive) {
+			t.Fatalf("fetchFixture() error contains sensitive request data: %v", err)
+		}
 	}
 	if !strings.Contains(err.Error(), "localhost:9117") || !strings.Contains(err.Error(), "transport failed") {
 		t.Fatalf("fetchFixture() error lost useful context: %v", err)

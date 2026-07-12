@@ -292,7 +292,19 @@ func safeRequestError(err error, requestURL *url.URL, apiKey string) error {
 	if errors.As(err, &requestErr) {
 		message = requestErr.Err.Error()
 	}
-	for _, sensitive := range []string{apiKey, url.QueryEscape(apiKey)} {
+	sensitiveValues := []string{apiKey, url.QueryEscape(apiKey)}
+	if requestURL.User != nil {
+		encodedUserInfo := requestURL.User.String()
+		rawUserInfo := requestURL.User.Username()
+		if password, ok := requestURL.User.Password(); ok {
+			rawUserInfo += ":" + password
+		}
+		sensitiveValues = append(sensitiveValues, encodedUserInfo+"@", rawUserInfo+"@")
+	}
+	sort.Slice(sensitiveValues, func(i, j int) bool {
+		return len(sensitiveValues[i]) > len(sensitiveValues[j])
+	})
+	for _, sensitive := range sensitiveValues {
 		if sensitive != "" {
 			message = strings.ReplaceAll(message, sensitive, "[REDACTED]")
 		}
