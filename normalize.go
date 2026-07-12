@@ -2,15 +2,15 @@ package torrentname
 
 import (
 	"html"
-	"regexp"
 	"strconv"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 )
 
 var (
-	releaseBoundaryReplacer    = strings.NewReplacer("[", " [", "]", "] ", "(", " (", ")", ") ")
-	audioCompactReplacer       = strings.NewReplacer(" ", "", ".", "", "-", "")
-	malformedApostrophePattern = regexp.MustCompile(`(?i)([\pL\pN])[ ._-]+039[ ._-]+(s|t|re|ve|ll|d|m)\b`)
+	releaseBoundaryReplacer = strings.NewReplacer("[", " [", "]", "] ", "(", " (", ")", ") ")
+	audioCompactReplacer    = strings.NewReplacer(" ", "", ".", "", "-", "")
 )
 
 func normalizeReleaseString(value string) string {
@@ -29,7 +29,81 @@ func normalizeTitleText(value string) string {
 }
 
 func normalizeMalformedApostrophe(value string) string {
-	return malformedApostrophePattern.ReplaceAllString(value, "${1}'${2}")
+	var normalized strings.Builder
+	lastWrite := 0
+	searchStart := 0
+	for searchStart < len(value) {
+		relative := strings.Index(value[searchStart:], "039")
+		if relative < 0 {
+			break
+		}
+		marker := searchStart + relative
+		separatorStart, suffixStart, suffixEnd, ok := malformedApostropheBounds(value, marker)
+		if !ok {
+			searchStart = marker + 3
+			continue
+		}
+		if normalized.Cap() == 0 {
+			normalized.Grow(len(value))
+		}
+		normalized.WriteString(value[lastWrite:separatorStart])
+		normalized.WriteByte('\'')
+		normalized.WriteString(value[suffixStart:suffixEnd])
+		lastWrite = suffixEnd
+		searchStart = suffixEnd
+	}
+	if normalized.Cap() == 0 {
+		return value
+	}
+	normalized.WriteString(value[lastWrite:])
+	return normalized.String()
+}
+
+func malformedApostropheBounds(value string, marker int) (int, int, int, bool) {
+	separatorStart := marker
+	for separatorStart > 0 && isApostropheSeparator(value[separatorStart-1]) {
+		separatorStart--
+	}
+	if separatorStart == 0 || separatorStart == marker {
+		return 0, 0, 0, false
+	}
+	previous, _ := utf8.DecodeLastRuneInString(value[:separatorStart])
+	if !unicode.IsLetter(previous) && !unicode.IsNumber(previous) {
+		return 0, 0, 0, false
+	}
+
+	suffixStart := marker + 3
+	for suffixStart < len(value) && isApostropheSeparator(value[suffixStart]) {
+		suffixStart++
+	}
+	if suffixStart == marker+3 {
+		return 0, 0, 0, false
+	}
+	suffixLength := contractionSuffixLength(value[suffixStart:])
+	if suffixLength == 0 {
+		return 0, 0, 0, false
+	}
+	return separatorStart, suffixStart, suffixStart + suffixLength, true
+}
+
+func contractionSuffixLength(value string) int {
+	for _, suffix := range [...]string{"re", "ve", "ll", "s", "t", "d", "m"} {
+		if len(value) < len(suffix) || !strings.EqualFold(value[:len(suffix)], suffix) {
+			continue
+		}
+		if len(value) == len(suffix) {
+			return len(suffix)
+		}
+		next, _ := utf8.DecodeRuneInString(value[len(suffix):])
+		if !unicode.IsLetter(next) && !unicode.IsNumber(next) {
+			return len(suffix)
+		}
+	}
+	return 0
+}
+
+func isApostropheSeparator(value byte) bool {
+	return value == ' ' || value == '.' || value == '_' || value == '-'
 }
 
 func collapseSpaces(value string) string {
