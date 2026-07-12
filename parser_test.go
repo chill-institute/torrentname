@@ -9,6 +9,97 @@ func assertTorrentInfo(t *testing.T, filename string, got TorrentInfo, want Torr
 	}
 }
 
+func TestParseApostropheNormalization(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		filename string
+		want     string
+	}{
+		{
+			name:     "spaced tracker marker",
+			filename: "Don  039 t Open The Door 2025 Season 1 Complete 1080p WEB x264 [i c]",
+			want:     "Don't Open The Door",
+		},
+		{
+			name:     "literal numeric fragment",
+			filename: "Blade 039 Project 2024 1080p WEB-DL x264-GRP",
+			want:     "Blade 039 Project",
+		},
+		{
+			name:     "html entity",
+			filename: "Director&#039;s Cut 2024 1080p WEB-DL x264-GRP",
+			want:     "Director's Cut",
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			info, err := Parse(tc.filename)
+			if err != nil {
+				t.Fatalf("Parse(%q) error = %v", tc.filename, err)
+			}
+			if info.Title != tc.want {
+				t.Fatalf("Parse(%q).Title = %q, want %q", tc.filename, info.Title, tc.want)
+			}
+		})
+	}
+}
+
+func TestHasReleaseInfoCoversEveryField(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]TorrentInfo{
+		"title":       {Title: "value"},
+		"season":      {Season: 1},
+		"episode":     {Episode: 1},
+		"episode end": {EpisodeEnd: 2},
+		"part":        {Part: 1},
+		"year":        {Year: 2024},
+		"resolution":  {Resolution: "1080p"},
+		"quality":     {Quality: "WEB-DL"},
+		"codec":       {Codec: "x264"},
+		"hdr":         {HDR: "HDR"},
+		"audio":       {Audio: "AAC"},
+		"source":      {Source: "AMZN"},
+		"group":       {Group: "GROUP"},
+		"region":      {Region: "R1"},
+		"extended":    {Extended: true},
+		"hardcoded":   {Hardcoded: true},
+		"proper":      {Proper: true},
+		"repack":      {Repack: true},
+		"remastered":  {Remastered: true},
+		"container":   {Container: "mkv"},
+		"widescreen":  {Widescreen: true},
+		"website":     {Website: "source"},
+		"language":    {Language: "ENG"},
+		"bit depth":   {BitDepth: "10-bit"},
+		"edition":     {Edition: "Extended"},
+		"sbs":         {Sbs: "SBS"},
+		"unrated":     {Unrated: true},
+		"size":        {Size: "1GB"},
+		"three d":     {ThreeD: true},
+		"imax":        {IMAX: true},
+		"complete":    {Complete: true},
+		"excess":      {Excess: "value"},
+	}
+
+	if (TorrentInfo{}).HasReleaseInfo() {
+		t.Fatal("zero TorrentInfo.HasReleaseInfo() = true, want false")
+	}
+	for name, info := range tests {
+		info := info
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			if !info.HasReleaseInfo() {
+				t.Fatalf("%s-only TorrentInfo.HasReleaseInfo() = false, want true", name)
+			}
+		})
+	}
+}
+
 func TestParse(t *testing.T) {
 	t.Parallel()
 

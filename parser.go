@@ -116,9 +116,11 @@ func (info TorrentInfo) HasReleaseInfo() bool {
 		info.Remastered ||
 		info.Container != "" ||
 		info.Widescreen ||
+		info.Website != "" ||
 		info.Language != "" ||
 		info.BitDepth != "" ||
 		info.Edition != "" ||
+		info.Sbs != "" ||
 		info.Unrated ||
 		info.Size != "" ||
 		info.ThreeD ||

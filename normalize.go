@@ -14,16 +14,14 @@ var (
 func normalizeReleaseString(value string) string {
 	value = html.UnescapeString(strings.TrimSpace(value))
 	value = strings.ReplaceAll(value, "_", " ")
-	value = strings.ReplaceAll(value, " 039 ", "'")
-	value = strings.ReplaceAll(value, "039", "'")
+	value = strings.ReplaceAll(value, "  039 ", "'")
 	value = releaseBoundaryReplacer.Replace(value)
 	return collapseSpaces(value)
 }
 
 func normalizeTitleText(value string) string {
 	value = html.UnescapeString(strings.TrimSpace(value))
-	value = strings.ReplaceAll(value, " 039 ", "'")
-	value = strings.ReplaceAll(value, "039", "'")
+	value = strings.ReplaceAll(value, "  039 ", "'")
 	value = strings.Trim(value, ".-_ ")
 	return collapseSpaces(value)
 }
