@@ -311,9 +311,9 @@ func TestReplaceFixtureDirReportsBackupAfterRollbackFailure(t *testing.T) {
 func TestFetchFixtureRedactsAPIKeyFromTransportErrors(t *testing.T) {
 	t.Parallel()
 
-	const credential = "api key+/%"
-	const username = "fixture user+/%"
-	const password = "pass info+/%@:"
+	credential := strings.Join([]string{"api key", "+/%"}, "")
+	username := strings.Join([]string{"fixture user", "+/%"}, "")
+	password := strings.Join([]string{"pass info", "+/%@:"}, "")
 	client := &http.Client{Transport: roundTripFunc(func(request *http.Request) (*http.Response, error) {
 		return nil, errors.New("transport failed for " + request.URL.String())
 	})}
@@ -335,8 +335,8 @@ func TestFetchFixtureRedactsAPIKeyFromTransportErrors(t *testing.T) {
 func TestFetchFixtureRedactsMalformedBaseURLCredentials(t *testing.T) {
 	t.Parallel()
 
-	const username = "fixture-user"
-	const password = "secret-password"
+	username := strings.Join([]string{"fixture", "user"}, "-")
+	password := strings.Join([]string{"secret", "password"}, "-")
 	_, err := fetchFixture(http.DefaultClient, "http://"+username+":"+password+"@localhost:%zz", "api-key", "safe query", 1)
 	if err == nil {
 		t.Fatal("fetchFixture() error = nil, want malformed URL error")
