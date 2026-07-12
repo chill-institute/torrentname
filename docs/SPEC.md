@@ -29,7 +29,7 @@
 | `Group` | Dash suffixes, bracket suffixes, and advanced release trailing group names | Wrapper characters and spaces are stripped; metadata-looking tokens are ignored |
 | `Website` | Leading bracket tags such as `[Source]` | Trimmed bracket content |
 | `Language` | Current explicit language pairs such as `rus.eng`, `ita.eng`, and `ENG.LAT`, strong single post-release markers such as `JAPANESE` and `KOREAN`, plus clusters such as `Eng.Rus.Multi-Subs`, `VOSTFR`, `VFF`, and `MultiLang` | Preserved explicit pairs or uppercase normalized clusters |
-| `Region` | Disc-style region tokens from `R0` through `R9` | Preserved uppercase `R` plus one digit |
+| `Region` | Disc-style region tokens from `R0` through `R9` | Single digit with the `R` prefix removed |
 | `BitDepth` | `8-bit`, `10bit`, `12 bit`, `16Bit`, `24bit` | `N-bit` |
 | `Edition` | Director's Cut, DC, hybrid, theatrical cut, special edition, open matte, B&W, dubbed, dual audio, `2Audios`, `M SUB`, multi subs | Canonical descriptive labels |
 | `Size` | `MB` and `GB` size tokens | Preserved token |
