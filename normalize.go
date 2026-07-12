@@ -2,28 +2,34 @@ package torrentname
 
 import (
 	"html"
+	"regexp"
 	"strconv"
 	"strings"
 )
 
 var (
-	releaseBoundaryReplacer = strings.NewReplacer("[", " [", "]", "] ", "(", " (", ")", ") ")
-	audioCompactReplacer    = strings.NewReplacer(" ", "", ".", "", "-", "")
+	releaseBoundaryReplacer    = strings.NewReplacer("[", " [", "]", "] ", "(", " (", ")", ") ")
+	audioCompactReplacer       = strings.NewReplacer(" ", "", ".", "", "-", "")
+	malformedApostrophePattern = regexp.MustCompile(`(?i)([\pL\pN])[ ._-]+039[ ._-]+(s|t|re|ve|ll|d|m)\b`)
 )
 
 func normalizeReleaseString(value string) string {
 	value = html.UnescapeString(strings.TrimSpace(value))
 	value = strings.ReplaceAll(value, "_", " ")
-	value = strings.ReplaceAll(value, "  039 ", "'")
+	value = normalizeMalformedApostrophe(value)
 	value = releaseBoundaryReplacer.Replace(value)
 	return collapseSpaces(value)
 }
 
 func normalizeTitleText(value string) string {
 	value = html.UnescapeString(strings.TrimSpace(value))
-	value = strings.ReplaceAll(value, "  039 ", "'")
+	value = normalizeMalformedApostrophe(value)
 	value = strings.Trim(value, ".-_ ")
 	return collapseSpaces(value)
+}
+
+func normalizeMalformedApostrophe(value string) string {
+	return malformedApostrophePattern.ReplaceAllString(value, "${1}'${2}")
 }
 
 func collapseSpaces(value string) string {

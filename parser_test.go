@@ -23,6 +23,21 @@ func TestParseApostropheNormalization(t *testing.T) {
 			want:     "Don't Open The Door",
 		},
 		{
+			name:     "single spaced tracker marker",
+			filename: "Don 039 t Open The Door 2025 1080p WEB x264-GRP",
+			want:     "Don't Open The Door",
+		},
+		{
+			name:     "dot separated tracker marker",
+			filename: "Childhood.039.s.End.2008.1080p.BluRay.x264-GRP",
+			want:     "Childhood's End",
+		},
+		{
+			name:     "underscore separated tracker marker",
+			filename: "Director_039_s_Cut_2024_1080p_WEB-DL_x264-GRP",
+			want:     "Director's Cut",
+		},
+		{
 			name:     "literal numeric fragment",
 			filename: "Blade 039 Project 2024 1080p WEB-DL x264-GRP",
 			want:     "Blade 039 Project",
