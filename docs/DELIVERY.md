@@ -9,10 +9,12 @@ Pull requests and pushes to `main` run the same guardrails:
 ```bash
 mise run verify
 mise run test:fuzz
-mise run test:cover
-mise run corpus:metrics
 go test . -run=^$ -bench=BenchmarkParse -benchmem -count=1
 ```
+
+`mise run verify` includes formatting, module tidiness, Go static analysis,
+workflow linting, parser tests, and corpus field-presence floors. Coverage is an
+optional contributor diagnostic rather than an automatic CI gate.
 
 The GitHub Actions workflow keeps default permissions empty, grants each verification job read-only repository access, pins high-trust actions to full commit SHAs, and uses the repo's `mise.toml` as the toolchain source of truth.
 

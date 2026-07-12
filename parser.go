@@ -37,7 +37,8 @@ type TorrentInfo struct {
 	ThreeD     bool   `json:"3d,omitempty"`
 	IMAX       bool   `json:"imax,omitempty"`
 	Complete   bool   `json:"complete,omitempty"`
-	Excess     string `json:"excess,omitempty"`
+	// Deprecated: Excess is retained for source compatibility and is not populated by Parse.
+	Excess string `json:"excess,omitempty"`
 }
 
 // Parse extracts release metadata from a filename or release title.
