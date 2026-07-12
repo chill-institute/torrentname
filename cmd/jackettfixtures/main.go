@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -15,11 +16,13 @@ import (
 
 const fixtureDir = "testdata/jackett"
 
-var curatedQueries = []struct {
+type fixtureQuery struct {
 	slug  string
 	query string
 	limit int
-}{
+}
+
+var curatedQueries = []fixtureQuery{
 	{slug: "1080p_bluray_x264", query: "1080p BluRay x264"},
 	{slug: "2160p_hevc_hdr", query: "2160p HEVC HDR"},
 	{slug: "anime_1080p", query: "Anime 1080p"},
@@ -44,8 +47,7 @@ type fixtureFile struct {
 }
 
 type fixtureSource struct {
-	BaseURL    string `json:"base_url"`
-	Configured bool   `json:"configured"`
+	Configured bool `json:"configured"`
 }
 
 type fixtureResult struct {
@@ -69,7 +71,7 @@ type fixtureIndexer struct {
 	Status      int    `json:"status"`
 	Results     int    `json:"results"`
 	ElapsedTime int    `json:"elapsed_time_ms"`
-	Error       string `json:"error,omitempty"`
+	HasError    bool   `json:"has_error,omitempty"`
 }
 
 type rawResponse struct {
@@ -110,31 +112,98 @@ func main() {
 	if apiKey == "" {
 		fail("JACKETT_API_KEY is required")
 	}
-	if err := os.MkdirAll(fixtureDir, 0o755); err != nil {
-		fail("create fixture directory: %v", err)
-	}
-	if err := clearFixtureDir(fixtureDir); err != nil {
-		fail("clear fixture directory: %v", err)
-	}
-
 	client := &http.Client{Timeout: 30 * time.Second}
-	for _, item := range curatedQueries {
-		fixture, err := fetchFixture(client, baseURL, apiKey, item.query, item.limit)
-		if err != nil {
-			fail("fetch fixture %s: %v", item.slug, err)
-		}
+	if err := refreshFixtures(client, baseURL, apiKey, fixtureDir, curatedQueries, fetchFixture); err != nil {
+		fail("refresh fixtures: %v", err)
+	}
+}
 
-		target := filepath.Join(fixtureDir, item.slug+".json")
+type fetchFixtureFunc func(*http.Client, string, string, string, int) (fixtureFile, error)
+
+type stagedFixture struct {
+	name    string
+	payload []byte
+	results int
+}
+
+func refreshFixtures(client *http.Client, baseURL, apiKey, dir string, queries []fixtureQuery, fetch fetchFixtureFunc) error {
+	staged := make([]stagedFixture, 0, len(queries))
+	for _, item := range queries {
+		fixture, err := fetch(client, baseURL, apiKey, item.query, item.limit)
+		if err != nil {
+			return fmt.Errorf("fetch fixture %s: %w", item.slug, err)
+		}
 		payload, err := json.MarshalIndent(fixture, "", "  ")
 		if err != nil {
-			fail("marshal fixture %s: %v", item.slug, err)
+			return fmt.Errorf("marshal fixture %s: %w", item.slug, err)
 		}
-		payload = append(payload, '\n')
-		if err := os.WriteFile(target, payload, 0o644); err != nil {
-			fail("write fixture %s: %v", item.slug, err)
-		}
-		fmt.Fprintf(os.Stdout, "wrote %s (%d results)\n", target, len(fixture.Results))
+		staged = append(staged, stagedFixture{
+			name:    item.slug + ".json",
+			payload: append(payload, '\n'),
+			results: len(fixture.Results),
+		})
 	}
+
+	if err := replaceFixtureDir(dir, staged); err != nil {
+		return err
+	}
+	for _, item := range staged {
+		fmt.Fprintf(os.Stdout, "wrote %s (%d results)\n", filepath.Join(dir, item.name), item.results)
+	}
+	return nil
+}
+
+func replaceFixtureDir(dir string, fixtures []stagedFixture) error {
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return fmt.Errorf("create fixture directory: %w", err)
+	}
+	dirInfo, err := os.Stat(dir)
+	if err != nil {
+		return fmt.Errorf("inspect fixture directory: %w", err)
+	}
+	parent := filepath.Dir(dir)
+	stage, err := os.MkdirTemp(parent, ".jackett-fixtures-stage-")
+	if err != nil {
+		return fmt.Errorf("create fixture staging directory: %w", err)
+	}
+	defer os.RemoveAll(stage)
+	if err := os.Chmod(stage, dirInfo.Mode().Perm()); err != nil {
+		return fmt.Errorf("set fixture staging permissions: %w", err)
+	}
+
+	if err := os.CopyFS(stage, os.DirFS(dir)); err != nil {
+		return fmt.Errorf("stage fixture directory: %w", err)
+	}
+	if err := clearFixtureDir(stage); err != nil {
+		return fmt.Errorf("clear staged fixtures: %w", err)
+	}
+	for _, fixture := range fixtures {
+		if err := os.WriteFile(filepath.Join(stage, fixture.name), fixture.payload, 0o644); err != nil {
+			return fmt.Errorf("stage fixture %s: %w", fixture.name, err)
+		}
+	}
+
+	backup, err := os.MkdirTemp(parent, ".jackett-fixtures-backup-")
+	if err != nil {
+		return fmt.Errorf("reserve fixture backup: %w", err)
+	}
+	if err := os.Remove(backup); err != nil {
+		return fmt.Errorf("prepare fixture backup: %w", err)
+	}
+	if err := os.Rename(dir, backup); err != nil {
+		return fmt.Errorf("back up fixture directory: %w", err)
+	}
+	if err := os.Rename(stage, dir); err != nil {
+		restoreErr := os.Rename(backup, dir)
+		if restoreErr != nil {
+			return fmt.Errorf("activate staged fixtures: %v; restore original fixtures: %w", err, restoreErr)
+		}
+		return fmt.Errorf("activate staged fixtures: %w", err)
+	}
+	if err := os.RemoveAll(backup); err != nil {
+		return fmt.Errorf("remove fixture backup: %w", err)
+	}
+	return nil
 }
 
 func clearFixtureDir(dir string) error {
@@ -166,11 +235,11 @@ func fetchFixture(client *http.Client, baseURL, apiKey, queryValue string, limit
 
 	request, err := http.NewRequest(http.MethodGet, requestURL.String(), nil)
 	if err != nil {
-		return fixtureFile{}, err
+		return fixtureFile{}, safeRequestError(err, requestURL, apiKey)
 	}
 	response, err := client.Do(request)
 	if err != nil {
-		return fixtureFile{}, err
+		return fixtureFile{}, safeRequestError(err, requestURL, apiKey)
 	}
 	defer response.Body.Close()
 	if response.StatusCode < http.StatusOK || response.StatusCode >= http.StatusMultipleChoices {
@@ -186,7 +255,6 @@ func fetchFixture(client *http.Client, baseURL, apiKey, queryValue string, limit
 		Query:     queryValue,
 		FetchedAt: time.Now().UTC().Format(time.RFC3339),
 		Source: fixtureSource{
-			BaseURL:    strings.TrimRight(baseURL, "/"),
 			Configured: true,
 		},
 		Results:  sanitizeResults(raw.Results, limit),
@@ -196,6 +264,20 @@ func fetchFixture(client *http.Client, baseURL, apiKey, queryValue string, limit
 		return fixtureFile{}, fmt.Errorf("query %q returned no usable results", queryValue)
 	}
 	return fixture, nil
+}
+
+func safeRequestError(err error, requestURL *url.URL, apiKey string) error {
+	message := err.Error()
+	var requestErr *url.Error
+	if errors.As(err, &requestErr) {
+		message = requestErr.Err.Error()
+	}
+	for _, sensitive := range []string{apiKey, url.QueryEscape(apiKey)} {
+		if sensitive != "" {
+			message = strings.ReplaceAll(message, sensitive, "[REDACTED]")
+		}
+	}
+	return fmt.Errorf("request Jackett fixture from %s: %s", requestURL.Host, message)
 }
 
 func sanitizeResults(rawResults []rawResult, limit int) []fixtureResult {
@@ -246,9 +328,7 @@ func sanitizeIndexers(rawIndexers []rawIndexer) []fixtureIndexer {
 			Results:     item.Results,
 			ElapsedTime: item.ElapsedTime,
 		}
-		if item.Error != nil {
-			fixture.Error = strings.TrimSpace(*item.Error)
-		}
+		fixture.HasError = item.Error != nil && strings.TrimSpace(*item.Error) != ""
 		indexers = append(indexers, fixture)
 	}
 	sort.Slice(indexers, func(i, j int) bool {

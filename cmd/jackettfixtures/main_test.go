@@ -2,12 +2,20 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
+
+type roundTripFunc func(*http.Request) (*http.Response, error)
+
+func (fn roundTripFunc) RoundTrip(request *http.Request) (*http.Response, error) {
+	return fn(request)
+}
 
 func TestClearFixtureDir(t *testing.T) {
 	t.Parallel()
@@ -109,7 +117,7 @@ func TestSanitizeIndexers(t *testing.T) {
 	})
 
 	want := []fixtureIndexer{
-		{ID: "a", Name: "A", Status: 4, Results: 5, ElapsedTime: 6, Error: "timed out"},
+		{ID: "a", Name: "A", Status: 4, Results: 5, ElapsedTime: 6, HasError: true},
 		{ID: "b", Name: "B", Status: 1, Results: 2, ElapsedTime: 3},
 	}
 	if len(got) != len(want) {
@@ -119,6 +127,107 @@ func TestSanitizeIndexers(t *testing.T) {
 		if got[i] != want[i] {
 			t.Fatalf("sanitizeIndexers()[%d]\nwant: %#v\ngot:  %#v", i, want[i], got[i])
 		}
+	}
+}
+
+func TestRefreshFixturesPreservesExistingCorpusOnFetchFailure(t *testing.T) {
+	t.Parallel()
+
+	dir := t.TempDir()
+	original := []byte("{\"original\":true}\n")
+	path := filepath.Join(dir, "existing.json")
+	if err := os.WriteFile(path, original, 0o600); err != nil {
+		t.Fatalf("write existing fixture: %v", err)
+	}
+
+	calls := 0
+	fetch := func(*http.Client, string, string, string, int) (fixtureFile, error) {
+		calls++
+		if calls == 2 {
+			return fixtureFile{}, errors.New("injected fetch failure")
+		}
+		return fixtureFile{Results: []fixtureResult{{Title: "Safe", TrackerID: "safe"}}}, nil
+	}
+	err := refreshFixtures(http.DefaultClient, "http://localhost:9117", "neutral-key", dir, []fixtureQuery{
+		{slug: "first", query: "first"},
+		{slug: "second", query: "second"},
+	}, fetch)
+	if err == nil {
+		t.Fatal("refreshFixtures() error = nil, want injected failure")
+	}
+	got, readErr := os.ReadFile(path)
+	if readErr != nil {
+		t.Fatalf("read preserved fixture: %v", readErr)
+	}
+	if string(got) != string(original) {
+		t.Fatalf("existing fixture changed after failed refresh: %q", got)
+	}
+	if _, statErr := os.Stat(filepath.Join(dir, "first.json")); !os.IsNotExist(statErr) {
+		t.Fatalf("partial fixture exists after failed refresh: %v", statErr)
+	}
+}
+
+func TestRefreshFixturesReplacesJSONAndPreservesOtherEntries(t *testing.T) {
+	t.Parallel()
+
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "old.json"), []byte("{}"), 0o600); err != nil {
+		t.Fatalf("write old fixture: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "keep.txt"), []byte("keep"), 0o600); err != nil {
+		t.Fatalf("write preserved file: %v", err)
+	}
+	if err := os.Mkdir(filepath.Join(dir, "nested"), 0o700); err != nil {
+		t.Fatalf("create nested directory: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "nested", "keep.txt"), []byte("nested"), 0o600); err != nil {
+		t.Fatalf("write nested file: %v", err)
+	}
+
+	fetch := func(*http.Client, string, string, string, int) (fixtureFile, error) {
+		return fixtureFile{
+			Query:   "safe query",
+			Source:  fixtureSource{Configured: true},
+			Results: []fixtureResult{{Title: "Safe", TrackerID: "safe"}},
+		}, nil
+	}
+	if err := refreshFixtures(http.DefaultClient, "http://localhost:9117", "neutral-key", dir, []fixtureQuery{{slug: "new", query: "safe"}}, fetch); err != nil {
+		t.Fatalf("refreshFixtures() error = %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(dir, "old.json")); !os.IsNotExist(err) {
+		t.Fatalf("old fixture still exists: %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(dir, "new.json")); err != nil {
+		t.Fatalf("new fixture missing: %v", err)
+	}
+	if info, err := os.Stat(dir); err != nil {
+		t.Fatalf("stat refreshed directory: %v", err)
+	} else if got := info.Mode().Perm(); got != 0o700 {
+		t.Fatalf("refreshed directory mode = %o, want 700", got)
+	}
+	for _, preserved := range []string{"keep.txt", filepath.Join("nested", "keep.txt")} {
+		if _, err := os.Stat(filepath.Join(dir, preserved)); err != nil {
+			t.Fatalf("preserved entry %s missing: %v", preserved, err)
+		}
+	}
+}
+
+func TestFetchFixtureRedactsAPIKeyFromTransportErrors(t *testing.T) {
+	t.Parallel()
+
+	const credential = "neutral-placeholder-key"
+	client := &http.Client{Transport: roundTripFunc(func(request *http.Request) (*http.Response, error) {
+		return nil, errors.New("transport failed for " + request.URL.String())
+	})}
+	_, err := fetchFixture(client, "http://localhost:9117", credential, "safe query", 1)
+	if err == nil {
+		t.Fatal("fetchFixture() error = nil, want transport error")
+	}
+	if strings.Contains(err.Error(), credential) {
+		t.Fatalf("fetchFixture() error contains credential: %v", err)
+	}
+	if !strings.Contains(err.Error(), "localhost:9117") || !strings.Contains(err.Error(), "transport failed") {
+		t.Fatalf("fetchFixture() error lost useful context: %v", err)
 	}
 }
 
@@ -191,9 +300,6 @@ func TestFetchFixture(t *testing.T) {
 
 	if fixture.Query != "safe query" {
 		t.Fatalf("fixture.Query = %q, want %q", fixture.Query, "safe query")
-	}
-	if fixture.Source.BaseURL != server.URL {
-		t.Fatalf("fixture.Source.BaseURL = %q, want %q", fixture.Source.BaseURL, server.URL)
 	}
 	if !fixture.Source.Configured {
 		t.Fatalf("fixture.Source.Configured = false, want true")
