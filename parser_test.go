@@ -1510,6 +1510,31 @@ func TestReleaseInfoExamples(t *testing.T) {
 			},
 		},
 		{
+			name:     "rm4k starts release metadata",
+			filename: "Sample.Feature.RM4K",
+			want: TorrentInfo{
+				Title:      "Sample Feature",
+				Remastered: true,
+			},
+		},
+		{
+			name:     "4k remaster starts release metadata",
+			filename: "Sample.Feature.4K.Remaster",
+			want: TorrentInfo{
+				Title:      "Sample Feature",
+				Resolution: "2160p",
+				Remastered: true,
+			},
+		},
+		{
+			name:     "seasons range complete starts release metadata",
+			filename: "Sample.Series.Seasons.1.to.3.Complete",
+			want: TorrentInfo{
+				Title:    "Sample Series",
+				Complete: true,
+			},
+		},
+		{
 			name:     "truehd channel before atmos",
 			filename: "Sample.Feature.2025.2160p.BluRay.Remux.HEVC.TrueHD.7.1.Atmos-GRP",
 			want: TorrentInfo{

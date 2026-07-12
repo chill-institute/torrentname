@@ -40,7 +40,7 @@ var patterns = []pattern{
 	{name: "unrated", re: compileCapturedTokenPattern(unratedCatalog), apply: func(t *TorrentInfo, _ string) { t.Unrated = true }},
 	{name: "threeD", re: compileCapturedTokenPattern(threeDCatalog), apply: func(t *TorrentInfo, _ string) { t.ThreeD = true }},
 	{name: "imax", re: compileCapturedTokenPattern(imaxCatalog)},
-	{name: "complete", re: regexp.MustCompile(`(?i)\b((COMPLETE(?:[ .-]?SEASON|[ .-]?SERIES)?|SEASON[ .-]?[0-9]{1,2}[ .-]?COMPLETE))\b`)},
+	{name: "complete", re: compileCapturedTokenPattern(completeCatalog)},
 }
 
 func setInt(assign func(*TorrentInfo, int)) func(*TorrentInfo, string) {

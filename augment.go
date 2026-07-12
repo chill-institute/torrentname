@@ -18,10 +18,10 @@ var (
 	audioTokenPattern         = compileTokenPattern(audioCatalog)
 	bitDepthPattern           = regexp.MustCompile(`(?i)\b(8|10|12|16|24)[ .-]?bits?\b`)
 	partPattern               = regexp.MustCompile(`(?i)\bPart[ .-]+([0-9]+|One|Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten|I|II|III|IV|V|VI|VII|VIII|IX|X)\b`)
-	completePattern           = regexp.MustCompile(`(?i)\b(?:Complete(?:[ .-]+(?:Season|Series))?|Season[ .-]+[0-9]{1,2}(?:[ .-]*(?:to|-|\+|&)[ .-]*[0-9]{1,2})?[ .-]+Complete(?:[ .-]+Series)?|Seasons[ .-]+[0-9]{1,2}[ .-]+to[ .-]+[0-9]{1,2}[ .-]+Complete|S[0-9]{1,2}[ .-]*Complete)\b`)
+	completePattern           = compileTokenPattern(completeCatalog)
 	editionTokenPattern       = compileTokenPattern(editionCatalog)
 	languageTokenPattern      = compileTokenPattern(languageCatalog)
-	remasteredPattern         = regexp.MustCompile(`(?i)\b(?:Remastered|RM4K|4K[ .-]+Remaster(?:ed)?)\b`)
+	remasteredPattern         = compileTokenPattern(remasteredCatalog)
 	imaxPattern               = regexp.MustCompile(`(?i)\bIMAX\b`)
 )
 
