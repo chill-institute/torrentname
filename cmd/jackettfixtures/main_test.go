@@ -171,6 +171,11 @@ func TestRefreshFixturesReplacesJSONAndPreservesOtherEntries(t *testing.T) {
 	t.Parallel()
 
 	dir := t.TempDir()
+	dirInfo, err := os.Stat(dir)
+	if err != nil {
+		t.Fatalf("stat fixture directory: %v", err)
+	}
+	wantDirMode := dirInfo.Mode().Perm()
 	if err := os.WriteFile(filepath.Join(dir, "old.json"), []byte("{}"), 0o600); err != nil {
 		t.Fatalf("write old fixture: %v", err)
 	}
@@ -202,8 +207,8 @@ func TestRefreshFixturesReplacesJSONAndPreservesOtherEntries(t *testing.T) {
 	}
 	if info, err := os.Stat(dir); err != nil {
 		t.Fatalf("stat refreshed directory: %v", err)
-	} else if got := info.Mode().Perm(); got != 0o700 {
-		t.Fatalf("refreshed directory mode = %o, want 700", got)
+	} else if got := info.Mode().Perm(); got != wantDirMode {
+		t.Fatalf("refreshed directory mode = %o, want %o", got, wantDirMode)
 	}
 	for preserved, wantMode := range map[string]os.FileMode{
 		"keep.txt":                          0o600,
