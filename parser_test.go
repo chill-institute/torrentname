@@ -1,11 +1,113 @@
 package torrentname
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func assertTorrentInfo(t *testing.T, filename string, got TorrentInfo, want TorrentInfo) {
 	t.Helper()
 	if got != want {
 		t.Fatalf("Parse(%q)\nwant: %#v\ngot:  %#v", filename, want, got)
+	}
+}
+
+func TestParseApostropheNormalization(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		filename string
+		want     string
+	}{
+		{
+			name:     "spaced tracker marker",
+			filename: "Don  039 t Open The Door 2025 Season 1 Complete 1080p WEB x264 [i c]",
+			want:     "Don't Open The Door",
+		},
+		{
+			name:     "single spaced tracker marker",
+			filename: "Don 039 t Open The Door 2025 1080p WEB x264-GRP",
+			want:     "Don't Open The Door",
+		},
+		{
+			name:     "dot separated tracker marker",
+			filename: "Childhood.039.s.End.2008.1080p.BluRay.x264-GRP",
+			want:     "Childhood's End",
+		},
+		{
+			name:     "underscore separated tracker marker",
+			filename: "Director_039_s_Cut_2024_1080p_WEB-DL_x264-GRP",
+			want:     "Director's Cut",
+		},
+		{
+			name:     "literal numeric fragment",
+			filename: "Blade 039 Project 2024 1080p WEB-DL x264-GRP",
+			want:     "Blade 039 Project",
+		},
+		{
+			name:     "attached tracker marker",
+			filename: "John039s.Release.2025.1080p.WEB-DL.x264-GRP",
+			want:     "John's Release",
+		},
+		{
+			name:     "attached multi-letter contraction",
+			filename: "We039re.Here.2025.1080p.WEB-DL.x264-GRP",
+			want:     "We're Here",
+		},
+		{
+			name:     "attached numeric fragment",
+			filename: "Model2039s.Release.2025.1080p.WEB-DL.x264-GRP",
+			want:     "Model2039s Release",
+		},
+		{
+			name:     "html entity",
+			filename: "Director&#039;s Cut 2024 1080p WEB-DL x264-GRP",
+			want:     "Director's Cut",
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			info, err := Parse(tc.filename)
+			if err != nil {
+				t.Fatalf("Parse(%q) error = %v", tc.filename, err)
+			}
+			if info.Title != tc.want {
+				t.Fatalf("Parse(%q).Title = %q, want %q", tc.filename, info.Title, tc.want)
+			}
+		})
+	}
+}
+
+func TestHasReleaseInfoCoversEveryField(t *testing.T) {
+	t.Parallel()
+
+	if (TorrentInfo{}).HasReleaseInfo() {
+		t.Fatal("zero TorrentInfo.HasReleaseInfo() = true, want false")
+	}
+	infoType := reflect.TypeFor[TorrentInfo]()
+	for index := range infoType.NumField() {
+		field := infoType.Field(index)
+		t.Run(field.Name, func(t *testing.T) {
+			t.Parallel()
+			var info TorrentInfo
+			value := reflect.ValueOf(&info).Elem().FieldByIndex(field.Index)
+			switch value.Kind() {
+			case reflect.String:
+				value.SetString("value")
+			case reflect.Int:
+				value.SetInt(1)
+			case reflect.Bool:
+				value.SetBool(true)
+			default:
+				t.Fatalf("TorrentInfo.%s has unsupported kind %s", field.Name, value.Kind())
+			}
+			if !info.HasReleaseInfo() {
+				t.Fatalf("%s-only TorrentInfo.HasReleaseInfo() = false, want true", field.Name)
+			}
+		})
 	}
 }
 
@@ -1401,6 +1503,55 @@ func TestReleaseInfoExamples(t *testing.T) {
 				Audio:      "EAC3 5.1",
 				Group:      "GRP",
 				Remastered: true,
+			},
+		},
+		{
+			name:     "rm4k starts release metadata",
+			filename: "Sample.Feature.RM4K",
+			want: TorrentInfo{
+				Title:      "Sample Feature",
+				Remastered: true,
+			},
+		},
+		{
+			name:     "4k remaster starts release metadata",
+			filename: "Sample.Feature.4K.Remaster",
+			want: TorrentInfo{
+				Title:      "Sample Feature",
+				Resolution: "2160p",
+				Remastered: true,
+			},
+		},
+		{
+			name:     "seasons range complete starts release metadata",
+			filename: "Sample.Series.Seasons.1.to.3.Complete",
+			want: TorrentInfo{
+				Title:    "Sample Series",
+				Complete: true,
+			},
+		},
+		{
+			name:     "compact complete season starts release metadata",
+			filename: "Sample.Series.CompleteSeason",
+			want: TorrentInfo{
+				Title:    "Sample Series",
+				Complete: true,
+			},
+		},
+		{
+			name:     "compact complete series starts release metadata",
+			filename: "Sample.Series.CompleteSeries",
+			want: TorrentInfo{
+				Title:    "Sample Series",
+				Complete: true,
+			},
+		},
+		{
+			name:     "compact season complete starts release metadata",
+			filename: "Sample.Series.Season1Complete",
+			want: TorrentInfo{
+				Title:    "Sample Series",
+				Complete: true,
 			},
 		},
 		{

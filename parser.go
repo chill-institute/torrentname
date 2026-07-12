@@ -37,7 +37,8 @@ type TorrentInfo struct {
 	ThreeD     bool   `json:"3d,omitempty"`
 	IMAX       bool   `json:"imax,omitempty"`
 	Complete   bool   `json:"complete,omitempty"`
-	Excess     string `json:"excess,omitempty"`
+	// Deprecated: Excess is retained for source compatibility and is not populated by Parse.
+	Excess string `json:"excess,omitempty"`
 }
 
 // Parse extracts release metadata from a filename or release title.
@@ -65,7 +66,9 @@ func Parse(filename string) (*TorrentInfo, error) {
 		} else if rawStart < endIndex {
 			endIndex = rawStart
 		}
-		pattern.apply(tor, cleanName[valueStart:valueEnd])
+		if pattern.apply != nil {
+			pattern.apply(tor, cleanName[valueStart:valueEnd])
+		}
 	}
 
 	if startIndex < 0 {
@@ -116,9 +119,11 @@ func (info TorrentInfo) HasReleaseInfo() bool {
 		info.Remastered ||
 		info.Container != "" ||
 		info.Widescreen ||
+		info.Website != "" ||
 		info.Language != "" ||
 		info.BitDepth != "" ||
 		info.Edition != "" ||
+		info.Sbs != "" ||
 		info.Unrated ||
 		info.Size != "" ||
 		info.ThreeD ||

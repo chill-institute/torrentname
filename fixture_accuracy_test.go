@@ -224,6 +224,118 @@ var fixtureGoldenCases = []struct {
 		},
 		fields: []string{"group"},
 	},
+	{
+		name:  "bluray x265 bit depth and advanced group",
+		title: "Silkwood 1983 1080p BluRay x265 10bit EAC3 2 0 r00t QxR",
+		want: TorrentInfo{
+			Title:      "Silkwood",
+			Year:       1983,
+			Resolution: "1080p",
+			Quality:    "BluRay",
+			Codec:      "x265",
+			Audio:      "EAC3 2.0",
+			Group:      "QxR",
+			BitDepth:   "10-bit",
+		},
+		fields: []string{"title", "year", "resolution", "quality", "codec", "audio", "group", "bit_depth"},
+	},
+	{
+		name:  "episode range hdr web dl",
+		title: "56 дней / 56 Days / S1E1-8 of 8 (Шена Стейн, Алетеа Джонс) [2026, США, триллер, драма, мелодрама, криминал, детектив, HEVC, HDR10+, WEB-DL 2160p] 3 x MVO (Дубляжная, LE-Production, Dragon Money Studio) + Original + Sub (Eng)",
+		want: TorrentInfo{
+			Season:     1,
+			Episode:    1,
+			EpisodeEnd: 8,
+			Resolution: "2160p",
+			Quality:    "WEB-DL",
+			Codec:      "H265",
+			HDR:        "HDR10+",
+		},
+		fields: []string{"season", "episode", "episode_end", "resolution", "quality", "codec", "hdr"},
+	},
+	{
+		name:  "website dual audio source without group",
+		title: "[ToonsHub] In the Clear Moonlit Dusk S01E09 1080p CR WEB DL DUAL AAC2 0 H 264 (Uruwashi no Yoi no Tsuki  Dual Audio  Multi Subs)",
+		want: TorrentInfo{
+			Title:      "In the Clear Moonlit Dusk",
+			Season:     1,
+			Episode:    9,
+			Resolution: "1080p",
+			Quality:    "WEB-DL",
+			Codec:      "H264",
+			Audio:      "AAC2.0",
+			Source:     "CR",
+			Website:    "ToonsHub",
+			Edition:    "Dual Audio Multi Subs",
+		},
+		fields: []string{"title", "season", "episode", "resolution", "quality", "codec", "audio", "source", "group", "website", "edition"},
+	},
+	{
+		name:  "second episode part",
+		title: "You and I Are Polar Opposites S01E11 Class Trip Part 2 1080p CR WEB DL AAC2 0 H 264 VARYG (Seihantai na Kimi to Boku  Multi Subs)",
+		want: TorrentInfo{
+			Season:  1,
+			Episode: 11,
+			Part:    2,
+			Source:  "CR",
+			Edition: "Multi Subs",
+		},
+		fields: []string{"season", "episode", "part", "source", "group", "edition"},
+	},
+	{
+		name:  "malformed apostrophe remux",
+		title: "[hchcsen] Gurren Lagann The Movie  Childhood  039 s End (2008) v2 (BD Remux 1080p x264 8 bit TrueHD Atmos) [Dual Audio]",
+		want: TorrentInfo{
+			Title:      "Gurren Lagann The Movie Childhood's End",
+			Year:       2008,
+			Resolution: "1080p",
+			Quality:    "REMUX",
+			Codec:      "x264",
+			Audio:      "TrueHD Atmos",
+			Website:    "hchcsen",
+			BitDepth:   "8-bit",
+			Edition:    "Dual Audio",
+		},
+		fields: []string{"title", "year", "resolution", "quality", "codec", "audio", "website", "bit_depth", "edition"},
+	},
+	{
+		name:  "bracket group after legacy metadata",
+		title: "Tar 2022 HDRip XviD AC3 EVO[TGx]",
+		want: TorrentInfo{
+			Title:   "Tar",
+			Year:    2022,
+			Quality: "HDRip",
+			Codec:   "XViD",
+			Audio:   "AC3",
+			Group:   "TGx",
+		},
+		fields: []string{"title", "year", "quality", "codec", "audio", "group"},
+	},
+	{
+		name:  "space separated trailing group",
+		title: "Roman Empire By Train With Alice Roberts S01E06 720p HDTV H264 JFF EZTV",
+		want: TorrentInfo{
+			Season:     1,
+			Episode:    6,
+			Resolution: "720p",
+			Quality:    "HDTV",
+			Codec:      "H264",
+		},
+		fields: []string{"season", "episode", "resolution", "quality", "codec", "group"},
+	},
+	{
+		name:  "container and lowercase audio",
+		title: "Pyramid.Builders.New.Clues.2019.720p.x265.aac.subs.mkv",
+		want: TorrentInfo{
+			Title:      "Pyramid Builders New Clues",
+			Year:       2019,
+			Resolution: "720p",
+			Codec:      "x265",
+			Audio:      "AAC",
+			Container:  "mkv",
+		},
+		fields: []string{"title", "year", "resolution", "codec", "audio", "container"},
+	},
 }
 
 func TestFixtureGoldenCases(t *testing.T) {
@@ -311,6 +423,8 @@ func assertTorrentInfoFields(t *testing.T, title string, got TorrentInfo, want T
 			assertEqual(t, title, field, got.Edition, want.Edition)
 		case "complete":
 			assertEqual(t, title, field, got.Complete, want.Complete)
+		case "container":
+			assertEqual(t, title, field, got.Container, want.Container)
 		default:
 			t.Fatalf("unsupported golden field %q", field)
 		}

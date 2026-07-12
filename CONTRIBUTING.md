@@ -37,6 +37,10 @@ checked parser coverage floors regress. To test a different floor directly,
 run `go run ./cmd/corpusmetrics --min field=percent`; repeat `--min` for each
 field you want to guard.
 
+Fixture refreshes fetch and serialize the complete curated set before replacing
+the checked-in corpus. Generated fixtures omit configured URLs, credentials,
+download URLs, and free-form remote diagnostics.
+
 Use the [Parser Spec](./docs/SPEC.md) to decide whether a parser behavior change is a contract expansion, a normalization fix, or an unsupported inference.
 
 For benchmark comparisons, capture before and after runs with:

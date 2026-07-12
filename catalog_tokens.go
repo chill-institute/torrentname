@@ -119,7 +119,11 @@ var (
 	}
 
 	remasteredCatalog = []aliasToken{
-		{canonical: "REMASTERED", patterns: []string{`REMASTERED`}},
+		{canonical: "REMASTERED", aliases: []string{"RM4K", "4K Remaster", "4K Remastered"}, patterns: []string{`REMASTERED`, `RM4K`, `4K[ .-]+Remaster(?:ed)?`}},
+	}
+
+	completeCatalog = []aliasToken{
+		{canonical: "COMPLETE", patterns: []string{`Complete(?:[ .-]*(?:Season|Series))?`, `Season[ .-]*[0-9]{1,2}(?:[ .-]*(?:to|-|\+|&)[ .-]*[0-9]{1,2})?[ .-]*Complete(?:[ .-]*Series)?`, `Seasons[ .-]+[0-9]{1,2}[ .-]+to[ .-]+[0-9]{1,2}[ .-]+Complete`, `S[0-9]{1,2}[ .-]*Complete`}},
 	}
 
 	widescreenCatalog = []aliasToken{
@@ -138,7 +142,7 @@ var (
 		{canonical: "IMAX", patterns: []string{`IMAX`}},
 	}
 
-	flagCatalog = mergeAliasTokens(extendedCatalog, hardcodedCatalog, properCatalog, repackCatalog, remasteredCatalog, widescreenCatalog, unratedCatalog, threeDCatalog, imaxCatalog)
+	flagCatalog = mergeAliasTokens(extendedCatalog, hardcodedCatalog, properCatalog, repackCatalog, remasteredCatalog, completeCatalog, widescreenCatalog, unratedCatalog, threeDCatalog, imaxCatalog)
 
 	broadResolutionAliasContextCatalog = mergeAliasTokens(
 		selectAliasTokens(qualityCatalog, "WEB-DL", "WEBRip", "WEB", "BluRay", "REMUX", "HDRip", "DVDRip", "BRRip", "BDRip", "HDTV", "PDTV", "DvDScr"),

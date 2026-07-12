@@ -120,7 +120,7 @@ Sample Series S01 COMPLETE 720p WEBRip x264-GRP
 - release traits: `Resolution`, `Quality`, `Codec`, `HDR`, `Audio`, `BitDepth`
 - source traits: `Source`, `Group`, `Website`, `Language`, `Region`
 - flags: `Extended`, `Hardcoded`, `Proper`, `Repack`, `Remastered`, `Widescreen`, `Unrated`, `ThreeD`, `IMAX`, `Complete`
-- file traits: `Container`, `Sbs`, `Size`, `Excess`
+- file traits: `Container`, `Sbs`, `Size`
 
 See [Parser Spec](./docs/SPEC.md) for the full contract and normalization rules.
 
