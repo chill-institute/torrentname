@@ -174,6 +174,9 @@ func replaceFixtureDir(dir string, fixtures []stagedFixture) error {
 	if err := os.CopyFS(stage, os.DirFS(dir)); err != nil {
 		return fmt.Errorf("stage fixture directory: %w", err)
 	}
+	if err := restoreCopiedModes(dir, stage); err != nil {
+		return fmt.Errorf("preserve staged fixture permissions: %w", err)
+	}
 	if err := clearFixtureDir(stage); err != nil {
 		return fmt.Errorf("clear staged fixtures: %w", err)
 	}
@@ -204,6 +207,23 @@ func replaceFixtureDir(dir string, fixtures []stagedFixture) error {
 		return fmt.Errorf("remove fixture backup: %w", err)
 	}
 	return nil
+}
+
+func restoreCopiedModes(source, target string) error {
+	return filepath.WalkDir(source, func(path string, entry os.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		relative, err := filepath.Rel(source, path)
+		if err != nil {
+			return err
+		}
+		info, err := entry.Info()
+		if err != nil {
+			return err
+		}
+		return os.Chmod(filepath.Join(target, relative), info.Mode())
+	})
 }
 
 func clearFixtureDir(dir string) error {

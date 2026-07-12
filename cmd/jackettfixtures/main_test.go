@@ -205,9 +205,17 @@ func TestRefreshFixturesReplacesJSONAndPreservesOtherEntries(t *testing.T) {
 	} else if got := info.Mode().Perm(); got != 0o700 {
 		t.Fatalf("refreshed directory mode = %o, want 700", got)
 	}
-	for _, preserved := range []string{"keep.txt", filepath.Join("nested", "keep.txt")} {
-		if _, err := os.Stat(filepath.Join(dir, preserved)); err != nil {
+	for preserved, wantMode := range map[string]os.FileMode{
+		"keep.txt":                          0o600,
+		"nested":                            0o700,
+		filepath.Join("nested", "keep.txt"): 0o600,
+	} {
+		info, err := os.Stat(filepath.Join(dir, preserved))
+		if err != nil {
 			t.Fatalf("preserved entry %s missing: %v", preserved, err)
+		}
+		if got := info.Mode().Perm(); got != wantMode {
+			t.Fatalf("preserved entry %s mode = %o, want %o", preserved, got, wantMode)
 		}
 	}
 }
