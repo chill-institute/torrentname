@@ -64,7 +64,7 @@ func malformedApostropheBounds(value string, marker int) (int, int, int, bool) {
 	for separatorStart > 0 && isApostropheSeparator(value[separatorStart-1]) {
 		separatorStart--
 	}
-	if separatorStart == 0 || separatorStart == marker {
+	if separatorStart == 0 {
 		return 0, 0, 0, false
 	}
 	previous, _ := utf8.DecodeLastRuneInString(value[:separatorStart])
@@ -76,7 +76,9 @@ func malformedApostropheBounds(value string, marker int) (int, int, int, bool) {
 	for suffixStart < len(value) && isApostropheSeparator(value[suffixStart]) {
 		suffixStart++
 	}
-	if suffixStart == marker+3 {
+	separatedBefore := separatorStart < marker
+	separatedAfter := suffixStart > marker+3
+	if (!separatedBefore || !separatedAfter) && !unicode.IsLetter(previous) {
 		return 0, 0, 0, false
 	}
 	suffixLength := contractionSuffixLength(value[suffixStart:])

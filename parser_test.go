@@ -46,6 +46,21 @@ func TestParseApostropheNormalization(t *testing.T) {
 			want:     "Blade 039 Project",
 		},
 		{
+			name:     "attached tracker marker",
+			filename: "John039s.Release.2025.1080p.WEB-DL.x264-GRP",
+			want:     "John's Release",
+		},
+		{
+			name:     "attached multi-letter contraction",
+			filename: "We039re.Here.2025.1080p.WEB-DL.x264-GRP",
+			want:     "We're Here",
+		},
+		{
+			name:     "attached numeric fragment",
+			filename: "Model2039s.Release.2025.1080p.WEB-DL.x264-GRP",
+			want:     "Model2039s Release",
+		},
+		{
 			name:     "html entity",
 			filename: "Director&#039;s Cut 2024 1080p WEB-DL x264-GRP",
 			want:     "Director's Cut",
