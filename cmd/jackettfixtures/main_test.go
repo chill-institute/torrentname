@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -225,25 +226,127 @@ func TestRefreshFixturesReplacesJSONAndPreservesOtherEntries(t *testing.T) {
 	}
 }
 
+func TestReplaceFixtureDirRestoresOriginalAfterActivationFailure(t *testing.T) {
+	t.Parallel()
+
+	dir := t.TempDir()
+	originalPath := filepath.Join(dir, "existing.json")
+	original := []byte("{\"original\":true}\n")
+	if err := os.WriteFile(originalPath, original, 0o600); err != nil {
+		t.Fatalf("write existing fixture: %v", err)
+	}
+
+	renameCalls := 0
+	rename := func(oldPath, newPath string) error {
+		renameCalls++
+		if renameCalls == 2 {
+			return errors.New("injected activation failure")
+		}
+		return os.Rename(oldPath, newPath)
+	}
+	err := replaceFixtureDirWithRename(dir, []stagedFixture{{name: "new.json", payload: []byte("{}\n")}}, rename)
+	if err == nil || !strings.Contains(err.Error(), "injected activation failure") {
+		t.Fatalf("replaceFixtureDirWithRename() error = %v, want activation failure", err)
+	}
+	got, readErr := os.ReadFile(originalPath)
+	if readErr != nil {
+		t.Fatalf("read restored fixture: %v", readErr)
+	}
+	if string(got) != string(original) {
+		t.Fatalf("restored fixture = %q, want %q", got, original)
+	}
+	if _, statErr := os.Stat(filepath.Join(dir, "new.json")); !os.IsNotExist(statErr) {
+		t.Fatalf("new fixture exists after failed activation: %v", statErr)
+	}
+}
+
+func TestReplaceFixtureDirReportsBackupAfterRollbackFailure(t *testing.T) {
+	t.Parallel()
+
+	parent := t.TempDir()
+	dir := filepath.Join(parent, "jackett")
+	if err := os.Mkdir(dir, 0o755); err != nil {
+		t.Fatalf("create fixture directory: %v", err)
+	}
+	original := []byte("{\"original\":true}\n")
+	if err := os.WriteFile(filepath.Join(dir, "existing.json"), original, 0o600); err != nil {
+		t.Fatalf("write existing fixture: %v", err)
+	}
+
+	renameCalls := 0
+	rename := func(oldPath, newPath string) error {
+		renameCalls++
+		switch renameCalls {
+		case 2:
+			return errors.New("injected activation failure")
+		case 3:
+			return errors.New("injected rollback failure")
+		default:
+			return os.Rename(oldPath, newPath)
+		}
+	}
+	err := replaceFixtureDirWithRename(dir, []stagedFixture{{name: "new.json", payload: []byte("{}\n")}}, rename)
+	if err == nil {
+		t.Fatal("replaceFixtureDirWithRename() error = nil, want rollback failure")
+	}
+	backups, globErr := filepath.Glob(filepath.Join(parent, ".jackett-fixtures-backup-*"))
+	if globErr != nil {
+		t.Fatalf("find fixture backup: %v", globErr)
+	}
+	if len(backups) != 1 {
+		t.Fatalf("fixture backups = %v, want one", backups)
+	}
+	if !strings.Contains(err.Error(), backups[0]) || !strings.Contains(err.Error(), "injected rollback failure") {
+		t.Fatalf("replaceFixtureDirWithRename() error = %v, want actionable backup path", err)
+	}
+	got, readErr := os.ReadFile(filepath.Join(backups[0], "existing.json"))
+	if readErr != nil {
+		t.Fatalf("read recoverable fixture backup: %v", readErr)
+	}
+	if string(got) != string(original) {
+		t.Fatalf("recoverable fixture backup = %q, want %q", got, original)
+	}
+}
+
 func TestFetchFixtureRedactsAPIKeyFromTransportErrors(t *testing.T) {
 	t.Parallel()
 
-	const credential = "pass"
-	const username = "fixture-user"
-	const password = "pass-info"
+	const credential = "api key+/%"
+	const username = "fixture user+/%"
+	const password = "pass info+/%@:"
 	client := &http.Client{Transport: roundTripFunc(func(request *http.Request) (*http.Response, error) {
 		return nil, errors.New("transport failed for " + request.URL.String())
 	})}
-	_, err := fetchFixture(client, "http://"+username+":"+password+"@localhost:9117", credential, "safe query", 1)
+	baseURL := (&url.URL{Scheme: "http", Host: "localhost:9117", User: url.UserPassword(username, password)}).String()
+	_, err := fetchFixture(client, baseURL, credential, "safe query", 1)
 	if err == nil {
 		t.Fatal("fetchFixture() error = nil, want transport error")
 	}
-	for _, sensitive := range []string{credential, username, password} {
+	for _, sensitive := range []string{credential, username, password, url.QueryEscape(credential), url.UserPassword(username, password).String()} {
 		if strings.Contains(err.Error(), sensitive) {
 			t.Fatalf("fetchFixture() error contains sensitive request data: %v", err)
 		}
 	}
 	if !strings.Contains(err.Error(), "localhost:9117") || !strings.Contains(err.Error(), "transport failed") {
+		t.Fatalf("fetchFixture() error lost useful context: %v", err)
+	}
+}
+
+func TestFetchFixtureRedactsMalformedBaseURLCredentials(t *testing.T) {
+	t.Parallel()
+
+	const username = "fixture-user"
+	const password = "secret-password"
+	_, err := fetchFixture(http.DefaultClient, "http://"+username+":"+password+"@localhost:%zz", "api-key", "safe query", 1)
+	if err == nil {
+		t.Fatal("fetchFixture() error = nil, want malformed URL error")
+	}
+	for _, sensitive := range []string{username, password, "api-key"} {
+		if strings.Contains(err.Error(), sensitive) {
+			t.Fatalf("fetchFixture() error contains sensitive request data: %v", err)
+		}
+	}
+	if !strings.Contains(err.Error(), "parse Jackett base URL") {
 		t.Fatalf("fetchFixture() error lost useful context: %v", err)
 	}
 }

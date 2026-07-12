@@ -154,6 +154,10 @@ func refreshFixtures(client *http.Client, baseURL, apiKey, dir string, queries [
 }
 
 func replaceFixtureDir(dir string, fixtures []stagedFixture) error {
+	return replaceFixtureDirWithRename(dir, fixtures, os.Rename)
+}
+
+func replaceFixtureDirWithRename(dir string, fixtures []stagedFixture, rename func(string, string) error) error {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return fmt.Errorf("create fixture directory: %w", err)
 	}
@@ -193,18 +197,18 @@ func replaceFixtureDir(dir string, fixtures []stagedFixture) error {
 	if err := os.Remove(backup); err != nil {
 		return fmt.Errorf("prepare fixture backup: %w", err)
 	}
-	if err := os.Rename(dir, backup); err != nil {
+	if err := rename(dir, backup); err != nil {
 		return fmt.Errorf("back up fixture directory: %w", err)
 	}
-	if err := os.Rename(stage, dir); err != nil {
-		restoreErr := os.Rename(backup, dir)
+	if err := rename(stage, dir); err != nil {
+		restoreErr := rename(backup, dir)
 		if restoreErr != nil {
-			return fmt.Errorf("activate staged fixtures: %v; restore original fixtures: %w", err, restoreErr)
+			return fmt.Errorf("activate staged fixtures: %v; restore original fixtures from %s: %w", err, backup, restoreErr)
 		}
 		return fmt.Errorf("activate staged fixtures: %w", err)
 	}
 	if err := os.RemoveAll(backup); err != nil {
-		return fmt.Errorf("remove fixture backup: %w", err)
+		return fmt.Errorf("remove fixture backup %s: %w", backup, err)
 	}
 	return nil
 }
@@ -245,7 +249,7 @@ func clearFixtureDir(dir string) error {
 func fetchFixture(client *http.Client, baseURL, apiKey, queryValue string, limit int) (fixtureFile, error) {
 	requestURL, err := url.Parse(strings.TrimRight(baseURL, "/") + "/api/v2.0/indexers/all/results")
 	if err != nil {
-		return fixtureFile{}, err
+		return fixtureFile{}, safeURLParseError(err)
 	}
 	params := requestURL.Query()
 	params.Set("apikey", apiKey)
@@ -284,6 +288,14 @@ func fetchFixture(client *http.Client, baseURL, apiKey, queryValue string, limit
 		return fixtureFile{}, fmt.Errorf("query %q returned no usable results", queryValue)
 	}
 	return fixture, nil
+}
+
+func safeURLParseError(err error) error {
+	var requestErr *url.Error
+	if errors.As(err, &requestErr) {
+		return fmt.Errorf("parse Jackett base URL: %s", requestErr.Err)
+	}
+	return errors.New("parse Jackett base URL: invalid URL")
 }
 
 func safeRequestError(err error, requestURL *url.URL, apiKey string) error {
