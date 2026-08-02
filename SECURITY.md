@@ -6,9 +6,9 @@ named by parsed input.
 
 ## Reporting
 
-Please report suspected vulnerabilities through GitHub Security Advisories for
-this repository. If advisories are unavailable, open a minimal public issue that
-describes the affected behavior without publishing exploit details.
+Please report suspected vulnerabilities privately through GitHub Security
+Advisories for this repository. Do not open a public issue with vulnerability
+details.
 
 ## Parser Safety
 

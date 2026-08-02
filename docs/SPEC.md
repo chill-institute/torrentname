@@ -5,7 +5,7 @@
 ## Contract
 
 - `Parse` accepts a single filename or release title string and returns a populated `TorrentInfo`.
-- Parse failures are reserved for future hard errors; current parsing is best-effort and should not reject unusual release names.
+- Parsing is best-effort: unusual release names return the fields the parser can prove and leave the rest at zero values.
 - The parser normalizes common release tokens while preserving human-readable title text.
 - Missing or unrecognized fields stay at their Go zero value.
 - The parser does not fetch metadata, validate titles against external catalogs, or infer facts that are not present in the release name.
