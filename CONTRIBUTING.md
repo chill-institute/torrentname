@@ -1,83 +1,49 @@
 # Contributing
 
-Thanks for contributing to `torrentname`.
+Parser changes should be deterministic, dependency-free at runtime, and backed
+by representative release names.
 
-## Setup
-
-Install the pinned toolchain and run the test suite once:
+## Start
 
 ```bash
 mise install
 mise run test
-```
-
-## Validation
-
-Run the full local verification baseline before opening or updating a pull request:
-
-```bash
 mise run verify
 ```
 
-Optional parser-focused checks:
+The [parser specification](./docs/SPEC.md) defines supported inference and
+normalization. Add common aliases to `catalog_tokens.go`; avoid app-specific
+special cases.
+
+## Focused Checks
 
 ```bash
-mise run bench
-BENCH_OUT=tmp/bench/baseline.txt mise run bench:record
-BENCH_OUT=tmp/bench/current.txt mise run bench:record
-mise run bench:compare
 mise run corpus:metrics
 mise run test:cover
 mise run test:fuzz
-JACKETT_API_KEY=... mise run fixtures:jackett
+mise run bench
 ```
 
-`mise run corpus:metrics` reports Jackett fixture coverage and fails if the
-checked parser coverage floors regress. To test a different floor directly,
-run `go run ./cmd/corpusmetrics --min field=percent`; repeat `--min` for each
-field you want to guard.
-
-Fixture refreshes fetch and serialize the complete curated set before replacing
-the checked-in corpus. Generated fixtures omit configured URLs, credentials,
-download URLs, and free-form remote diagnostics.
-
-Use the [Parser Spec](./docs/SPEC.md) to decide whether a parser behavior change is a contract expansion, a normalization fix, or an unsupported inference.
-
-For benchmark comparisons, capture before and after runs with:
+Compare performance-sensitive changes with:
 
 ```bash
 BENCH_OUT=tmp/bench/baseline.txt mise run bench:record
-# change parser code
+# make the change
 BENCH_OUT=tmp/bench/current.txt mise run bench:record
 mise run bench:compare
 ```
 
-`mise run bench:compare` uses the pinned `benchstat` tool from `go.mod`.
+`mise run corpus:metrics` protects field-presence floors; it is not an accuracy
+score. Review `ns/op`, `B/op`, and `allocs/op` for parser hot paths.
 
-For the search-style `1k rows` view, run:
+## Fixtures
 
 ```bash
-go test . -run=^$ -bench=BenchmarkParseBatch1000 -benchmem -count=10
+JACKETT_API_KEY=... mise run fixtures:jackett
 ```
 
-When discussing search-style workloads, translate parser cost into `ms per 1k rows`:
+Fixture generation strips configured URLs, credentials, download URLs, and
+remote diagnostics. Commit only representative fixture changes and intentional,
+minimized fuzz repro cases.
 
-- `ns/op` is the per-title parse cost
-- `ms per 1k rows = ns/op / 1_000_000`
-- example: `35,000 ns/op` is about `35 ms` of parser overhead for `1,000` results
-
-## Development Notes
-
-- This repo owns a standalone Go parsing library with zero runtime dependencies; `go.mod` may include tool-only development dependencies.
-- Keep parser behavior deterministic and fast.
-- Prefer small, explicit refactors over broad speculative rewrites.
-- Keep visible credit to the original `middelink/go-parse-torrent-name` project when updating public docs or package framing.
-- Treat live Jackett fixtures as sanitized test inputs. Never check in API keys or raw Jackett download URLs.
-- Treat generated fuzz artifacts as opt-in. Only commit minimized repro cases you intentionally want to keep under `testdata/fuzz/`.
-- Tooling and contributor workflow belong in this repo. Workspace-wide operator docs belong in the workspace repo.
-
-## Pull Requests
-
-- Keep instructions current when setup or validation changes.
-- Update docs when the public package surface or developer workflow changes.
-- Add or update tests and benchmarks when parser behavior changes.
+Keep the original upstream attribution visible when changing public framing.

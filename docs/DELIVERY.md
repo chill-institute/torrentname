@@ -1,6 +1,7 @@
 # Delivery
 
-`torrentname` is delivered as a tagged Go module. Go tooling resolves releases from this repository's `vX.Y.Z` tags.
+`torrentname` is a tagged Go module. Go tooling resolves `vX.Y.Z` directly from
+this repository.
 
 ## CI
 
@@ -12,23 +13,18 @@ mise run test:fuzz
 go test . -run=^$ -bench=BenchmarkParse -benchmem -count=1
 ```
 
-`mise run verify` includes formatting, module tidiness, Go static analysis,
-workflow linting, parser tests, and corpus field-presence floors. Coverage is an
-optional contributor diagnostic rather than an automatic CI gate.
-
-The GitHub Actions workflow keeps default permissions empty, grants each verification job read-only repository access, pins high-trust actions to full commit SHAs, and uses the repo's `mise.toml` as the toolchain source of truth.
+`mise run verify` covers formatting, module tidiness, static analysis, workflow
+linting, parser tests, and corpus field-presence floors.
 
 ## Releases
 
-Pushes to `main` run release only after verify, fuzz, and benchmark smoke jobs pass. Releases use semantic-release to analyze Conventional Commits, create a `vX.Y.Z` Git tag, and publish GitHub release notes. Go consumers then resolve the module through the tagged Git history.
-
-The release job uses the `release` GitHub Environment as the release trust boundary with deployment records disabled. That Environment is branch-restricted to `main`. The job requests `contents: write` only for the release lane so the default repository token posture can stay read-only for non-release jobs.
-
-The release lane creates the tag and GitHub release notes. The source tree has no separate version file to update.
+After all checks pass on `main`, semantic-release creates the immutable tag and
+GitHub release from Conventional Commits. There is no version file in the source
+tree.
 
 ## Operator Checklist
 
 - Keep `main` as the release branch.
 - Use Conventional Commits such as `fix: ...`, `feat: ...`, and `perf: ...`.
-- Keep the `release` Environment limited to `main`.
-- Keep the release job's `contents: write` permission allowed to create tags and GitHub Releases, or replace it with a narrowly scoped release bot if branch/tag rules require an allowlisted actor.
+- Keep the `release` Environment and release permissions limited to the `main`
+  release lane.

@@ -37,48 +37,14 @@
 | `Container` | MKV, AVI, MP4 tokens | Preserved token |
 | `Sbs` | SBS and Half-SBS | Preserved token |
 
-## Accuracy Loop
-
-Parser behavior is guarded by three layers:
-
-- unit tests for curated parser examples
-- semantic golden cases that assert reviewed field values and expected omissions for selected titles from `testdata/jackett`
-- corpus metrics that report field presence across every committed Jackett fixture title
-
-Use:
+## Verify
 
 ```bash
 mise run test
 mise run corpus:metrics
+mise run bench
 ```
 
-The semantic goldens protect exact parser behavior. Corpus metrics are a
-separate presence regression guard, not an accuracy score: the task fails when
-checked field coverage drops below the floors in `mise.toml`; use direct
-`go run ./cmd/corpusmetrics --min field=percent` calls when testing temporary
-thresholds.
-
-Refresh the Jackett corpus only when intentionally updating real-world samples:
-
-```bash
-JACKETT_API_KEY=... mise run fixtures:jackett
-```
-
-Fixture refreshes often change tracker timestamps and result ordering. Commit only fixture changes that improve the representative corpus.
-
-## Performance Loop
-
-Performance is tracked with parser microbenchmarks and the 1k-row batch benchmark.
-
-Use this workflow around parser changes:
-
-```bash
-BENCH_OUT=tmp/bench/baseline.txt mise run bench:record
-# edit parser
-BENCH_OUT=tmp/bench/current.txt mise run bench:record
-mise run bench:compare
-```
-
-`mise run bench:compare` uses Go's pinned `benchstat` tool. Review `ns/op`,
-`B/op`, and `allocs/op`. Treat allocation increases on hot parser paths as
-regressions unless the accuracy gain is worth the cost.
+Unit tests and semantic goldens protect exact behavior. Corpus metrics guard
+field presence, not accuracy. The [contributing guide](../CONTRIBUTING.md)
+covers fixture refreshes, fuzzing, and before/after benchmarks.

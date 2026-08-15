@@ -5,11 +5,13 @@
 [![CI](https://github.com/chill-institute/torrentname/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/chill-institute/torrentname/actions/workflows/ci.yml?query=branch%3Amain)
 [![Go Reference](https://pkg.go.dev/badge/github.com/chill-institute/torrentname.svg)](https://pkg.go.dev/github.com/chill-institute/torrentname)
 
-`torrentname` is a zero-dependency Go parser for torrent-style release names.
-It turns noisy filenames into structured metadata such as title, year, season,
-episode, quality, codec, audio, HDR, source, and release group.
+A zero-dependency Go parser for torrent-style release names. It extracts title,
+year, season, episode, quality, codec, audio, source, and release-group metadata
+without calling external services.
 
-Modern fork of [middelink/go-parse-torrent-name](https://github.com/middelink/go-parse-torrent-name) / [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name).
+Modern fork of
+[middelink/go-parse-torrent-name](https://github.com/middelink/go-parse-torrent-name)
+and [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name).
 
 ## Install
 
@@ -17,9 +19,7 @@ Modern fork of [middelink/go-parse-torrent-name](https://github.com/middelink/go
 go get github.com/chill-institute/torrentname
 ```
 
-## Quick start
-
-Call `Parse` with a release name. The parser returns the fields it can prove and leaves unknown fields at their Go zero value.
+## Use
 
 ```go
 package main
@@ -36,115 +36,30 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf("%s S%02dE%02d %s %s %s\n",
-		info.Title,
-		info.Season,
-		info.Episode,
-		info.Resolution,
-		info.Quality,
-		info.Group,
-	)
+	fmt.Printf("%s S%02dE%02d %s\n", info.Title, info.Season, info.Episode, info.Group)
 }
 ```
 
-Output:
+`Parse` is deterministic and best-effort. Unknown fields keep their Go zero
+value; recognized aliases normalize to stable values.
 
-```text
-Sample Series S05E03 720p HDTV GRP
-```
+## Contract
 
-## Examples
+- Identity: `Title`, `Year`, `Season`, `Episode`, `EpisodeEnd`, `Part`
+- Release: `Resolution`, `Quality`, `Codec`, `HDR`, `Audio`, `BitDepth`
+- Source: `Source`, `Group`, `Website`, `Language`, `Region`
+- Flags: `Extended`, `Proper`, `Repack`, `Remastered`, `Unrated`, `IMAX`, and more
+- File traits: `Container`, `Sbs`, `Size`
 
-TV episode:
+See the [parser specification](./docs/SPEC.md) for accepted tokens and
+normalization rules.
 
-```text
-Sample Series S05E03 720p HDTV x264-GRP
-```
-
-```go
-&torrentname.TorrentInfo{
-	Title:      "Sample Series",
-	Season:     5,
-	Episode:    3,
-	Resolution: "720p",
-	Quality:    "HDTV",
-	Codec:      "x264",
-	Group:      "GRP",
-}
-```
-
-Movie release:
-
-```text
-Open.Feature.2014.EXTENDED.1080p.WEB-DL.DD5.1.H264-RARBG
-```
-
-```go
-&torrentname.TorrentInfo{
-	Title:      "Open Feature",
-	Year:       2014,
-	Resolution: "1080p",
-	Quality:    "WEB-DL",
-	Codec:      "H264",
-	Audio:      "DD5.1",
-	Group:      "RARBG",
-	Extended:   true,
-}
-```
-
-Complete season:
-
-```text
-Sample Series S01 COMPLETE 720p WEBRip x264-GRP
-```
-
-```go
-&torrentname.TorrentInfo{
-	Title:      "Sample Series",
-	Season:     1,
-	Resolution: "720p",
-	Quality:    "WEBRip",
-	Codec:      "x264",
-	Group:      "GRP",
-	Complete:   true,
-}
-```
-
-## Supported Metadata
-
-`Parse` fills the fields it can prove from the release name:
-
-- identity: `Title`, `Year`, `Season`, `Episode`, `EpisodeEnd`, `Part`
-- release traits: `Resolution`, `Quality`, `Codec`, `HDR`, `Audio`, `BitDepth`
-- source traits: `Source`, `Group`, `Website`, `Language`, `Region`
-- flags: `Extended`, `Hardcoded`, `Proper`, `Repack`, `Remastered`, `Widescreen`, `Unrated`, `ThreeD`, `IMAX`, `Complete`
-- file traits: `Container`, `Sbs`, `Size`
-
-See [Parser Spec](./docs/SPEC.md) for the full contract and normalization rules.
-
-## Behavior
-
-- Parsing is deterministic and best-effort.
-- Missing or unrecognized fields stay at their Go zero value.
-- The parser does not call external services or validate titles against a media catalog.
-- Runtime parser code imports only the Go standard library; tool-only development dependencies live in `go.mod`.
-
-## Docs
-
-- [Parser spec](./docs/SPEC.md): contract, normalization rules, and supported metadata
-- [Release workflow](./docs/DELIVERY.md): CI, tags, and package delivery
-- [Security](./SECURITY.md): vulnerability reporting and parser safety baseline
-
-## Contributing
+## Develop
 
 ```bash
 mise install
 mise run verify
 ```
 
-Contributor checks, fixture refreshes, corpus metrics, and benchmark workflows
-live in the [contributing guide](./CONTRIBUTING.md).
-
-## License
-
-MIT. See [LICENSE](./LICENSE).
+[Contributing](./CONTRIBUTING.md) · [Delivery](./docs/DELIVERY.md) ·
+[Security](./SECURITY.md) · [MIT License](./LICENSE)
