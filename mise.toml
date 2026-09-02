@@ -1,5 +1,7 @@
 [tools]
+actionlint = "1.7.12"
 go = "1.26.6"
+zizmor = "1.29.0"
 
 [env]
 GOWORK = "off"
@@ -59,9 +61,14 @@ run = '"$(mise which go)" test ./...'
 description = "Run Go static checks"
 run = '"$(mise which go)" vet ./...'
 
-[tasks.actionlint]
-description = "Lint GitHub Actions workflows"
-run = '"$(mise which go)" tool actionlint'
+[tasks.actions]
+description = "Validate and audit GitHub Actions"
+shell = "bash -c"
+run = '''
+set -euo pipefail
+actionlint
+zizmor .github/workflows
+'''
 
 [tasks."test:cover"]
 description = "Run parser tests with coverage"
@@ -120,4 +127,4 @@ run = '"$(mise which go)" test . -run=^$ -fuzz=FuzzParse -fuzztime=5s'
 
 [tasks.verify]
 description = "Run formatting, static, and test checks"
-depends = ["fmt:check", "mod:check", "vet", "actionlint", "test", "corpus:metrics"]
+depends = ["fmt:check", "mod:check", "vet", "actions", "test", "corpus:metrics"]
