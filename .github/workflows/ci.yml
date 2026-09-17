@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
-      contents: write
+      contents: read
     environment:
       name: release
       deployment: false
@@ -115,8 +115,6 @@ jobs:
           owner: chill-institute
           repositories: torrentname
           permission-contents: write
-          permission-issues: write
-          permission-pull-requests: write
 
       - name: Publish GitHub release
         id: release
