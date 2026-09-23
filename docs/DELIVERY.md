@@ -13,8 +13,7 @@ mise run test:fuzz
 go test . -run=^$ -bench=BenchmarkParse -benchmem -count=1
 ```
 
-`mise run verify` covers formatting, module tidiness, static analysis, workflow
-linting, parser tests, and corpus field-presence floors.
+`mise run verify` runs the [`tasks.verify`](../mise.toml) dependencies.
 
 ## Releases
 

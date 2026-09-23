@@ -9,7 +9,7 @@ A zero-dependency Go parser for torrent-style release names. It extracts title,
 year, season, episode, quality, codec, audio, source, and release-group metadata
 without calling external services.
 
-Modern fork of
+Forked from
 [middelink/go-parse-torrent-name](https://github.com/middelink/go-parse-torrent-name)
 and [jzjzjzj/parse-torrent-name](https://github.com/jzjzjzj/parse-torrent-name).
 
