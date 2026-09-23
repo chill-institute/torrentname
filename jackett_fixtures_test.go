@@ -38,7 +38,6 @@ func testFixtureDir(t *testing.T, dir string, label string) {
 	}
 
 	for _, path := range files {
-		path := path
 		t.Run(filepath.Base(path), func(t *testing.T) {
 			t.Parallel()
 

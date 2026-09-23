@@ -18,7 +18,6 @@ func TestCatalogAliasNormalization(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -37,7 +36,6 @@ func TestSourceCatalogNormalizesAndMatches(t *testing.T) {
 	t.Parallel()
 
 	for _, token := range sourceCatalog {
-		token := token
 		t.Run(token.canonical, func(t *testing.T) {
 			t.Parallel()
 

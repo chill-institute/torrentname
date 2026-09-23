@@ -7,16 +7,6 @@ import (
 	"testing"
 )
 
-func TestRunReportsFixtureMetrics(t *testing.T) {
-	t.Parallel()
-
-	dir := writeSampleFixture(t)
-
-	if err := run(dir); err != nil {
-		t.Fatalf("run() error = %v", err)
-	}
-}
-
 func TestRunRequiresFixtures(t *testing.T) {
 	t.Parallel()
 

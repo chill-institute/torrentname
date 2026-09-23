@@ -343,7 +343,6 @@ func TestFixtureGoldenCases(t *testing.T) {
 
 	fixtureTitles := loadFixtureTitleSet(t)
 	for _, tc := range fixtureGoldenCases {
-		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
