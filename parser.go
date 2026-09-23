@@ -71,12 +71,6 @@ func Parse(filename string) (*TorrentInfo, error) {
 		}
 	}
 
-	if startIndex < 0 {
-		startIndex = 0
-	}
-	if endIndex < 0 || endIndex > len(filename) {
-		endIndex = len(filename)
-	}
 	if startIndex > endIndex {
 		startIndex = 0
 		endIndex = len(filename)
