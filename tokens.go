@@ -3,7 +3,6 @@ package torrentname
 import (
 	"regexp"
 	"sort"
-	"strings"
 )
 
 var (
@@ -12,10 +11,10 @@ var (
 		`|\bSeason[ .-]+[0-9]{1,2}\b` +
 		`|\b(?:19[0-9]{2}|20[0-9]{2})\b` +
 		`|\b(?:` + tokenPatternAlternates(resolutionCatalog, broadResolutionAliasContextPattern, `[0-9]{3,4}p`) + `)\b` +
-		`|\b(?:` + strings.Join(tokenPatterns(qualityCatalog), "|") + `)\b` +
-		`|\b(?:` + strings.Join(tokenPatterns(codecCatalog), "|") + `)\b` +
-		`|\b(?:` + strings.Join(tokenPatterns(hdrCatalog), "|") + `)` +
-		`|\b(?:` + strings.Join(tokenPatterns(audioCatalog), "|") + `)\b` +
+		`|\b(?:` + tokenPatternAlternates(qualityCatalog) + `)\b` +
+		`|\b(?:` + tokenPatternAlternates(codecCatalog) + `)\b` +
+		`|\b(?:` + tokenPatternAlternates(hdrCatalog) + `)` +
+		`|\b(?:` + tokenPatternAlternates(audioCatalog) + `)\b` +
 		`|\b(?:8|10|12|16|24)[ .-]?bits?\b` +
 		`)`)
 	sourceTokenPattern = compileSourcePattern(sourceCatalog)

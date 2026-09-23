@@ -83,11 +83,7 @@ func compileCapturedTokenPattern(tokens []aliasToken, extraPatterns ...string) *
 }
 
 func compileSourcePattern(tokens []sourceToken) *regexp.Regexp {
-	patterns := make([]string, 0, len(tokens))
-	for _, token := range tokens {
-		patterns = append(patterns, token.patterns...)
-	}
-	return regexp.MustCompile(`(?i)(?:^|[^A-Za-z0-9])((?:` + strings.Join(patterns, "|") + `))(?:$|[^A-Za-z0-9])`)
+	return regexp.MustCompile(`(?i)(?:^|[^A-Za-z0-9])((?:` + sourceTokenPatternAlternates(tokens) + `))(?:$|[^A-Za-z0-9])`)
 }
 
 func tokenPatterns(tokens []aliasToken) []string {
