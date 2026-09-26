@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 10
     concurrency:
       group: verify-${{ github.workflow }}-${{ github.ref }}-verify
-      cancel-in-progress: true
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     permissions:
       contents: read
     steps:
@@ -34,6 +34,10 @@ jobs:
       - name: Run verification baseline
         run: mise run verify
 
+      - name: Scan pushed range
+        if: ${{ !cancelled() }}
+        uses: chill-institute/.github/.github/actions/scan@04bad7d160da50b0509abfd5ff2e382aaf7d1aef # v1.0.0
+
   fuzz:
     name: Fuzz Smoke
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
@@ -41,7 +45,7 @@ jobs:
     timeout-minutes: 10
     concurrency:
       group: verify-${{ github.workflow }}-${{ github.ref }}-fuzz
-      cancel-in-progress: true
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     permissions:
       contents: read
     steps:
@@ -65,7 +69,7 @@ jobs:
     timeout-minutes: 10
     concurrency:
       group: verify-${{ github.workflow }}-${{ github.ref }}-benchmarks
-      cancel-in-progress: true
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     permissions:
       contents: read
     steps:

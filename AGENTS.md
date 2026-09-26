@@ -21,6 +21,7 @@
 | Parser hot paths | `BENCH_OUT=<file> mise run bench:record` before and after, then `mise run bench:compare` | local; [CI](./.github/workflows/ci.yml) `benchmarks` runs one pass only | `tmp/bench/*.txt`, benchstat table |
 | Fixture corpus | `JACKETT_API_KEY=... mise run fixtures:jackett`, then `mise run verify` | local, against a live local Jackett; see [Fixtures](./CONTRIBUTING.md#fixtures) | rewritten `testdata/jackett/*.json` |
 | Workflows | `mise run actions` and `go test ./internal/workflowpolicy` (in `verify`) | local, [CI](./.github/workflows/ci.yml) `verify` | exit status |
+| Pushed workflow changes | [shared scan](https://github.com/chill-institute/.github/tree/main/.github/actions/scan), last step of the [CI](./.github/workflows/ci.yml) `verify` job: Actionlint and Zizmor when the pushed range touches workflows; secrets rely on GitHub secret scanning | CI on push to `main` (pushed range) and dispatch (full history) | failed run |
 | Release | [CI](./.github/workflows/ci.yml) `release` after all jobs on `main` | CI only, `release` Environment | tag and GitHub release for `feat`, `fix`, `perf`, `revert`, or breaking commits; see [Delivery](./docs/DELIVERY.md) |
 
 `mise run verify` covers table tests in `parser_test.go`, golden cases in
