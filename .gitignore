@@ -15,3 +15,6 @@
 
 # Local task output
 tmp/
+
+# Locked semantic-release install
+.github/release/node_modules/

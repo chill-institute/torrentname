@@ -34,6 +34,18 @@ jobs:
       - name: Run verification baseline
         run: mise run verify
 
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Install locked semantic-release
+        run: npm ci --prefix .github/release --ignore-scripts --no-audit --no-fund
+
+      - name: Smoke-test semantic-release
+        run: node .github/release/smoke.mjs
+
       - name: Scan pushed range
         if: ${{ !cancelled() }}
         uses: chill-institute/.github/.github/actions/scan@04bad7d160da50b0509abfd5ff2e382aaf7d1aef # v1.0.0
@@ -110,6 +122,15 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Install locked semantic-release
+        run: npm ci --prefix .github/release --ignore-scripts --no-audit --no-fund
+
       - name: Mint a chill-ci token
         id: app
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
@@ -122,13 +143,7 @@ jobs:
 
       - name: Publish GitHub release
         id: release
-        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
-        with:
-          semantic_version: 25.0.9
-          extra_plugins: |
-            @semantic-release/commit-analyzer@13.0.1
-            @semantic-release/release-notes-generator@14.1.1
-            @semantic-release/github@12.0.8
+        run: node .github/release/release.mjs
         env:
           GITHUB_TOKEN: ${{ steps.app.outputs.token }}
 
@@ -137,4 +152,14 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           RELEASE_TAG: ${{ steps.release.outputs.new_release_git_tag }}
-        run: gh release verify "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY"
+        run: |
+          for attempt in {1..12}; do
+            if gh release verify "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY"; then
+              exit 0
+            fi
+            if [[ "$attempt" == 12 ]]; then
+              exit 1
+            fi
+            echo "Release attestation is not available yet; retrying in 5 seconds."
+            sleep 5
+          done
