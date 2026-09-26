@@ -22,6 +22,12 @@ After all checks pass on `main`, semantic-release creates the immutable tag and
 GitHub release from Conventional Commits. There is no version file in the source
 tree.
 
+Only `feat` (minor), `fix`, `perf`, `refactor`, `revert` (patch) and breaking
+(major) commits release from `main`; `docs`, `test`, `build`, `ci`, `chore`
+and `deps` do not. The rule set is the commit-analyzer `releaseRules` in
+[`.releaserc.json`](../.releaserc.json), identical in every chill.institute
+package repo; [`smoke.mjs`](../.github/release/smoke.mjs) fails when it drifts.
+
 ## Operator Checklist
 
 - Keep `main` as the release branch.
