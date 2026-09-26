@@ -5,10 +5,11 @@ this repository.
 
 ## CI
 
-Pull requests and pushes to `main` run the same guardrails:
+Pull requests, pushes to `main`, and manual dispatches run `mise run verify`.
+Pushes to `main` and dispatches also run the fuzz and benchmark smoke, which
+gate the release:
 
 ```bash
-mise run verify
 mise run test:fuzz
 go test . -run=^$ -bench=BenchmarkParse -benchmem -count=1
 ```
