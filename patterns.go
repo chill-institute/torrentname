@@ -13,6 +13,8 @@ type pattern struct {
 	apply func(*TorrentInfo, string)
 }
 
+var bareWebsitePattern = regexp.MustCompile(`^(((?:(?i:www)\.[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}|[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[a-z]{2,}))\s+-\s+)`)
+
 var patterns = []pattern{
 	{name: "season", re: regexp.MustCompile(`(?i)\b((?:s?([0-9]{1,2}))[ex][0-9])`), apply: setInt(func(t *TorrentInfo, value int) { t.Season = value })},
 	{name: "season", re: regexp.MustCompile(`(?i)\b((?:s([0-9]{1,2}))(?:\b|[^a-z0-9]))`), apply: setInt(func(t *TorrentInfo, value int) { t.Season = value })},
@@ -27,7 +29,6 @@ var patterns = []pattern{
 	{name: "region", re: regexp.MustCompile(`(?i)\b(R([0-9]))\b`), apply: func(t *TorrentInfo, value string) { t.Region = value }},
 	{name: "size", re: regexp.MustCompile(`(?i)\b((\d+(?:\.\d+)?(?:GB|MB)))\b`), apply: func(t *TorrentInfo, value string) { t.Size = value }},
 	{name: "website", re: regexp.MustCompile(`^(\[ ?([^\]]+?) ?\])`), apply: func(t *TorrentInfo, value string) { t.Website = value }},
-	{name: "website", re: regexp.MustCompile(`^(((?:(?i:www)\.[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}|[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[a-z]{2,}))\s+-\s+)`), apply: func(t *TorrentInfo, value string) { t.Website = value }},
 	{name: "language", re: regexp.MustCompile(`(?i)\b((rus\.eng|ita\.eng))\b`), apply: func(t *TorrentInfo, value string) { t.Language = value }},
 	{name: "sbs", re: regexp.MustCompile(`(?i)\b(((?:Half-)?SBS))\b`), apply: func(t *TorrentInfo, value string) { t.Sbs = value }},
 	{name: "container", re: compileCapturedTokenPattern(containerCatalog), apply: func(t *TorrentInfo, value string) { t.Container = value }},
