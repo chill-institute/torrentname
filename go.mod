@@ -2,7 +2,7 @@ module github.com/chill-institute/torrentname
 
 go 1.26.0
 
-toolchain go1.27.1
+toolchain go1.27.2
 
 tool (
 	github.com/rhysd/actionlint/cmd/actionlint
