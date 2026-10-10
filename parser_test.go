@@ -340,6 +340,47 @@ func TestParse(t *testing.T) {
 			},
 		},
 		{
+			name:     "anime style with attached container",
+			filename: "Sample Show - 10.mkv",
+			want: TorrentInfo{
+				Title:     "Sample Show",
+				Episode:   10,
+				Container: "mkv",
+			},
+		},
+		{
+			name:     "anime style at end",
+			filename: "Sample Show - 10",
+			want: TorrentInfo{
+				Title:   "Sample Show",
+				Episode: 10,
+			},
+		},
+		{
+			name:     "size after dash is not an episode",
+			filename: "Sample Film (2011) 720p BrRip x264 - 700mb - GRP",
+			want: TorrentInfo{
+				Title:      "Sample Film",
+				Year:       2011,
+				Resolution: "720p",
+				Quality:    "BrRip",
+				Codec:      "x264",
+				Group:      "GRP",
+				Size:       "700mb",
+			},
+		},
+		{
+			name:     "3d tag after dash is not an episode",
+			filename: "SAMPLE FILM- 3D™FS (2018) 1080p.mkv",
+			want: TorrentInfo{
+				Title:      "SAMPLE FILM",
+				Year:       2018,
+				Resolution: "1080p",
+				Container:  "mkv",
+				ThreeD:     true,
+			},
+		},
+		{
 			name:     "proper tag",
 			filename: "Sample.Toon.S01E05.HDTV.x264.PROPER-LOL",
 			want: TorrentInfo{

@@ -18,7 +18,7 @@ var patterns = []pattern{
 	{name: "season", re: regexp.MustCompile(`(?i)\b((?:s([0-9]{1,2}))(?:\b|[^a-z0-9]))`), apply: setInt(func(t *TorrentInfo, value int) { t.Season = value })},
 	{name: "season", re: regexp.MustCompile(`(?i)\b((?:Season)[ .-]+([0-9]{1,2}))\b`), apply: setInt(func(t *TorrentInfo, value int) { t.Season = value })},
 	{name: "episode", re: regexp.MustCompile(`(?i)([ex]([0-9]{2})(?:[^0-9]|$))`), apply: setInt(func(t *TorrentInfo, value int) { t.Episode = value })},
-	{name: "episode", re: regexp.MustCompile(`(-\s+([0-9]{1,})(?:[^0-9]|$))`), apply: setInt(func(t *TorrentInfo, value int) { t.Episode = value })},
+	{name: "episode", re: regexp.MustCompile(`(-\s+([0-9]{1,})(?:[^0-9A-Za-z]|[vV][0-9]|$))`), apply: setInt(func(t *TorrentInfo, value int) { t.Episode = value })},
 	{name: "year", last: true, re: regexp.MustCompile(`\b(((?:19[0-9]|20[0-9])[0-9]))\b`), apply: setInt(func(t *TorrentInfo, value int) { t.Year = value })},
 	{name: "resolution", re: compileCapturedTokenPattern(resolutionCatalog, broadResolutionAliasContextPattern, `[0-9]{3,4}p`)},
 	{name: "quality", re: compileCapturedTokenPattern(qualityCatalog)},

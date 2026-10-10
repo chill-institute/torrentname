@@ -15,7 +15,7 @@
 | --- | --- | --- |
 | `Title` | Text before release metadata such as season, year, resolution, quality, or source tokens | Separators collapse to spaces; wrapper website/group tags are removed when recognized |
 | `Season` | `S01`, `S01E02`, `1x02`, `Season 1`, and complete-season markers | Integer without leading zero |
-| `Episode` | `S01E02`, `1x02`, and anime-style ` - 10 ` forms | Integer without leading zero |
+| `Episode` | `S01E02`, `1x02`, and anime-style ` - 10 ` forms, including version suffixes such as ` - 10v2`; a dash number followed directly by letters, such as ` - 700mb` or ` - 3D`, is not an episode | Integer without leading zero |
 | `EpisodeEnd` | Episode ranges such as `S01E01-E03` and `S01E01 03 of 10` | Integer without leading zero |
 | `Part` | `Part 1`, `Part One`, and roman numerals through `X` | Integer |
 | `Year` | Years from `1900` through `2099` | Integer |
