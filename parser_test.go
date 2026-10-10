@@ -414,6 +414,26 @@ func TestParse(t *testing.T) {
 			},
 		},
 		{
+			name:     "lowercase dotted episode title",
+			filename: "sample.show - 01 [1080p]",
+			want:     TorrentInfo{Title: "sample show", Episode: 1, Resolution: "1080p"},
+		},
+		{
+			name:     "mixed case dotted episode title",
+			filename: "Sample.show - 01 [1080p]",
+			want:     TorrentInfo{Title: "Sample show", Episode: 1, Resolution: "1080p"},
+		},
+		{
+			name:     "dotted title before resolution",
+			filename: "sample.show - 1080p",
+			want:     TorrentInfo{Title: "sample show", Resolution: "1080p"},
+		},
+		{
+			name:     "dotted title before complete marker",
+			filename: "sample.show - COMPLETE",
+			want:     TorrentInfo{Title: "sample show", Complete: true},
+		},
+		{
 			name:     "proper tag",
 			filename: "Sample.Toon.S01E05.HDTV.x264.PROPER-LOL",
 			want: TorrentInfo{

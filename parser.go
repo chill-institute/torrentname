@@ -71,6 +71,15 @@ func Parse(filename string) (*TorrentInfo, error) {
 		}
 	}
 
+	// A bare domain is ambiguous with a dotted title; keep it unless a title remains.
+	if match := bareWebsitePattern.FindStringSubmatchIndex(cleanName); match != nil {
+		prefixEnd := match[3]
+		if prefixEnd < endIndex && strings.Trim(cleanName[prefixEnd:endIndex], ".-_ ") != "" {
+			startIndex = prefixEnd
+			tor.Website = cleanName[match[4]:match[5]]
+		}
+	}
+
 	if startIndex > endIndex {
 		startIndex = 0
 		endIndex = len(filename)
