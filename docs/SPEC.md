@@ -26,7 +26,7 @@
 | `Audio` | MP3, AAC/AAC-LC, AC3, EAC3, DDP, DDPA, DD, DTS, DTS X, DTS-HD MA/HRA, TrueHD, Atmos, FLAC, LiNE, PCM/LPCM, Opus, dual-audio markers, and channel tokens including `2CH`, `6CH`, `8CH`, `2.0`, `5.1`, and `7.1` | Common channel variants collapse to forms such as `DDP5.1`, `DDP Atmos 5.1`, `DD Atmos 5.1`, `EAC3 5.1`, `EAC3 Atmos 5.1`, `PCM 2.0`, `TrueHD Atmos 7.1`; real audio tokens take precedence over dual-audio edition markers |
 | `Source` | Known source tags after release metadata, including ABEMA, AMZN, ATVP, BILI, BCORE, CR, DSNP, HULU, NF, PCOK, PMTP, ROKU, STAN, HMAX/HBO/MAX, iT/iP, and the rest of `sourceCatalog` in [catalog_tokens.go](../catalog_tokens.go) | Canonical uppercase except stylized tags such as `iT`, `iP`, and `CRiT` |
 | `Group` | Dash suffixes, bracket suffixes, and advanced release trailing group names | Wrapper characters and spaces are stripped; metadata-looking tokens are ignored |
-| `Website` | Leading bracket tags such as `[Source]` | Trimmed bracket content |
+| `Website` | Leading bracket tags such as `[Source]`, and leading domains followed by ` - `, such as `www.example.org - `; without `www.`, the domain must end in a lowercase top-level domain | Trimmed bracket content or the domain |
 | `Language` | Current explicit language pairs such as `rus.eng`, `ita.eng`, and `ENG.LAT`, strong single post-release markers such as `JAPANESE` and `KOREAN`, plus clusters such as `Eng.Rus.Multi-Subs`, `VOSTFR`, `VFF`, and `MultiLang` | Preserved explicit pairs or uppercase normalized clusters |
 | `Region` | Disc-style region tokens from `R0` through `R9` | Single digit with the `R` prefix removed |
 | `BitDepth` | `8-bit`, `10bit`, `12 bit`, `16Bit`, `24bit` | `N-bit` |

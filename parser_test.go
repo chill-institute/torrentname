@@ -381,6 +381,39 @@ func TestParse(t *testing.T) {
 			},
 		},
 		{
+			name:     "bare www domain prefix",
+			filename: "www.example.org - Sample Film 2013 1080p x264-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Film",
+				Year:       2013,
+				Resolution: "1080p",
+				Codec:      "x264",
+				Group:      "GRP",
+				Website:    "www.example.org",
+			},
+		},
+		{
+			name:     "bare domain prefix",
+			filename: "example.to - Sample Film 2013 1080p x264-GRP",
+			want: TorrentInfo{
+				Title:      "Sample Film",
+				Year:       2013,
+				Resolution: "1080p",
+				Codec:      "x264",
+				Group:      "GRP",
+				Website:    "example.to",
+			},
+		},
+		{
+			name:     "dotted title before anime dash is not a website",
+			filename: "Mr.Sample - 01 [1080p]",
+			want: TorrentInfo{
+				Title:      "Mr Sample",
+				Episode:    1,
+				Resolution: "1080p",
+			},
+		},
+		{
 			name:     "proper tag",
 			filename: "Sample.Toon.S01E05.HDTV.x264.PROPER-LOL",
 			want: TorrentInfo{
