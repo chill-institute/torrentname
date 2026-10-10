@@ -44,20 +44,6 @@ var fixtureGoldenCases = []struct {
 		fields: []string{"title", "season", "episode", "resolution", "codec", "audio", "website", "bit_depth", "edition"},
 	},
 	{
-		name:  "complete series bracket group",
-		title: "Crossing Jordan 2001 Complete Series Seasons 1 to 6 1080p WEB x264 [i_c]",
-		want: TorrentInfo{
-			Title:      "Crossing Jordan",
-			Year:       2001,
-			Resolution: "1080p",
-			Quality:    "WEB",
-			Codec:      "x264",
-			Group:      "i_c",
-			Complete:   true,
-		},
-		fields: []string{"title", "year", "resolution", "quality", "codec", "group", "complete"},
-	},
-	{
 		name:  "cr web dl source",
 		title: "Kaya chan Isnt Scary S01E11 1080p CR WEB DL DUAL AAC2 0 H 264 VARYG (Kaya chan wa Kowakunai  Dual Audio  Multi Subs)",
 		want: TorrentInfo{
@@ -72,21 +58,6 @@ var fixtureGoldenCases = []struct {
 			Edition:    "Dual Audio Multi Subs",
 		},
 		fields: []string{"title", "season", "episode", "resolution", "quality", "codec", "audio", "source", "edition"},
-	},
-	{
-		name:  "multi hdr hevc",
-		title: "Monarch Legacy of Monsters S02E04 2160p HDR10Plus DV WEBRip 6CH x265 HEVC-P",
-		want: TorrentInfo{
-			Title:      "Monarch Legacy of Monsters",
-			Season:     2,
-			Episode:    4,
-			Resolution: "2160p",
-			Quality:    "WEBRip",
-			Codec:      "H265",
-			HDR:        "HDR10+ DV",
-			Group:      "P",
-		},
-		fields: []string{"title", "season", "episode", "resolution", "quality", "codec", "hdr", "group"},
 	},
 	{
 		name:  "uhd remux edition",

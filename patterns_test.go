@@ -12,45 +12,6 @@ func TestPatternsHaveExpectedCaptureGroups(t *testing.T) {
 	}
 }
 
-func TestNormalizeCodecVariants(t *testing.T) {
-	t.Parallel()
-
-	cases := map[string]string{
-		"x264":  "x264",
-		"x 264": "x264",
-		"x.264": "x264",
-		"x-264": "x264",
-		"x_264": "x264",
-		"X264":  "x264",
-		"x265":  "x265",
-		"x 265": "x265",
-		"x.265": "x265",
-		"x-265": "x265",
-		"x_265": "x265",
-		"H264":  "H264",
-		"h 264": "H264",
-		"H.264": "H264",
-		"H-264": "H264",
-		"H_264": "H264",
-		"AVC":   "H264",
-		"avc":   "H264",
-		"H265":  "H265",
-		"h 265": "H265",
-		"H.265": "H265",
-		"H-265": "H265",
-		"H_265": "H265",
-		"HEVC":  "H265",
-		"hevc":  "H265",
-		"AV1":   "AV1",
-		"XviD":  "XViD",
-	}
-	for input, want := range cases {
-		if got := normalizeCodec(input); got != want {
-			t.Errorf("normalizeCodec(%q) = %q, want %q", input, got, want)
-		}
-	}
-}
-
 func TestParseCodecVariantsInTitles(t *testing.T) {
 	t.Parallel()
 

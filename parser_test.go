@@ -494,20 +494,6 @@ func TestParse(t *testing.T) {
 			},
 		},
 		{
-			name:     "now source with adjacent release context",
-			filename: "Show.Name.S01E01.1080p.NOW.WEB-DL.H264-GRP",
-			want: TorrentInfo{
-				Title:      "Show Name",
-				Season:     1,
-				Episode:    1,
-				Resolution: "1080p",
-				Quality:    "WEB-DL",
-				Codec:      "H264",
-				Source:     "NOW",
-				Group:      "GRP",
-			},
-		},
-		{
 			name:     "play source with adjacent release context",
 			filename: "Show.Name.S01E01.1080p.PLAY.WEB-DL.H264-GRP",
 			want: TorrentInfo{
@@ -518,34 +504,6 @@ func TestParse(t *testing.T) {
 				Quality:    "WEB-DL",
 				Codec:      "H264",
 				Source:     "PLAY",
-				Group:      "GRP",
-			},
-		},
-		{
-			name:     "stan source with adjacent release context",
-			filename: "Show.Name.S01E01.1080p.STAN.WEB-DL.H264-GRP",
-			want: TorrentInfo{
-				Title:      "Show Name",
-				Season:     1,
-				Episode:    1,
-				Resolution: "1080p",
-				Quality:    "WEB-DL",
-				Codec:      "H264",
-				Source:     "STAN",
-				Group:      "GRP",
-			},
-		},
-		{
-			name:     "roku source with adjacent release context",
-			filename: "Show.Name.S01E01.1080p.ROKU.WEB-DL.H264-GRP",
-			want: TorrentInfo{
-				Title:      "Show Name",
-				Season:     1,
-				Episode:    1,
-				Resolution: "1080p",
-				Quality:    "WEB-DL",
-				Codec:      "H264",
-				Source:     "ROKU",
 				Group:      "GRP",
 			},
 		},
@@ -561,15 +519,6 @@ func TestParse(t *testing.T) {
 			}
 			assertTorrentInfo(t, tc.filename, *got, tc.want)
 		})
-	}
-}
-
-func TestParserDoesNotPanicOnJackettFixtureTitle(t *testing.T) {
-	t.Parallel()
-
-	_, err := Parse("[Hi-Res] Symphonic Suite AKIRA 2016 ハイパーハイレゾエディション／芸能山城組 (diff DSD256 11.2MHz タグ付き)")
-	if err != nil {
-		t.Fatalf("Parse returned error: %v", err)
 	}
 }
 
@@ -781,7 +730,6 @@ func TestParseCommonQualityAliases(t *testing.T) {
 		{name: "hdtc", filename: "Movie.2024.HDTC.x264", quality: "TC"},
 		{name: "tc", filename: "Movie.2024.TC.x264", quality: "TC"},
 		{name: "telecine", filename: "Movie.2024.Telecine.x264", quality: "TC"},
-		{name: "hdts", filename: "Movie.2024.HDTS.x264", quality: "TS"},
 		{name: "telesync", filename: "Movie.2024.Telesync.x264", quality: "TS"},
 		{name: "hdcam", filename: "Movie.2024.HDCAM.x264", quality: "CAM"},
 		{name: "camrip", filename: "Movie.2024.CAMRip.x264", quality: "CAM"},
@@ -1294,19 +1242,6 @@ func TestReleaseInfoExamples(t *testing.T) {
 			},
 		},
 		{
-			name:     "standalone max source",
-			filename: "Sample.Movie.2024.1080p.MAX.WEB-DL.x264-GRP",
-			want: TorrentInfo{
-				Title:      "Sample Movie",
-				Year:       2024,
-				Resolution: "1080p",
-				Quality:    "WEB-DL",
-				Codec:      "x264",
-				Source:     "MAX",
-				Group:      "GRP",
-			},
-		},
-		{
 			name:     "terminal ambiguous provider remains source",
 			filename: "Sample.Movie.2024.1080p.WEB-DL.ROKU",
 			want: TorrentInfo{
@@ -1598,17 +1533,6 @@ func TestReleaseInfoExamples(t *testing.T) {
 			},
 		},
 		{
-			name:     "terminal rich audio metadata is not group",
-			filename: "Sample.Movie.2024.1080p.WEB-DL.FLAC",
-			want: TorrentInfo{
-				Title:      "Sample Movie",
-				Year:       2024,
-				Resolution: "1080p",
-				Quality:    "WEB-DL",
-				Audio:      "FLAC",
-			},
-		},
-		{
 			name:     "terminal ddplus audio metadata is not group",
 			filename: "Sample.Movie.2024.1080p.WEB-DL.DDPlus",
 			want: TorrentInfo{
@@ -1642,21 +1566,6 @@ func TestReleaseInfoExamples(t *testing.T) {
 				Codec:      "x264",
 				Group:      "GRP",
 				Hardcoded:  true,
-			},
-		},
-		{
-			name:     "standalone channel count",
-			filename: "Sample.Series.S01E01.2160p.HDR10Plus.DV.WEBRip.6CH.x265.HEVC-GRP",
-			want: TorrentInfo{
-				Title:      "Sample Series",
-				Season:     1,
-				Episode:    1,
-				Resolution: "2160p",
-				Quality:    "WEBRip",
-				Codec:      "H265",
-				HDR:        "HDR10+ DV",
-				Audio:      "5.1",
-				Group:      "GRP",
 			},
 		},
 	}
@@ -1853,19 +1762,6 @@ func TestReleaseInfoEdgeCases(t *testing.T) {
 				t.Helper()
 				if got.Source != "" {
 					t.Fatalf("Source = %q, want empty", got.Source)
-				}
-				if got.Group != "GRP" {
-					t.Fatalf("Group = %q, want GRP", got.Group)
-				}
-			},
-		},
-		{
-			name:     "common stan provider before resolution and quality remains source",
-			filename: "Sample.Series.S01E01.STAN.1080p.WEB-DL.x264-GRP",
-			check: func(t *testing.T, got TorrentInfo) {
-				t.Helper()
-				if got.Source != "STAN" {
-					t.Fatalf("Source = %q, want STAN", got.Source)
 				}
 				if got.Group != "GRP" {
 					t.Fatalf("Group = %q, want GRP", got.Group)

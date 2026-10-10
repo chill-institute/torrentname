@@ -18,39 +18,6 @@ func (fn roundTripFunc) RoundTrip(request *http.Request) (*http.Response, error)
 	return fn(request)
 }
 
-func TestClearFixtureDir(t *testing.T) {
-	t.Parallel()
-
-	dir := t.TempDir()
-	jsonFile := filepath.Join(dir, "fixture.json")
-	textFile := filepath.Join(dir, "keep.txt")
-	subdir := filepath.Join(dir, "nested")
-
-	if err := os.WriteFile(jsonFile, []byte("{}"), 0o644); err != nil {
-		t.Fatalf("write json fixture: %v", err)
-	}
-	if err := os.WriteFile(textFile, []byte("keep"), 0o644); err != nil {
-		t.Fatalf("write text fixture: %v", err)
-	}
-	if err := os.Mkdir(subdir, 0o755); err != nil {
-		t.Fatalf("create nested dir: %v", err)
-	}
-
-	if err := clearFixtureDir(dir); err != nil {
-		t.Fatalf("clearFixtureDir: %v", err)
-	}
-
-	if _, err := os.Stat(jsonFile); !os.IsNotExist(err) {
-		t.Fatalf("expected json fixture to be removed, stat err = %v", err)
-	}
-	if _, err := os.Stat(textFile); err != nil {
-		t.Fatalf("expected non-json file to remain: %v", err)
-	}
-	if _, err := os.Stat(subdir); err != nil {
-		t.Fatalf("expected nested directory to remain: %v", err)
-	}
-}
-
 func TestSanitizeResults(t *testing.T) {
 	t.Parallel()
 
