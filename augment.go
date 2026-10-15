@@ -7,11 +7,10 @@ import (
 
 var (
 	audioChannelTokenPattern  = `[257][ .]?[01]|[268][ .-]*CH`
-	seasonEpisodeRangePattern = regexp.MustCompile(`(?i)\bS([0-9]{1,2})E([0-9]{1,3})(?:[ .-]*([0-9]{1,3}))?\b`)
-	seasonEpisodeChainPattern = regexp.MustCompile(`(?i)\bS([0-9]{1,2})E([0-9]{1,3})((?:[ .-]*E[0-9]{1,3})+)\b`)
-	crossEpisodeChainPattern  = regexp.MustCompile(`(?i)\b[0-9]{1,2}x[0-9]{2}((?:[ .-]+[0-9]{1,2}x[0-9]{2})+)\b`)
-	crossEpisodePattern       = regexp.MustCompile(`(?i)([0-9]{1,2})x([0-9]{2})`)
-	chainedNumberPattern      = regexp.MustCompile(`[0-9]+`)
+	seasonEpisodeRangePattern = regexp.MustCompile(`(?i)\bS([0-9]{1,2})E([0-9]{1,3})((?:[ .-]*(?:S[0-9]{1,2})?E[0-9]{1,3})+|[ .-]*[0-9]{1,3})?\b`)
+	seasonEpisodeLinkPattern  = regexp.MustCompile(`(?i)(?:S([0-9]{1,2}))?E([0-9]{1,3})`)
+	crossEpisodeChainPattern  = regexp.MustCompile(`(?i)\b[0-9]{1,2}x[0-9]{2}((?:[ .-]+[0-9]{1,2}x[0-9]{2}|-[0-9]{2})+)\b`)
+	crossEpisodeLinkPattern   = regexp.MustCompile(`(?i)(?:([0-9]{1,2})x)?([0-9]{2})`)
 	seasonReleaseTokenPattern = regexp.MustCompile(`(?i)\bSeason[ .-]+[0-9]{1,2}\b`)
 	compactRangePattern       = regexp.MustCompile(`(?i)\bS([0-9]{1,2})E([0-9]{1,3})[ .-]+([0-9]{1,3})(?:[ .-]+of[ .-]+[0-9]{1,3})?\b`)
 	yearTokenPattern          = regexp.MustCompile(`\b(?:19[0-9]{2}|20[0-9]{2})\b`)
@@ -49,21 +48,15 @@ func augmentTorrentInfo(info *TorrentInfo, filename string) {
 }
 
 func applyEpisodeRanges(info *TorrentInfo, value string) {
-	if match := seasonEpisodeChainPattern.FindStringSubmatch(value); len(match) == 4 {
-		episodes := []int{atoiOrZero(match[2])}
-		for _, number := range chainedNumberPattern.FindAllString(match[3], -1) {
-			episodes = append(episodes, atoiOrZero(number))
-		}
-		info.Season = atoiOrZero(match[1])
-		info.Episode = episodes[0]
-		info.EpisodeEnd = chainedEpisodeEnd(episodes, strings.Contains(match[3], "-"))
-		return
-	}
 	if match := seasonEpisodeRangePattern.FindStringSubmatch(value); len(match) == 4 {
+		if strings.ContainsAny(match[3], "Ee") {
+			applyEpisodeChain(info, seasonEpisodeLinkPattern.FindAllStringSubmatch(match[0], -1), strings.Contains(match[3], "-"))
+			return
+		}
 		info.Season = atoiOrZero(match[1])
 		info.Episode = atoiOrZero(match[2])
 		if match[3] != "" {
-			info.EpisodeEnd = chainedEpisodeEnd([]int{info.Episode, atoiOrZero(match[3])}, true)
+			info.EpisodeEnd = chainedEpisodeEnd([]int{info.Episode, atoiOrZero(strings.TrimLeft(match[3], " .-"))}, true)
 		}
 		return
 	}
@@ -73,25 +66,31 @@ func applyEpisodeRanges(info *TorrentInfo, value string) {
 		info.EpisodeEnd = chainedEpisodeEnd([]int{info.Episode, atoiOrZero(match[3])}, true)
 		return
 	}
+	if info.Episode == 0 {
+		return
+	}
 	if match := crossEpisodeChainPattern.FindStringSubmatch(value); len(match) == 2 {
-		applyCrossEpisodeChain(info, match[0], strings.Contains(match[1], "-"))
+		applyEpisodeChain(info, crossEpisodeLinkPattern.FindAllStringSubmatch(match[0], -1), strings.Contains(match[1], "-"))
 	}
 }
 
-// applyCrossEpisodeChain reads NxMM chains such as 2x01 2x02 or 2x01-2x03;
-// every link must name the same season.
-func applyCrossEpisodeChain(info *TorrentInfo, chain string, dashed bool) {
-	pairs := crossEpisodePattern.FindAllStringSubmatch(chain, -1)
-	season := atoiOrZero(pairs[0][1])
-	episodes := make([]int, 0, len(pairs))
-	for _, pair := range pairs {
-		if atoiOrZero(pair[1]) != season {
-			return
-		}
-		episodes = append(episodes, atoiOrZero(pair[2]))
+// applyEpisodeChain reads chain links of [match, season, episode], such as
+// S01E01-S01E02, 2x01 2x02, or 1x01-02. A link without a season continues
+// the first link's season; a link naming another season voids the range.
+func applyEpisodeChain(info *TorrentInfo, links [][]string, dashed bool) {
+	season := atoiOrZero(links[0][1])
+	episodes := make([]int, 0, len(links))
+	for _, link := range links {
+		episodes = append(episodes, atoiOrZero(link[2]))
 	}
 	info.Season = season
 	info.Episode = episodes[0]
+	info.EpisodeEnd = 0
+	for _, link := range links[1:] {
+		if link[1] != "" && atoiOrZero(link[1]) != season {
+			return
+		}
+	}
 	info.EpisodeEnd = chainedEpisodeEnd(episodes, dashed)
 }
 
