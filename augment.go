@@ -9,6 +9,7 @@ var (
 	audioChannelTokenPattern  = `[257][ .]?[01]|[268][ .-]*CH`
 	seasonEpisodeRangePattern = regexp.MustCompile(`(?i)\bS([0-9]{1,2})E([0-9]{1,3})((?:[ .-]*(?:S[0-9]{1,2})?E[0-9]{1,3})+|[ .-]*[0-9]{1,3})?\b`)
 	seasonEpisodeLinkPattern  = regexp.MustCompile(`(?i)(?:S([0-9]{1,2}))?E([0-9]{1,3})`)
+	audioChannelStartPattern  = regexp.MustCompile(`(?i)^[ .-]*(?:[257][ .][01]|[268][ .-]+CH)\b`)
 	crossEpisodeChainPattern  = regexp.MustCompile(`(?i)\b[0-9]{1,2}x[0-9]{2}((?:[ .-]+[0-9]{1,2}x[0-9]{2}|-[0-9]{2})+)\b`)
 	crossEpisodeLinkPattern   = regexp.MustCompile(`(?i)(?:([0-9]{1,2})x)?([0-9]{2})`)
 	seasonReleaseTokenPattern = regexp.MustCompile(`(?i)\bSeason[ .-]+[0-9]{1,2}\b`)
@@ -48,14 +49,15 @@ func augmentTorrentInfo(info *TorrentInfo, filename string) {
 }
 
 func applyEpisodeRanges(info *TorrentInfo, value string) {
-	if match := seasonEpisodeRangePattern.FindStringSubmatch(value); len(match) == 4 {
+	if loc := seasonEpisodeRangePattern.FindStringSubmatchIndex(value); loc != nil {
+		match := submatchStrings(value, loc)
 		if strings.ContainsAny(match[3], "Ee") {
 			applyEpisodeChain(info, seasonEpisodeLinkPattern.FindAllStringSubmatch(match[0], -1), strings.Contains(match[3], "-"))
 			return
 		}
 		info.Season = atoiOrZero(match[1])
 		info.Episode = atoiOrZero(match[2])
-		if match[3] != "" {
+		if match[3] != "" && !audioChannelStartPattern.MatchString(value[loc[6]:]) {
 			info.EpisodeEnd = chainedEpisodeEnd([]int{info.Episode, atoiOrZero(strings.TrimLeft(match[3], " .-"))}, true)
 		}
 		return
@@ -72,6 +74,16 @@ func applyEpisodeRanges(info *TorrentInfo, value string) {
 	if match := crossEpisodeChainPattern.FindStringSubmatch(value); len(match) == 2 {
 		applyEpisodeChain(info, crossEpisodeLinkPattern.FindAllStringSubmatch(match[0], -1), strings.Contains(match[1], "-"))
 	}
+}
+
+func submatchStrings(value string, loc []int) []string {
+	match := make([]string, len(loc)/2)
+	for i := range match {
+		if loc[2*i] >= 0 {
+			match[i] = value[loc[2*i]:loc[2*i+1]]
+		}
+	}
+	return match
 }
 
 // applyEpisodeChain reads chain links of [match, season, episode], such as
