@@ -86,6 +86,33 @@
       "size": 0,
       "seeders": 0,
       "peers": 0
+    },
+    {
+      "title": "Sample.Series.S01E01E02E03.720p.WEB-DL.x264-GRP",
+      "tracker": "synthetic",
+      "tracker_id": "synthetic",
+      "category": "TV",
+      "size": 0,
+      "seeders": 0,
+      "peers": 0
+    },
+    {
+      "title": "Sample.Series.2x01.2x02.HDTV.x264-GRP",
+      "tracker": "synthetic",
+      "tracker_id": "synthetic",
+      "category": "TV",
+      "size": 0,
+      "seeders": 0,
+      "peers": 0
+    },
+    {
+      "title": "Sample Series 2x01-2x02 HDTV x264-GRP",
+      "tracker": "synthetic",
+      "tracker_id": "synthetic",
+      "category": "TV",
+      "size": 0,
+      "seeders": 0,
+      "peers": 0
     }
   ],
   "indexers": [
@@ -93,7 +120,7 @@
       "id": "synthetic",
       "name": "Synthetic",
       "status": 0,
-      "results": 9,
+      "results": 12,
       "elapsed_time_ms": 0
     }
   ]

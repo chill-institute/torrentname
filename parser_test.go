@@ -1889,3 +1889,56 @@ func TestReleaseInfoEdgeCases(t *testing.T) {
 		})
 	}
 }
+
+func TestParseEpisodeChains(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		filename   string
+		season     int
+		episode    int
+		episodeEnd int
+	}{
+		{filename: "Sample.Series.S01E01E02E03.720p.WEB-DL.x264-GRP", season: 1, episode: 1, episodeEnd: 3},
+		{filename: "Sample.Series.S01E01.E02.E03.720p", season: 1, episode: 1, episodeEnd: 3},
+		{filename: "Sample Series S01E01-E02-E03 720p", season: 1, episode: 1, episodeEnd: 3},
+		{filename: "Sample.Series.S01E01E02.1080p.WEB-DL.DDP5.1.H.264-GRP", season: 1, episode: 1, episodeEnd: 2},
+		{filename: "Sample.Series.S01E09E10.1080p", season: 1, episode: 9, episodeEnd: 10},
+		{filename: "Sample.Series.S01E01-E03.1080p.WEB-DL.x264-GRP", season: 1, episode: 1, episodeEnd: 3},
+		{filename: "Sample.Series.S01E01-02.720p", season: 1, episode: 1, episodeEnd: 2},
+		{filename: "Sample Series S01E01 03 of 10 720p", season: 1, episode: 1, episodeEnd: 3},
+		{filename: "Sample Series 2x01 2x02 HDTV x264-GRP", season: 2, episode: 1, episodeEnd: 2},
+		{filename: "Sample.Series.2x01.2x02.2x03.HDTV.x264-GRP", season: 2, episode: 1, episodeEnd: 3},
+		{filename: "Sample Series 2x01-2x02 HDTV", season: 2, episode: 1, episodeEnd: 2},
+		{filename: "Sample Series 2x01-2x04 HDTV", season: 2, episode: 1, episodeEnd: 4},
+		{filename: "Sample.Series.S01E02-720p.WEB-DL.x264-GRP", season: 1, episode: 2},
+		{filename: "Sample.Series.S01E02.720p.WEB-DL.x264-GRP", season: 1, episode: 2},
+		{filename: "Sample Series S01E02 - 1080p", season: 1, episode: 2},
+		{filename: "Sample.Series.S01E02.2019.720p", season: 1, episode: 2},
+		{filename: "Sample Drama 5x06 HDTV x264-GRP", season: 5, episode: 6},
+		{filename: "Sample.Series.S01E01E02E04.720p", season: 1, episode: 1},
+		{filename: "Sample.Series.S01E01E03.720p", season: 1, episode: 1},
+		{filename: "Sample.Series.S01E03E02.720p", season: 1, episode: 3},
+		{filename: "Sample.Series.S01E05-03.720p", season: 1, episode: 5},
+		{filename: "Sample.Series.S01E01-E01.720p", season: 1, episode: 1},
+		{filename: "Sample Series 2x01 2x03 HDTV", season: 2, episode: 1},
+		{filename: "Sample Series 2x01 3x02 HDTV", season: 2, episode: 1},
+		{filename: "Sample.Series.S01.1080p.WEB-DL.x264-GRP", season: 1},
+		{filename: "Sample Series Season 2 Complete 1080p", season: 2},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.filename, func(t *testing.T) {
+			t.Parallel()
+
+			got, err := Parse(tc.filename)
+			if err != nil {
+				t.Fatalf("Parse(%q) error = %v", tc.filename, err)
+			}
+			if got.Season != tc.season || got.Episode != tc.episode || got.EpisodeEnd != tc.episodeEnd {
+				t.Fatalf("Parse(%q) season/episode/end = %d/%d/%d, want %d/%d/%d",
+					tc.filename, got.Season, got.Episode, got.EpisodeEnd, tc.season, tc.episode, tc.episodeEnd)
+			}
+		})
+	}
+}
