@@ -1,13 +1,10 @@
 # Parser Spec
 
-`torrentname` parses torrent-style release names into `TorrentInfo`. The parser is deterministic, best-effort, and dependency-free at runtime.
-
-## Contract
-
-- `Parse` accepts a single filename or release title string and returns a populated `TorrentInfo`.
-- Parsing is best-effort: unusual release names return the fields the parser can prove and leave the rest at zero values.
-- The parser normalizes common release tokens while preserving human-readable title text.
-- The parser does not fetch metadata, validate titles against external catalogs, or infer facts that are not present in the release name.
+`Parse` turns one filename or release title into a `TorrentInfo`. It is
+deterministic, best-effort, and dependency-free at runtime: it returns only
+fields the name proves, leaves the rest at zero values, normalizes release
+tokens, keeps title text readable, and never fetches or validates against
+external catalogs.
 
 ## Supported Fields
 
@@ -36,8 +33,5 @@
 | `Container` | MKV, AVI, MP4 tokens | Preserved token |
 | `Sbs` | SBS and Half-SBS | Preserved token |
 
-## Verify
-
-Unit tests and semantic goldens protect exact behavior; corpus metrics guard
-field presence, not accuracy. The [contributing guide](../CONTRIBUTING.md)
-owns the checks.
+Unit tests and semantic goldens pin exact behavior; `corpus:metrics` guards
+field presence, not accuracy.

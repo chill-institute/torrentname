@@ -1,44 +1,33 @@
 # Torrentname
 
-`torrentname` is the `chill.institute` Go library for parsing torrent-style release names into structured metadata.
-
-## Work
+Zero-dependency Go library that parses torrent-style release names into
+`TorrentInfo`. The parser contract is [docs/spec.md](./docs/spec.md).
 
 ```bash
 mise install
 mise run verify
 ```
 
-## Conventions
+## Rules
 
-- Keep parsing behavior deterministic and dependency-free.
-- Keep release-token coverage catalog-driven: add common aliases to the relevant catalog in `catalog_tokens.go`, normalize through lookup helpers, and avoid one-off app-specific parser heuristics.
-- Preserve visible attribution to the original upstream library in public docs and package framing.
+- Parsing stays deterministic and dependency-free at runtime.
+- Add release-token aliases to the catalogs in `catalog_tokens.go`; no
+  app-specific heuristics.
+- Keep the upstream attribution in the README and package docs.
+- Release types come from `releaseRules` in [`.releaserc.json`](./.releaserc.json),
+  shared by every chill.institute package repo and checked by
+  [`smoke.mjs`](./.github/release/smoke.mjs).
 
 ## Proof map
 
-| Change | Check | Runs | Leaves |
-| --- | --- | --- | --- |
-| Docs | `mise run verify` | local, [CI](./.github/workflows/ci.yml) `verify` | exit status |
-| Parser logic, catalogs, normalization | `mise run verify`, then `mise run test:fuzz` | local, [CI](./.github/workflows/ci.yml) `verify`; `fuzz` on push to `main` and dispatch | exit status; `FuzzParse` failures write repros to `testdata/fuzz/FuzzParse/` |
-| Parser hot paths | `BENCH_OUT=<file> mise run bench:record` before and after, then `mise run bench:compare` | local; [CI](./.github/workflows/ci.yml) `benchmarks` runs one pass on push to `main` and dispatch | `tmp/bench/*.txt`, benchstat table |
-| Fixture corpus | `JACKETT_API_KEY=... mise run fixtures:jackett`, then `mise run verify` | local, against a live local Jackett; see [Fixtures](./CONTRIBUTING.md#fixtures) | rewritten `testdata/jackett/*.json` |
-| Release rules, locked semantic-release | `npm ci --prefix .github/release --ignore-scripts`, then `node .github/release/smoke.mjs` | local, [CI](./.github/workflows/ci.yml) | exit status |
-| Workflows | `mise run actions` and `go test ./internal/workflowpolicy` (in `verify`) | local, [CI](./.github/workflows/ci.yml) `verify` | exit status |
-| Pushed workflow changes | [shared scan](https://github.com/chill-institute/.github/tree/main/.github/actions/scan), last step of the [CI](./.github/workflows/ci.yml) `verify` job: Actionlint and Zizmor when the pushed range touches workflows; secrets rely on GitHub secret scanning | CI on push to `main` (pushed range) and dispatch (full history) | failed run |
-| Release | [CI](./.github/workflows/ci.yml) `release` after all jobs on `main` | CI only, `release` Environment | tag and GitHub release; see [Release](./CONTRIBUTING.md#release) |
+| Change | Check | Runs |
+| --- | --- | --- |
+| Parser, catalogs, normalization | `mise run verify`, then `mise run test:fuzz` | local; [CI](./.github/workflows/ci.yml) `verify`, `fuzz` on `main` |
+| Hot paths | `BENCH_OUT=<file> mise run bench:record` before and after, then `mise run bench:compare` | local; CI `benchmarks` on `main` |
+| Fixture corpus | `JACKETT_API_KEY=... mise run fixtures:jackett`, then `mise run verify` | local, against a live Jackett |
+| Workflows | `mise run actions`, `go test ./internal/workflowpolicy` (in `verify`) | local, CI |
+| Release rules | `npm ci --prefix .github/release --ignore-scripts && node .github/release/smoke.mjs` | local, CI |
+| Release | CI `release` job after all jobs pass on `main` | CI only: tag, GitHub release |
 
-`mise run verify` covers table tests in `parser_test.go`, golden cases in
-`fixture_accuracy_test.go`, the `testdata/jackett` and `testdata/synthetic`
-corpora, and `corpus:metrics` field-presence floors.
-
-Gaps:
-
-- No property tests; `FuzzParse` asserts only that `Parse` returns without error or panic. Owner: chill-institute/torrentname.
-- No benchmark regression gate; comparison is manual. Owner: chill-institute/torrentname.
-- No Markdown or link check for docs. Owner: chill-institute/torrentname.
-
-## Read More
-
-- [Parser contract](./docs/SPEC.md)
-- [Contributor checks](./CONTRIBUTING.md)
+Gaps: `FuzzParse` checks only for panics and errors; benchmark regressions are
+compared by hand.
