@@ -38,12 +38,6 @@
 
 ## Verify
 
-```bash
-mise run test
-mise run corpus:metrics
-mise run bench
-```
-
-Unit tests and semantic goldens protect exact behavior. Corpus metrics guard
+Unit tests and semantic goldens protect exact behavior; corpus metrics guard
 field presence, not accuracy. The [contributing guide](../CONTRIBUTING.md)
-covers fixture refreshes, fuzzing, and before/after benchmarks.
+owns the checks.

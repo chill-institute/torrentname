@@ -4,7 +4,10 @@
 
 ## Work
 
-- `mise install`
+```bash
+mise install
+mise run verify
+```
 
 ## Conventions
 
@@ -23,7 +26,7 @@
 | Release rules, locked semantic-release | `npm ci --prefix .github/release --ignore-scripts`, then `node .github/release/smoke.mjs` | local, [CI](./.github/workflows/ci.yml) | exit status |
 | Workflows | `mise run actions` and `go test ./internal/workflowpolicy` (in `verify`) | local, [CI](./.github/workflows/ci.yml) `verify` | exit status |
 | Pushed workflow changes | [shared scan](https://github.com/chill-institute/.github/tree/main/.github/actions/scan), last step of the [CI](./.github/workflows/ci.yml) `verify` job: Actionlint and Zizmor when the pushed range touches workflows; secrets rely on GitHub secret scanning | CI on push to `main` (pushed range) and dispatch (full history) | failed run |
-| Release | [CI](./.github/workflows/ci.yml) `release` after all jobs on `main` | CI only, `release` Environment | tag and GitHub release for `feat`, `fix`, `perf`, `refactor`, `revert`, or breaking commits; see [Delivery](./docs/DELIVERY.md#releases) |
+| Release | [CI](./.github/workflows/ci.yml) `release` after all jobs on `main` | CI only, `release` Environment | tag and GitHub release; see [Release](./CONTRIBUTING.md#release) |
 
 `mise run verify` covers table tests in `parser_test.go`, golden cases in
 `fixture_accuracy_test.go`, the `testdata/jackett` and `testdata/synthetic`

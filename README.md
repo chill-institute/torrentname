@@ -45,14 +45,9 @@ value; recognized aliases normalize to stable values.
 
 ## Contract
 
-- Identity: `Title`, `Year`, `Season`, `Episode`, `EpisodeEnd`, `Part`
-- Release: `Resolution`, `Quality`, `Codec`, `HDR`, `Audio`, `BitDepth`
-- Source: `Source`, `Group`, `Website`, `Language`, `Region`
-- Flags: `Extended`, `Proper`, `Repack`, `Remastered`, `Unrated`, `IMAX`, and more
-- File traits: `Container`, `Sbs`, `Size`
-
-See the [parser specification](./docs/SPEC.md) for accepted tokens and
-normalization rules.
+[`TorrentInfo`](https://pkg.go.dev/github.com/chill-institute/torrentname#TorrentInfo)
+lists the parsed fields. The [parser specification](./docs/SPEC.md) defines
+accepted tokens and normalization rules.
 
 ## Develop
 
@@ -61,5 +56,5 @@ mise install
 mise run verify
 ```
 
-[Contributing](./CONTRIBUTING.md) · [Delivery](./docs/DELIVERY.md) ·
-[Security](./SECURITY.md) · [MIT License](./LICENSE)
+[Contributing](./CONTRIBUTING.md) · [Security](./SECURITY.md) ·
+[MIT License](./LICENSE)
