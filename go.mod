@@ -1,8 +1,6 @@
 module github.com/chill-institute/torrentname
 
-go 1.26.0
-
-toolchain go1.27.3
+go 1.27.3
 
 tool (
 	github.com/rhysd/actionlint/cmd/actionlint
