@@ -31,20 +31,21 @@ jobs:
         with:
           cache: true
 
-      - name: Run verification baseline
+      - name: Cache Go builds and modules
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('mise.toml', 'go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Verify
         run: mise run verify
 
-      - name: Set up Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: "24.22.1"
-          package-manager-cache: false
-
-      - name: Install locked semantic-release
-        run: npm ci --prefix .github/release --ignore-scripts --no-audit --no-fund
-
       - name: Smoke-test semantic-release
-        run: node .github/release/smoke.mjs
+        run: mise run release:smoke
 
       - name: Scan pushed range
         if: ${{ !cancelled() }}
@@ -96,7 +97,7 @@ jobs:
           cache: true
 
       - name: Run parser benchmark smoke
-        run: go test . -run=^$ -bench=BenchmarkParse -benchmem -count=1
+        run: mise run bench
 
   release:
     name: Release

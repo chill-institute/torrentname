@@ -21,14 +21,13 @@ mise run verify
 
 ## Proof map
 
-| Change | Check | Runs |
-| --- | --- | --- |
-| Parser, catalogs, normalization | `mise run verify`, then `mise run test:fuzz` | local; [CI](./.github/workflows/ci.yml) `verify`, `fuzz` on `main` |
-| Hot paths | `BENCH_OUT=tmp/bench/baseline.txt mise run bench:record` before, `mise run bench:record` after, then `mise run bench:compare` | local; CI `benchmarks` on `main` |
-| Fixture corpus | `JACKETT_API_KEY=... mise run fixtures:jackett`, then `mise run verify` | local, against a live Jackett |
-| Workflows | `mise run actions`, `go test ./internal/workflowpolicy` (in `verify`) | local, CI |
-| Release rules | `npm ci --prefix .github/release --ignore-scripts && node .github/release/smoke.mjs` | local, CI |
-| Release | CI `release` job after all jobs pass on `main` | CI only: tag, GitHub release |
+| Change | Check |
+| --- | --- |
+| Parser, catalogs, normalization | `mise run verify`, then `mise run test:fuzz` |
+| Hot paths | `BENCH_OUT=tmp/bench/baseline.txt mise run bench:record` before, `mise run bench:record` after, then `mise run bench:compare` |
+| Fixture corpus | `JACKETT_API_KEY=... mise run fixtures:jackett` against a live Jackett, then `mise run verify` |
+| Workflows | `mise run actions`, `go test ./internal/workflowpolicy` (in `verify`) |
+| Release rules | `mise run release:smoke` |
 
 Gaps: `FuzzParse` checks only for panics and errors; benchmark regressions are
 compared by hand.
