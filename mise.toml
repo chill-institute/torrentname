@@ -9,76 +9,43 @@ GOWORK = "off"
 
 [tasks.fmt]
 description = "Format Go sources"
-run = """
-gofmt_bin="$(dirname "$(mise which go)")/gofmt"
-go_files="$(git ls-files '*.go')"
-if [ -z "$go_files" ]; then
-  exit 0
-fi
-
-printf '%s\n' "$go_files" | while IFS= read -r file; do
-  [ -n "$file" ] || continue
-  [ -f "$file" ] || continue
-  "$gofmt_bin" -w "$file"
-done
-"""
+run = "git ls-files -z '*.go' | xargs -0 gofmt -w"
 
 [tasks."fmt:check"]
 description = "Check Go source formatting"
-run = """
-gofmt_bin="$(dirname "$(mise which go)")/gofmt"
-go_files="$(git ls-files '*.go')"
-if [ -z "$go_files" ]; then
-  exit 0
-fi
-
-unformatted="$(printf '%s\n' "$go_files" | while IFS= read -r file; do
-  [ -n "$file" ] || continue
-  [ -f "$file" ] || continue
-  "$gofmt_bin" -l "$file"
-done)"
-
-if [ -n "$unformatted" ]; then
-  printf 'gofmt needs to be run on:\n%s\n' "$unformatted" >&2
-  exit 1
-fi
-
-printf '==> Go formatting is clean\n'
-"""
+run = "git ls-files -z '*.go' | xargs -0 gofmt -l | (! grep .)"
 
 [tasks."mod:tidy"]
 description = "Tidy Go module metadata"
-run = '"$(mise which go)" mod tidy'
+run = 'go mod tidy'
 
 [tasks."mod:check"]
 description = "Ensure go.mod and go.sum are tidy without mutating them"
-run = '"$(mise which go)" mod tidy -diff'
+run = 'go mod tidy -diff'
 
 [tasks.test]
 description = "Run parser unit tests"
-run = '"$(mise which go)" test ./...'
+run = 'go test ./...'
 
 [tasks.vet]
 description = "Run Go static checks"
-run = '"$(mise which go)" vet ./...'
+run = 'go vet ./...'
 
 [tasks.actions]
 description = "Validate and audit GitHub Actions"
-shell = "bash -c"
-run = '''
-set -euo pipefail
-actionlint
-zizmor .github/workflows
-'''
+run = ["actionlint", "zizmor .github/workflows"]
 
-[tasks."test:cover"]
-description = "Run parser tests with coverage"
-run = '"$(mise which go)" test ./... -cover'
+[tasks."release:smoke"]
+description = "Check the shared release rules with a dry semantic-release run"
+run = [
+  "npm ci --prefix .github/release --ignore-scripts --no-audit --no-fund",
+  "node .github/release/smoke.mjs"
+]
 
 [tasks."corpus:metrics"]
-description = "Report parser field coverage across committed Jackett fixtures"
+description = "Fail when parser field presence across committed Jackett fixtures drops below its floors"
 run = """
-"$(mise which go)" run ./cmd/corpusmetrics \
+go run ./cmd/corpusmetrics \
   --min release_info=100 \
   --min title=100 \
   --min resolution=90 \
@@ -90,8 +57,8 @@ run = """
 """
 
 [tasks.bench]
-description = "Run parser benchmarks"
-run = '"$(mise which go)" test ./... -bench=. -benchmem'
+description = "Run each parser benchmark once"
+run = "go test . -run=^$ -bench=BenchmarkParse -benchmem -count=1"
 
 [tasks."bench:record"]
 description = "Record parser benchmark output for before/after comparison"
@@ -99,7 +66,7 @@ run = """
 set -o pipefail
 out="${BENCH_OUT:-tmp/bench/current.txt}"
 mkdir -p "$(dirname "$out")"
-"$(mise which go)" test . -run=^$ -bench=BenchmarkParse -benchmem -count="${BENCH_COUNT:-5}" | tee "$out"
+go test . -run=^$ -bench=BenchmarkParse -benchmem -count="${BENCH_COUNT:-5}" | tee "$out"
 """
 
 [tasks."bench:compare"]
@@ -107,7 +74,7 @@ description = "Compare two parser benchmark output files"
 run = """
 baseline="${BENCH_BASELINE:-tmp/bench/baseline.txt}"
 current="${BENCH_CURRENT:-tmp/bench/current.txt}"
-"$(mise which go)" tool benchstat "$baseline" "$current"
+go tool benchstat "$baseline" "$current"
 """
 
 [tasks."fixtures:jackett"]
@@ -119,12 +86,12 @@ if [ -z "${JACKETT_API_KEY:-}" ]; then
 fi
 
 JACKETT_BASE_URL="${JACKETT_BASE_URL:-http://localhost:9117}" \
-"$(mise which go)" run ./cmd/jackettfixtures
+go run ./cmd/jackettfixtures
 """
 
 [tasks."test:fuzz"]
 description = "Run the parser fuzz target for a short local pass"
-run = '"$(mise which go)" test . -run=^$ -fuzz=FuzzParse -fuzztime=5s'
+run = 'go test . -run=^$ -fuzz=FuzzParse -fuzztime=5s'
 
 [tasks.verify]
 description = "Run formatting, static, and test checks"
