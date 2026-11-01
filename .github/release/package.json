@@ -10,6 +10,12 @@
     "semantic-release": "25.0.9"
   },
   "overrides": {
+    "@actions/http-client": {
+      "undici": "6.29.1"
+    },
+    "@semantic-release/github": {
+      "undici": "7.30.1"
+    },
     "@semantic-release/npm": {
       "npm": "11.21.1"
     }
