@@ -1,6 +1,7 @@
 # Contributing
 
-Back parser changes with representative release names; update the [spec](./docs/spec.md).
+Back parser changes with representative release names and boundary cases.
+The [parser contract](./docs/spec.md) links to the fields, tokens, and examples.
 
 ```bash
 mise install
