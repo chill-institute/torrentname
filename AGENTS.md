@@ -15,9 +15,7 @@ mise run verify
   heuristics general to release names.
 - Keep the upstream attribution in the README and the upstream copyright in
   [LICENSE](./LICENSE).
-- Release types come from `releaseRules` in [`.releaserc.json`](./.releaserc.json),
-  shared by every chill.institute package repo and checked by
-  [`smoke.mjs`](./.github/release/smoke.mjs).
+- [Release rules](./.releaserc.json); [release check](./.github/release/smoke.mjs).
 
 ## Proof map
 

@@ -17,5 +17,4 @@ fixtures:jackett` (`JACKETT_BASE_URL` overrides the address). The generator
 strips URLs and credentials; commit only representative fixtures and minimized
 fuzz repros.
 
-Merges to `main` release from Conventional Commits once [CI](./.github/workflows/ci.yml)
-passes; Go resolves the `vX.Y.Z` tag directly.
+[CI](./.github/workflows/ci.yml) · [release rules](./.releaserc.json).
