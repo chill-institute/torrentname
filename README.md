@@ -1,6 +1,6 @@
 # torrentname
 
-![chill.institute library](https://chill.institute/banner.png)
+![chill.institute library](https://raw.githubusercontent.com/chill-institute/.github/main/assets/banner.png)
 
 [![CI](https://github.com/chill-institute/torrentname/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/chill-institute/torrentname/actions/workflows/ci.yml?query=branch%3Amain)
 [![Go Reference](https://pkg.go.dev/badge/github.com/chill-institute/torrentname.svg)](https://pkg.go.dev/github.com/chill-institute/torrentname)
