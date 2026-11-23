@@ -19,7 +19,7 @@ require (
 	github.com/rhysd/actionlint v1.7.12 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	go.yaml.in/yaml/v4 v4.0.0-rc.3 // indirect
-	golang.org/x/perf v0.0.0-20261009192801-be2c69fb417e // indirect
+	golang.org/x/perf v0.0.0-20261117185222-4febdb082b2c // indirect
 	golang.org/x/sync v0.20.0 // indirect
-	golang.org/x/sys v0.49.0 // indirect
+	golang.org/x/sys v0.50.0 // indirect
 )
